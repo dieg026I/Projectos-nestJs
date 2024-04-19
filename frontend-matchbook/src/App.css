@@ -1,0 +1,56 @@
+.login-container   {
+  background-image: url("./assents/img/wallpaperLogin.png");
+  background-size: cover;
+  background-position: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  
+  /* Fondo oscuro */
+  background-color: rgba(0, 0, 0, 0.7); 
+  background-blend-mode: darken;
+  background-size: 100% auto; 
+
+  .css-1p6z1ep-MuiFormLabel-root-MuiInputLabel-root.Mui-focused {
+    color: #000000;
+  }
+}
+
+.reg-container {
+  background-image: url("./assents/img/wallpaperRegister.jpg");
+  background-size: cover;
+  background-position: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  
+  /* Fondo oscuro */
+  background-color: rgba(0, 0, 0, 0.5); 
+  background-blend-mode: darken;
+  background-size: 100% auto;
+
+
+  .css-1p6z1ep-MuiFormLabel-root-MuiInputLabel-root.Mui-focused {
+    color: #000000;
+  }
+}
+
+.centrado{
+  justify-content: center;
+  align-items: center;
+  justify-items: center;
+}
+
+.title {
+  font-size: 36px;
+}
+
+.formulario{
+  color: black;
+  border-color: black;
+}
+
+
+
