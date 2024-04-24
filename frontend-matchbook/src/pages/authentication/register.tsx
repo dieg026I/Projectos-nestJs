@@ -31,7 +31,7 @@ const RegisterPage: React.FC = () => {
     const [password_user, setPassword] = React.useState('');
     const [repeatPassword_user, setRepeatPassword] = React.useState('');
     const [region, setRegion] = React.useState('');
-    const [cities, setCity] = React.useState('');
+    const [cities, setCities] = React.useState('');
     const [terms, setTerms] = React.useState(false);
 
     const handleTermsChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -131,7 +131,7 @@ const RegisterPage: React.FC = () => {
         }
 
     try {
-        const response = await axios.post('http://localhost:3000/api/register', {
+        const response = await axios.post('http://localhost:3000/post/users', {
             name_user,
             lastname_user,
             rut_user,
@@ -362,7 +362,7 @@ const RegisterPage: React.FC = () => {
                                                     value={cities}
                                                     label="Comuna"
                                                     sx={{ width: '100%', color: "black" }}
-                                                    onChange={e => setCity(e.target.value)}
+                                                    onChange={e => setCities(e.target.value)}
                                                 >
                                                     
                                                     <MenuItem value="">
