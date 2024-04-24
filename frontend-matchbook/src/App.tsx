@@ -7,10 +7,6 @@ import  LoginPage  from './pages/authentication/login';
 import  RegisterPage  from './pages/authentication/register';
 import NotFoundPage from './pages/notfound/notfound';
 
-
-
-
-
 function App() {
   return (
     <BrowserRouter>
@@ -28,20 +24,5 @@ function App() {
 
   );
 }
-
-
-
-  /*
-function App() {
-  return (
-    <BrowserRouter>
-      <MyRoutes />
-    </BrowserRouter>
-
-    
-  );
-}
-*/
-
 
 export default App;

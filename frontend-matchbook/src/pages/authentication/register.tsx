@@ -1,30 +1,24 @@
 
-import React, { ChangeEvent, FormEvent, useState } from "react";
+import React, { useState } from "react";
 import {
     Box,
     Button,
     Card,
-    CardActions,
     CardContent,
-    Container,
     FormControl,
-    FormGroup,
     Grid,
     IconButton,
     InputLabel,
     MenuItem,
-    Paper,
     Select,
     SelectChangeEvent,
     TextField,
     Typography,
-    styled,
 } from "@mui/material"; 
 import Form from 'react-bootstrap/Form';
 import { CgDanger } from "react-icons/cg";
 import "../../App.css";
 import logo from "../../assents/img/logoMatch.png";
-import flag from "../../assents/img/chile.png";
 import { SubmitHandler, useForm } from "react-hook-form";
 
 type FormValue = {
@@ -39,7 +33,6 @@ type FormValue = {
     repeatPassword: string,
     terms: boolean;
 }
-
 
 const RegisterPage: React.FC = () => {
 
@@ -82,7 +75,7 @@ const RegisterPage: React.FC = () => {
                 {/* -- Register -- */}
                 <Grid className="centrado" item xs={12} sm={12} md={6} lg={4} justifyContent="center" alignItems="center" style={{display: "flex"}}>
                     
-                    <Card style={{justifyContent: "center", alignItems: "center", borderRadius: "20px",  overflowY: "auto"}} sx={{ maxHeight: { xs: 565, md: 680, sm: 680, lg: 610}, maxWidth: { xs: 365, md: 420, sm: 450, lg: 500}  }} >
+                    <Card style={{justifyContent: "center", alignItems: "center", borderRadius: "20px",  overflowY: "auto"}} sx={{ maxHeight: { xs: 565, md: 675, sm: 680, lg: 610}, maxWidth: { xs: 365, md: 420, sm: 450, lg: 500}  }} >
                         <CardContent>
                         {/*-Titulo Registro-*/}
                         <Typography  variant="h5" component="div" fontWeight="bold" sx={{ marginBottom: '10px'}}>

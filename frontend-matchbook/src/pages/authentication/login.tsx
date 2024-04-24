@@ -1,6 +1,4 @@
 
-import React, { ChangeEvent, FormEvent } from "react";
-import { useState } from 'react';
 import {
   Box,
   Button,
@@ -12,11 +10,10 @@ import {
   Typography,
 } from "@mui/material"; 
 
-import Form from 'react-bootstrap/Form';
 import { FcGoogle } from "react-icons/fc";
 import { FaFacebookF } from "react-icons/fa";
 import "../../App.css";
-import { useForm, SubmitHandler } from 'react-hook-form';
+
 import logo from "../../assents/img/logoMatch.png";
 
 type FormValue = {

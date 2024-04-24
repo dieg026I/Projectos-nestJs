@@ -1,3 +1,4 @@
+
 .login-container   {
   background-image: url("./assents/img/wallpaperLogin.png");
   background-size: cover;
@@ -30,7 +31,6 @@
   background-color: rgba(0, 0, 0, 0.5); 
   background-blend-mode: darken;
   background-size: 100% auto;
-
 
   .css-1p6z1ep-MuiFormLabel-root-MuiInputLabel-root.Mui-focused {
     color: #000000;
