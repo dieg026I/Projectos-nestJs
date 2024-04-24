@@ -21,11 +21,15 @@ import "../../App.css";
 import axios from 'axios';
 import logo from "../../assents/img/logoMatch.png";
 
-type Region = {
+interface Region  {
     id_region: number;
     name_region: string;
   };
-
+  
+  interface Cities {
+    id_city: number;
+    name: string;
+  }
 const RegisterPage: React.FC = () => {
     const [name_user, setName] = React.useState('');
     const [lastname_user, setLastname] = React.useState('');
@@ -35,9 +39,9 @@ const RegisterPage: React.FC = () => {
     const [email_user, setEmail] = React.useState('');
     const [password_user, setPassword] = React.useState('');
     const [repeatPassword_user, setRepeatPassword] = React.useState('');
-    const [region , setRegion] = React.useState();
+    const [region , setRegion] = React.useState<Region[]>([]);
     const [selectedRegion, setSelectedRegion] = useState('');
-    const [cities, setCities] = React.useState('');
+    const [cities, setCities] = React.useState<Cities[]>([]);
     const [terms, setTerms] = React.useState(false);
 
     const handleTermsChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -57,6 +61,8 @@ const RegisterPage: React.FC = () => {
             .then(response => {
             setCities(response.data);
             });
+
+    
     };
     
     
@@ -367,7 +373,7 @@ const RegisterPage: React.FC = () => {
                                                     onChange={handleRegionChange}
                                                 >
                                                 {region.map(region => (
-                                                    <MenuItem key={region.id} value={region.id}>{region.name}</MenuItem>
+                                                    <MenuItem key={region.id_region} value={region.id_region}>{region.name_region}</MenuItem>
                                                 ))}
                                                 </Select>
                                             </FormControl>
@@ -383,13 +389,10 @@ const RegisterPage: React.FC = () => {
                                                     value={cities}
                                                     label="Comuna"
                                                     sx={{ width: '100%', color: "black" }}
-                                                    onChange={e => setCities(e.target.value)}
-                                                >
-                                                    
-                                                    <MenuItem value="">
-                                                        <em>None</em>
-                                                    </MenuItem>
-                                                    <MenuItem value={10}>Ten</MenuItem>
+                                                >  
+                                                    {cities.map((city: Cities) => (
+                                                    <MenuItem key={city.id_city} value={city.id_city}>{city.name}</MenuItem>
+                                                    ))}
                                                 </Select>
                                                 
                                             </FormControl>
