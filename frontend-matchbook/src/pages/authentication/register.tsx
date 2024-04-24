@@ -21,7 +21,6 @@ import "../../App.css";
 import axios from 'axios';
 import logo from "../../assents/img/logoMatch.png";
 
-
 const RegisterPage: React.FC = () => {
     const [name_user, setName] = React.useState('');
     const [lastname_user, setLastname] = React.useState('');
@@ -32,7 +31,7 @@ const RegisterPage: React.FC = () => {
     const [password_user, setPassword] = React.useState('');
     const [repeatPassword_user, setRepeatPassword] = React.useState('');
     const [region, setRegion] = React.useState('');
-    const [city, setCity] = React.useState('');
+    const [cities, setCity] = React.useState('');
     const [terms, setTerms] = React.useState(false);
 
     const handleTermsChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -120,7 +119,7 @@ const RegisterPage: React.FC = () => {
         }
 
         //  -Comuna-
-        if (!city.trim()) {
+        if (!cities.trim()) {
             alert('Comuna requerida.');
             return;
         }
@@ -141,7 +140,7 @@ const RegisterPage: React.FC = () => {
             email_user,
             password_user,
             region,
-            city,
+            cities,
         });
 
         console.log(response.data);
@@ -360,7 +359,7 @@ const RegisterPage: React.FC = () => {
                                                 <Select
                                                     labelId="city-label"
                                                     id="city"
-                                                    value={city}
+                                                    value={cities}
                                                     label="Comuna"
                                                     sx={{ width: '100%', color: "black" }}
                                                     onChange={e => setCity(e.target.value)}
