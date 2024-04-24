@@ -1,6 +1,7 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Put } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Put, Query } from '@nestjs/common';
 import { CitiesService } from './commune.service';
 import { Cities } from './entities/cities.entity';
+import { Region } from 'src/region/entities/region.entity';
 
 
 @Controller('cities')
@@ -20,6 +21,15 @@ export class CitiesController {
   @Get(':id')
   findOne(@Param('id') id: number) {
     return this.citiesService.findOne(id);
+  }
+
+  @Get('citiesForRegion')
+  findAllCitiesForRegion(@Query('region') region: Region) {
+    if (region) {
+      return this.citiesService.findByRegion(region);
+    } else {
+      return this.citiesService.findAll();
+    }
   }
 
   @Put(':id')

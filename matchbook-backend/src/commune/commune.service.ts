@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Cities } from './entities/cities.entity';
+import { Region } from 'src/region/entities/region.entity';
 
 @Injectable()
 export class CitiesService {
@@ -19,6 +20,10 @@ export class CitiesService {
 
   findOne(id_city: number): Promise<Cities | null> {
     return this.communeRepository.findOneBy({id_city});
+  }
+
+  findByRegion(region: Region): Promise<Cities[]> {
+    return this.communeRepository.find({ where: { region } });
   }
   async update(id: number, user: Cities): Promise<Cities> {
     await this.communeRepository.update(id, user);
