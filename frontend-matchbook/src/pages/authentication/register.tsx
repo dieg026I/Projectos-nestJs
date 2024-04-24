@@ -49,15 +49,16 @@ const RegisterPage: React.FC = () => {
     };
 
     useEffect(() => {
-        axios.get('http://localhost:3000/get/regions')
+        axios.get('http://localhost:3001/get/regions')
             .then(response => {
             setRegion(response.data);
+            console.log(response.data);
             });
     }, []);
 
     const handleRegionChange = (event: { target: { value: React.SetStateAction<string>; }; }) => {
         setSelectedRegion(event.target.value);
-        axios.get('http://localhost:3000/regions/${event.target.value}/cities/citiesForRegion')
+        axios.get('http://localhost:3001/regions/${event.target.value}/cities/citiesForRegion')
             .then(response => {
             setCities(response.data);
         });
@@ -157,7 +158,7 @@ const RegisterPage: React.FC = () => {
         }
 
     try {
-        const response = await axios.post('http://localhost:3000/post/users', {
+        const response = await axios.post('http://localhost:3001/post/users', {
             name_user,
             lastname_user,
             rut_user,
@@ -417,7 +418,7 @@ const RegisterPage: React.FC = () => {
                                 <br />
                                 {/*-Boton Registrar-*/}
                                 <Typography d-flex justify-content-center h-100 align-items-center text-center text-align-center fontSize = "10px" variant="body2" >
-                                <Button type="submit" fullWidth variant="contained"  style={{ textTransform: "none", fontSize: "15px", color: "#fff", backgroundColor: "#1976D2", borderRadius: "20px" }}> Régistrarme </Button> 
+                                <Button type="submit" onClick={handleSubmit} fullWidth variant="contained"  style={{ textTransform: "none", fontSize: "15px", color: "#fff", backgroundColor: "#1976D2", borderRadius: "20px" }}> Régistrarme </Button> 
                                 </Typography>
                             </CardContent>
                         </Card>

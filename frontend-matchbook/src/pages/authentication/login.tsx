@@ -33,7 +33,7 @@ const LoginPage: React.FC = () => {
     event.preventDefault();
 
     try {
-      const response = await axios.post('http://localhost:3000/post/users', {
+      const response = await axios.post('http://localhost:3001/post/users', {
         email_user,
         password_user
       });
@@ -126,7 +126,7 @@ const LoginPage: React.FC = () => {
                   {/*-Boton Ingresar-*/}
                   <div style={{ width: '100%' }}>
                     <Typography d-flex justify-content-center h-100 alight-items-center text-center text-alight-center fontSize = "10px" variant="body2">
-                      <Button fullWidth variant="contained"  style={{ textTransform: "none", fontSize: "12px", color: "#fff", backgroundColor: "#1976D2", borderRadius: "20px" }}> Ingresar </Button> 
+                      <Button fullWidth variant="contained" onClick={handleSubmit} style={{ textTransform: "none", fontSize: "12px", color: "#fff", backgroundColor: "#1976D2", borderRadius: "20px" }}> Ingresar </Button> 
                     </Typography>
                   </div>
 
