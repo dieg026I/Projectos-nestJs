@@ -49,7 +49,7 @@ const RegisterPage: React.FC = () => {
     };
 
     useEffect(() => {
-        axios.get('http://localhost:3000/regions')
+        axios.get('http://localhost:3000/get/regions')
             .then(response => {
             setRegion(response.data);
             });
@@ -57,12 +57,10 @@ const RegisterPage: React.FC = () => {
 
     const handleRegionChange = (event: { target: { value: React.SetStateAction<string>; }; }) => {
         setSelectedRegion(event.target.value);
-        axios.get('http://localhost:3000/regions/${event.target.value}/cities')
+        axios.get('http://localhost:3000/regions/${event.target.value}/cities/citiesForRegion')
             .then(response => {
             setCities(response.data);
-            });
-
-    
+        });
     };
     
     
