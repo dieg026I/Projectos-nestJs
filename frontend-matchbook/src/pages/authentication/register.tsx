@@ -1,5 +1,5 @@
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
     Box,
     Button,
@@ -21,6 +21,11 @@ import "../../App.css";
 import axios from 'axios';
 import logo from "../../assents/img/logoMatch.png";
 
+type Region = {
+    id_region: number;
+    name_region: string;
+  };
+
 const RegisterPage: React.FC = () => {
     const [name_user, setName] = React.useState('');
     const [lastname_user, setLastname] = React.useState('');
@@ -30,7 +35,8 @@ const RegisterPage: React.FC = () => {
     const [email_user, setEmail] = React.useState('');
     const [password_user, setPassword] = React.useState('');
     const [repeatPassword_user, setRepeatPassword] = React.useState('');
-    const [region, setRegion] = React.useState('');
+    const [region , setRegion] = React.useState();
+    const [selectedRegion, setSelectedRegion] = useState('');
     const [cities, setCities] = React.useState('');
     const [terms, setTerms] = React.useState(false);
 
@@ -38,10 +44,25 @@ const RegisterPage: React.FC = () => {
         setTerms(event.target.checked);
     };
 
+    useEffect(() => {
+        axios.get('http://localhost:3000/regions')
+            .then(response => {
+            setRegion(response.data);
+            });
+    }, []);
+
+    const handleRegionChange = (event: { target: { value: React.SetStateAction<string>; }; }) => {
+        setSelectedRegion(event.target.value);
+        axios.get('http://localhost:3000/regions/${event.target.value}/cities')
+            .then(response => {
+            setCities(response.data);
+            });
+    };
+    
+    
     const handleSubmit = async (event: React.FormEvent) => {
         event.preventDefault();
 
-        
         //  --Validaciones--
 
         //  -Nombre-
@@ -113,16 +134,17 @@ const RegisterPage: React.FC = () => {
         }
 
         //  -Region-
-        if (!region.trim()) {
+       {/* if (!region.trim()) {
             alert('Región requerida.');
             return;
-        }
+        }*/}
 
         //  -Comuna-
+        {/*
         if (!cities.trim()) {
             alert('Comuna requerida.');
             return;
-        }
+        }*/}
 
         //  -Terminos y condiciones-
         if (!terms) {
@@ -339,15 +361,14 @@ const RegisterPage: React.FC = () => {
                                                 <Select 
                                                     labelId="region-label"
                                                     id="region"
-                                                    value={region}
+                                                    
                                                     label="Región"
                                                     sx={{ width: '100%', color: "black" }}
-                                                    onChange={e => setRegion(e.target.value)}
+                                                    onChange={handleRegionChange}
                                                 >
-                                                    <MenuItem value="">
-                                                        <em>None</em>
-                                                    </MenuItem>
-                                                    <MenuItem value={10}>Ten</MenuItem>
+                                                {region.map(region => (
+                                                    <MenuItem key={region.id} value={region.id}>{region.name}</MenuItem>
+                                                ))}
                                                 </Select>
                                             </FormControl>
                                         </Grid>
@@ -407,3 +428,7 @@ const RegisterPage: React.FC = () => {
 }
 
 export default RegisterPage;
+function setSelectedRegion(value: any) {
+    throw new Error("Function not implemented.");
+}
+
