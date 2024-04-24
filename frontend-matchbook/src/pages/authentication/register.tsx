@@ -20,7 +20,6 @@ import { CgDanger } from "react-icons/cg";
 import "../../App.css";
 import axios from 'axios';
 import logo from "../../assents/img/logoMatch.png";
-import { SubmitHandler, useForm } from "react-hook-form";
 
 
 const RegisterPage: React.FC = () => {
