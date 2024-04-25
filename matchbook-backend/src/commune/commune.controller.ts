@@ -23,13 +23,9 @@ export class CitiesController {
     return this.citiesService.findOne(id);
   }
 
-  @Get('citiesForRegion')
-  findAllCitiesForRegion(@Query('region') region: Region) {
-    if (region) {
-      return this.citiesService.findByRegion(region);
-    } else {
-      return this.citiesService.findAll();
-    }
+  @Get('region/:regionId')
+  getCitiesByRegion(@Param('regionId') regionId: number): Promise<Cities[]> {
+    return this.citiesService.getCitiesByRegion(regionId);
   }
 
   @Put(':id')

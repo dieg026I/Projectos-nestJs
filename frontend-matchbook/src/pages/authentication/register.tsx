@@ -39,8 +39,9 @@ const RegisterPage: React.FC = () => {
     const [email_user, setEmail] = React.useState('');
     const [password_user, setPassword] = React.useState('');
     const [repeatPassword_user, setRepeatPassword] = React.useState('');
-    const [regions , setRegions] = React.useState<Region[]>([]);
-    const [selectedRegion, setSelectedRegion] = useState('');
+    const [region , setRegion] = React.useState<Region[]>([]);
+    const [selectedRegion, setSelectedRegion] = useState(0);
+    const [selectedCity, setSelectedCity] = useState(0);
     const [cities, setCities] = React.useState<Cities[]>([]);
     const [terms, setTerms] = React.useState(false);
 
@@ -51,35 +52,27 @@ const RegisterPage: React.FC = () => {
     useEffect(() => {
         axios.get('http://localhost:3001/region')
             .then(response => {
-            setRegions(response.data);
-            console.log(response.data);
+            setRegion(response.data);
+            console.log('Mostrar Regiones'+response.data);
             });
     }, []);
-    useEffect(() => {
-        const handleRegionChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-            const regionId = event.target.value;
-            const region = regions.find(r => r.name_region === regionId);
-            if (region) {
-                setSelectedRegion(region.name_region);
-            } else {
-                console.error('Hubo un error al obtener las ciudades:', Error);
-            }
-        
-        };
-        if (selectedRegion) {
-            axios.get('http://localhost:3001/cities/citiesForRegion?region=${selectedRegion.name_region}')
+
+    const handleRegionChange = (event: { target: { value: React.SetStateAction<number>; }; }) => {
+        setSelectedRegion(event.target.value);
+        const numberRegion = event.target.value;
+        console.log('numero de region: ' + numberRegion);
+        console.log('region seleccionada: ' + event.target.value);
+        console.log('region : ' + selectedRegion);
+        axios.get(`http://localhost:3001/cities/region/${numberRegion}`)
             .then(response => {
-                setCities(response.data);
-                console.log(response.data);
-            })
-            .catch(error => {
-                console.error('Hubo un error al obtener las ciudades:', error);
-            });
-            }
-        }, [selectedRegion]);
-        
-        
+            setCities(response.data);
+            console.log(response.data);
+        });
+    };
     
+    const handleCityChange = (event: { target: { value: React.SetStateAction<number>; }; }) => {
+        setSelectedCity(event.target.value);
+    };
     
     const handleSubmit = async (event: React.FormEvent) => {
         event.preventDefault();
@@ -174,7 +167,7 @@ const RegisterPage: React.FC = () => {
         }
 
     try {
-        const response = await axios.post('http://localhost:3001/post/users', {
+        const response = await axios.post('http://localhost:3001/users', {
             name_user,
             lastname_user,
             rut_user,
@@ -182,7 +175,7 @@ const RegisterPage: React.FC = () => {
             phone_user,
             email_user,
             password_user,
-            regions,
+            region,
             cities,
         });
 
@@ -382,13 +375,16 @@ const RegisterPage: React.FC = () => {
                                                 <Select 
                                                     labelId="region-label"
                                                     id="region"
-                                                    onChange={handleRegionChange}
                                                     label="Región"
                                                     sx={{ width: '100%', color: "black" }}
-                                                    value={selectedRegion}
-                                        
+                                                    onChange={(event) => handleRegionChange({
+                                                        target: {
+                                                          value: Number(event.target.value),
+                                                        },
+                                                      })}
+                                                    value = {selectedRegion}
                                                 >
-                                                {regions.map(region => (
+                                                {region.map(region => (
                                                     <MenuItem key={region.id_region} value={region.id_region}>{region.name_region}</MenuItem>
                                                 ))}
                                                 </Select>
@@ -402,10 +398,15 @@ const RegisterPage: React.FC = () => {
                                                 <Select
                                                     labelId="city-label"
                                                     id="city"
-                                                    value={cities}
+                                                    value={selectedCity}
                                                     label="Comuna"
                                                     sx={{ width: '100%', color: "black" }}
-                                                >  
+                                                    onChange={(event) => handleCityChange({
+                                                        target: {
+                                                          value: Number(event.target.value),
+                                                        },
+                                                      })}
+                                                >   
                                                     {cities.map((city: Cities) => (
                                                     <MenuItem key={city.id_city} value={city.id_city}>{city.name}</MenuItem>
                                                     ))}
