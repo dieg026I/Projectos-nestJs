@@ -15,6 +15,8 @@ import { FaFacebookF } from "react-icons/fa";
 import "../../App.css";
 import axios from 'axios';
 
+
+
 import logo from "../../assents/img/logoMatch.png";
 import React from "react";
 
@@ -32,20 +34,39 @@ const LoginPage: React.FC = () => {
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
 
+    //  -Validacion-
+    if (!email_user.trim()) {
+      alert('Correo requerido.');
+      return;
+    }
+
+
+    //  -Contraseña-
+    if (!password_user.trim()) {
+      alert('Contraseña requerida.');
+      return;
+    }
+    
     try {
       const response = await axios.post('http://localhost:3001/post/users', {
         email_user,
         password_user
       });
 
+      if (response.status === 200){
+        localStorage.setItem('token', response.data.token);
+      }
+
       console.log(response.data);
 
-    } catch (error) {
-      console.error('Hubo un error al iniciar sesión:', error);
+    } catch (error:any) {
+      if (error.response && error.response.status === 401){
+        alert('Correo electrónico o contraseña incorrectos. Por favor, inténtalo de nuevo.');
+      } else {
+        console.error('Hubo un error al iniciar sesión:', error);
+      }
     }
   };
-
-
 
   return (
     <form onSubmit={handleSubmit}>

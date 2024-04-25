@@ -11,7 +11,6 @@ import {
     InputLabel,
     MenuItem,
     Select,
-    SelectChangeEvent,
     TextField,
     Typography,
 } from "@mui/material"; 
@@ -24,12 +23,11 @@ import logo from "../../assents/img/logoMatch.png";
 interface Region  {
     id_region: number;
     name_region: string;
-  };
-  
-  interface Cities {
+};
+interface Cities {
     id_city: number;
     name: string;
-  }
+}
 const RegisterPage: React.FC = () => {
     const [name_user, setName] = React.useState('');
     const [lastname_user, setLastname] = React.useState('');
@@ -63,7 +61,6 @@ const RegisterPage: React.FC = () => {
             setCities(response.data);
         });
     };
-    
     
     const handleSubmit = async (event: React.FormEvent) => {
         event.preventDefault();
@@ -137,19 +134,6 @@ const RegisterPage: React.FC = () => {
             alert('Las contraseñas no coinciden.');
             return;
         }
-
-        //  -Region-
-       {/* if (!region.trim()) {
-            alert('Región requerida.');
-            return;
-        }*/}
-
-        //  -Comuna-
-        {/*
-        if (!cities.trim()) {
-            alert('Comuna requerida.');
-            return;
-        }*/}
 
         //  -Terminos y condiciones-
         if (!terms) {
