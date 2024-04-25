@@ -39,7 +39,7 @@ const RegisterPage: React.FC = () => {
     const [email_user, setEmail] = React.useState('');
     const [password_user, setPassword] = React.useState('');
     const [repeatPassword_user, setRepeatPassword] = React.useState('');
-    const [region , setRegion] = React.useState<Region[]>([]);
+    const [regions , setRegions] = React.useState<Region[]>([]);
     const [selectedRegion, setSelectedRegion] = useState('');
     const [cities, setCities] = React.useState<Cities[]>([]);
     const [terms, setTerms] = React.useState(false);
@@ -49,20 +49,36 @@ const RegisterPage: React.FC = () => {
     };
 
     useEffect(() => {
-        axios.get('http://localhost:3001/get/regions')
+        axios.get('http://localhost:3001/region')
             .then(response => {
-            setRegion(response.data);
+            setRegions(response.data);
             console.log(response.data);
             });
     }, []);
-
-    const handleRegionChange = (event: { target: { value: React.SetStateAction<string>; }; }) => {
-        setSelectedRegion(event.target.value);
-        axios.get('http://localhost:3001/regions/${event.target.value}/cities/citiesForRegion')
+    useEffect(() => {
+        const handleRegionChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+            const regionId = event.target.value;
+            const region = regions.find(r => r.name_region === regionId);
+            if (region) {
+                setSelectedRegion(region.name_region);
+            } else {
+                console.error('Hubo un error al obtener las ciudades:', Error);
+            }
+        
+        };
+        if (selectedRegion) {
+            axios.get('http://localhost:3001/cities/citiesForRegion?region=${selectedRegion.name_region}')
             .then(response => {
-            setCities(response.data);
-        });
-    };
+                setCities(response.data);
+                console.log(response.data);
+            })
+            .catch(error => {
+                console.error('Hubo un error al obtener las ciudades:', error);
+            });
+            }
+        }, [selectedRegion]);
+        
+        
     
     
     const handleSubmit = async (event: React.FormEvent) => {
@@ -166,7 +182,7 @@ const RegisterPage: React.FC = () => {
             phone_user,
             email_user,
             password_user,
-            region,
+            regions,
             cities,
         });
 
@@ -366,12 +382,13 @@ const RegisterPage: React.FC = () => {
                                                 <Select 
                                                     labelId="region-label"
                                                     id="region"
-                                                    
+                                                    onChange={handleRegionChange}
                                                     label="Región"
                                                     sx={{ width: '100%', color: "black" }}
-                                                    onChange={handleRegionChange}
+                                                    value={selectedRegion}
+                                        
                                                 >
-                                                {region.map(region => (
+                                                {regions.map(region => (
                                                     <MenuItem key={region.id_region} value={region.id_region}>{region.name_region}</MenuItem>
                                                 ))}
                                                 </Select>
