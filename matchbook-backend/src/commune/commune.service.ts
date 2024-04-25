@@ -15,15 +15,17 @@ export class CitiesService {
     return await this.communeRepository.save(cities);
   }
   findAll(): Promise<Cities[]> {
-    return this.communeRepository.find();
+    return this.communeRepository.find({relations: ['region'] });
   }
 
   findOne(id_city: number): Promise<Cities | null> {
     return this.communeRepository.findOneBy({id_city});
   }
 
-  findByRegion(region: Region): Promise<Cities[]> {
-    return this.communeRepository.find({ where: { region } });
+  async getCitiesByRegion(regionId: number): Promise<Cities[]> {
+    const region = new Region();
+    region.id_region = regionId;
+    return this.communeRepository.find({ where: { region: region } });
   }
   async update(id: number, user: Cities): Promise<Cities> {
     await this.communeRepository.update(id, user);
