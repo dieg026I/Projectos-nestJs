@@ -38,7 +38,8 @@ const RegisterPage: React.FC = () => {
     const [password_user, setPassword] = React.useState('');
     const [repeatPassword_user, setRepeatPassword] = React.useState('');
     const [region , setRegion] = React.useState<Region[]>([]);
-    const [selectedRegion, setSelectedRegion] = useState('');
+    const [selectedRegion, setSelectedRegion] = useState(0);
+    const [selectedCity, setSelectedCity] = useState(0);
     const [cities, setCities] = React.useState<Cities[]>([]);
     const [terms, setTerms] = React.useState(false);
 
@@ -47,19 +48,28 @@ const RegisterPage: React.FC = () => {
     };
 
     useEffect(() => {
-        axios.get('http://localhost:3001/get/regions')
+        axios.get('http://localhost:3001/region')
             .then(response => {
             setRegion(response.data);
-            console.log(response.data);
+            console.log('Mostrar Regiones'+response.data);
             });
     }, []);
 
-    const handleRegionChange = (event: { target: { value: React.SetStateAction<string>; }; }) => {
+    const handleRegionChange = (event: { target: { value: React.SetStateAction<number>; }; }) => {
         setSelectedRegion(event.target.value);
-        axios.get('http://localhost:3001/regions/${event.target.value}/cities/citiesForRegion')
+        const numberRegion = event.target.value;
+        console.log('numero de region: ' + numberRegion);
+        console.log('region seleccionada: ' + event.target.value);
+        console.log('region : ' + selectedRegion);
+        axios.get(`http://localhost:3001/cities/region/${numberRegion}`)
             .then(response => {
             setCities(response.data);
+            console.log(response.data);
         });
+    };
+    
+    const handleCityChange = (event: { target: { value: React.SetStateAction<number>; }; }) => {
+        setSelectedCity(event.target.value);
     };
     
     const handleSubmit = async (event: React.FormEvent) => {
@@ -142,7 +152,7 @@ const RegisterPage: React.FC = () => {
         }
 
     try {
-        const response = await axios.post('http://localhost:3001/post/users', {
+        const response = await axios.post('http://localhost:3001/users', {
             name_user,
             lastname_user,
             rut_user,
@@ -350,10 +360,14 @@ const RegisterPage: React.FC = () => {
                                                 <Select 
                                                     labelId="region-label"
                                                     id="region"
-                                                    
                                                     label="Región"
                                                     sx={{ width: '100%', color: "black" }}
-                                                    onChange={handleRegionChange}
+                                                    onChange={(event) => handleRegionChange({
+                                                        target: {
+                                                          value: Number(event.target.value),
+                                                        },
+                                                      })}
+                                                    value = {selectedRegion}
                                                 >
                                                 {region.map(region => (
                                                     <MenuItem key={region.id_region} value={region.id_region}>{region.name_region}</MenuItem>
@@ -369,10 +383,15 @@ const RegisterPage: React.FC = () => {
                                                 <Select
                                                     labelId="city-label"
                                                     id="city"
-                                                    value={cities}
+                                                    value={selectedCity}
                                                     label="Comuna"
                                                     sx={{ width: '100%', color: "black" }}
-                                                >  
+                                                    onChange={(event) => handleCityChange({
+                                                        target: {
+                                                          value: Number(event.target.value),
+                                                        },
+                                                      })}
+                                                >   
                                                     {cities.map((city: Cities) => (
                                                     <MenuItem key={city.id_city} value={city.id_city}>{city.name}</MenuItem>
                                                     ))}

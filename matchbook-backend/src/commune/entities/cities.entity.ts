@@ -2,13 +2,15 @@
 import { Entity, Column, PrimaryGeneratedColumn, OneToOne, OneToMany, ManyToOne, JoinColumn } from 'typeorm';
 import { Region } from '../../region/entities/region.entity';
 import { Users } from 'src/users/entities/user.entity';
+
 @Entity('cities')
 export class Cities {
+  
   @PrimaryGeneratedColumn()
   id_city: number;
 
   @Column()
-  name: string;  
+  name: string;
   
   @OneToMany(() => Users, (user) => user.city)
   users: Users[];
