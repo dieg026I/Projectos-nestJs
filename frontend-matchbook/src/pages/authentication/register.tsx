@@ -53,14 +53,17 @@ const RegisterPage: React.FC = () => {
         axios.get('http://localhost:3001/region')
             .then(response => {
             setRegion(response.data);
-            console.log(response.data);
+            console.log('Mostrar Regiones'+response.data);
             });
     }, []);
 
     const handleRegionChange = (event: { target: { value: React.SetStateAction<number>; }; }) => {
         setSelectedRegion(event.target.value);
-
-        axios.get('http://localhost:3001/cities/region/:regionId/${event.target.value}')
+        const numberRegion = event.target.value;
+        console.log('numero de region: ' + numberRegion);
+        console.log('region seleccionada: ' + event.target.value);
+        console.log('region : ' + selectedRegion);
+        axios.get(`http://localhost:3001/cities/region/${numberRegion}`)
             .then(response => {
             setCities(response.data);
             console.log(response.data);

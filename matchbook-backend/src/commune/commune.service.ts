@@ -25,7 +25,7 @@ export class CitiesService {
   async getCitiesByRegion(regionId: number): Promise<Cities[]> {
     const region = new Region();
     region.id_region = regionId;
-    return this.communeRepository.find({ where: { region: region } });
+    return this.communeRepository.find({relations:['region'], where: { region: region } });
   }
   async update(id: number, user: Cities): Promise<Cities> {
     await this.communeRepository.update(id, user);
