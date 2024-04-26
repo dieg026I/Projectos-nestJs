@@ -1,12 +1,11 @@
-import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, JoinColumn } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, JoinColumn, PrimaryColumn } from 'typeorm';
 import { Cities } from 'src/commune/entities/cities.entity';
-import { Region } from 'src/region/entities/region.entity';
 
 
 @Entity('users')
 export class Users {
-  @PrimaryGeneratedColumn()
-  rut_user: string;
+  @PrimaryColumn()
+  rut_user: number;
 
   @Column()
   dv_user: string;
@@ -31,7 +30,7 @@ export class Users {
 
   @ManyToOne(() => Cities, (city) => city.users)
   @JoinColumn({ name: 'city_id' })
-  city: Cities;
+  city_id: number;
 
 
 }
