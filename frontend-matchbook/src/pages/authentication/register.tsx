@@ -27,20 +27,35 @@ interface Region  {
 interface Cities {
     id_city: number;
     name: string;
+<<<<<<< HEAD
 }
+=======
+  }
+
+  interface Users  {
+    name_user: string,
+    lastname_user: string,
+    rut_user: string,
+    dv_user: string,
+    phone_user: number,
+    email_user: string,
+    password_users: string,
+    id_city: number,
+};
+>>>>>>> origin/Diego-Back
 const RegisterPage: React.FC = () => {
     const [name_user, setName] = React.useState('');
     const [lastname_user, setLastname] = React.useState('');
-    const [rut_user, setRut] = React.useState('');
+    const [rut_user, setRut] = React.useState<number | null>(null);
     const [dv_user, setDv] = React.useState('');
-    const [phone_user, setPhone] = React.useState('');
+    const [phone_user, setPhone] = React.useState<number | null>(null);
     const [email_user, setEmail] = React.useState('');
-    const [password_user, setPassword] = React.useState('');
+    const [password_users, setPassword] = React.useState('');
     const [repeatPassword_user, setRepeatPassword] = React.useState('');
     const [region , setRegion] = React.useState<Region[]>([]);
     const [selectedRegion, setSelectedRegion] = useState(0);
-    const [selectedCity, setSelectedCity] = useState(0);
     const [cities, setCities] = React.useState<Cities[]>([]);
+    const [id_city, setIdCity] = useState(0);
     const [terms, setTerms] = React.useState(false);
 
     const handleTermsChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -69,7 +84,7 @@ const RegisterPage: React.FC = () => {
     };
     
     const handleCityChange = (event: { target: { value: React.SetStateAction<number>; }; }) => {
-        setSelectedCity(event.target.value);
+        setIdCity(event.target.value);
     };
     
     const handleSubmit = async (event: React.FormEvent) => {
@@ -90,12 +105,12 @@ const RegisterPage: React.FC = () => {
         }
 
         //  -Rut-
-        if (!rut_user.trim() ) {
-            alert('RUT requerido.');
+        if (rut_user == null ) {
+            alert('Rut requerido.');
             return;
         }
 
-        if (rut_user.length < 7 || rut_user.length > 8) {
+        if (rut_user < 1000000 || rut_user > 99999999) {
             alert('El RUT debe tener al menos 7 caracteres y no más de 8 caracteres.');
             return;
         }
@@ -112,12 +127,12 @@ const RegisterPage: React.FC = () => {
         }
 
         //  -Telefono-
-        if (!phone_user.trim() ) {
+        if (phone_user == null ) {
             alert('Teléfono requerido.');
             return;
         }
 
-        if (phone_user.length !== 9) {
+        if (phone_user < 100000000 || phone_user > 999999999) {
             alert('El teléfono debe tener exactamente 9 dígitos.');
             return;
         }
@@ -134,13 +149,13 @@ const RegisterPage: React.FC = () => {
         }
 
         //  -Contraseña-
-        if (!password_user.trim()) {
+        if (!password_users.trim()) {
             alert('Contraseña requerida.');
             return;
         }
 
         //  -Repetir Contraseña-
-        if (password_user !== repeatPassword_user) {
+        if (password_users !== repeatPassword_user) {
             alert('Las contraseñas no coinciden.');
             return;
         }
@@ -151,23 +166,23 @@ const RegisterPage: React.FC = () => {
             return;
         }
 
-    try {
-        const response = await axios.post('http://localhost:3001/users', {
-            name_user,
-            lastname_user,
-            rut_user,
-            dv_user,
-            phone_user,
-            email_user,
-            password_user,
-            region,
-            cities,
-        });
-
-        console.log(response.data);
-
-    } catch (error) {
-        console.error('Hubo un error al registrarse:', error);
+        try {
+            
+            const user  =  {
+                name_user: name_user,
+                lastname_user: lastname_user,
+                rut_user: rut_user,
+                dv_user: dv_user,
+                phone_user: phone_user,
+                email_user: email_user,
+                password_users: password_users,
+                city_id: id_city,
+            };
+        
+            const response = await axios.post('http://localhost:3001/users', user);
+            console.log(response.data);
+        } catch (error) {
+            console.error('Hubo un error al registrarse:', error);
         }
     };
 
@@ -252,8 +267,9 @@ const RegisterPage: React.FC = () => {
                                                 className="mb-3 formulario"
                                                 variant="outlined" 
                                                 type="number"
-                                                value={rut_user}
-                                                onChange={e => setRut(e.target.value)}
+                                                value={rut_user === null ? '' : rut_user}
+
+                                                onChange={e => setRut(Number(e.target.value))}
                                                 InputLabelProps={{
                                                     sx: { fontSize: "16px" } 
                                                 }}
@@ -299,7 +315,7 @@ const RegisterPage: React.FC = () => {
                                                 variant="outlined" 
                                                 type="tel"
                                                 value={phone_user}
-                                                onChange={e => setPhone(e.target.value)}
+                                                onChange={e => setPhone(Number(e.target.value))}
                                                 InputLabelProps={{
                                                     sx: { fontSize: "16px" } 
                                                 }}
@@ -330,7 +346,7 @@ const RegisterPage: React.FC = () => {
                                         className="mb-3"
                                         id="password" 
                                         variant="outlined"
-                                        value={password_user}
+                                        value={password_users}
                                         onChange={e => setPassword(e.target.value)}
                                         InputLabelProps={{
                                             sx: { fontSize: "16px" } 
@@ -383,7 +399,7 @@ const RegisterPage: React.FC = () => {
                                                 <Select
                                                     labelId="city-label"
                                                     id="city"
-                                                    value={selectedCity}
+                                                    value={id_city}
                                                     label="Comuna"
                                                     sx={{ width: '100%', color: "black" }}
                                                     onChange={(event) => handleCityChange({

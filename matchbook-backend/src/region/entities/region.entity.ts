@@ -1,9 +1,9 @@
 import { Cities } from 'src/commune/entities/cities.entity';
-import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, OneToMany, PrimaryColumn } from 'typeorm';
 
 @Entity('regions')
 export class Region {
-  @PrimaryGeneratedColumn({name: 'id_region'})
+  @PrimaryColumn({name: 'id_region'})
   id_region: number;
 
   @Column({name: 'name'})
