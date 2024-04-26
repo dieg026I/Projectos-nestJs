@@ -28,7 +28,7 @@ type FormValue = {
 const LoginPage: React.FC = () => {
 
   const [email_user, setEmail] = React.useState('');
-  const [password_user, setPassword] = React.useState('');
+  const [password_users, setPassword] = React.useState('');
 
 
   const handleSubmit = async (event: React.FormEvent) => {
@@ -42,19 +42,21 @@ const LoginPage: React.FC = () => {
 
 
     //  -Contraseña-
-    if (!password_user.trim()) {
+    if (!password_users.trim()) {
       alert('Contraseña requerida.');
       return;
     }
     
     try {
-      const response = await axios.post('http://localhost:3001/post/users', {
-        email_user,
-        password_user
+      const response = await axios.post('http://localhost:3001/auth/login', {
+        email_user: email_user,
+        password_users: password_users
       });
 
       if (response.status === 200){
         localStorage.setItem('token', response.data.token);
+        console.log('Sesión iniciada')
+        alert('Felicidades iniciaste sesión');
       }
 
       console.log(response.data);
@@ -132,7 +134,7 @@ const LoginPage: React.FC = () => {
                       InputLabelProps={{
                         sx: { fontSize: "auto"  } 
                       }}
-                      value={password_user}
+                      value={password_users}
                       onChange={e => setPassword(e.target.value)}
                       />
 

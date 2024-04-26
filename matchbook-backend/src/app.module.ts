@@ -22,7 +22,7 @@ import { JwtModule } from '@nestjs/jwt';
     password: '95809580Dd',
     database: 'Matchbook_BD',
     entities: [Users, Cities, Region],
-    synchronize: false, // Solo para entornos de desarrollo
+    synchronize: true, // Solo para entornos de desarrollo
     autoLoadEntities: false,
   }),RegionModule,CommuneModule, UsersModule, AuthModule,
      JwtModule.register({

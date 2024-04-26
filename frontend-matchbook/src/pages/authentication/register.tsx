@@ -27,22 +27,7 @@ interface Region  {
 interface Cities {
     id_city: number;
     name: string;
-<<<<<<< HEAD
 }
-=======
-  }
-
-  interface Users  {
-    name_user: string,
-    lastname_user: string,
-    rut_user: string,
-    dv_user: string,
-    phone_user: number,
-    email_user: string,
-    password_users: string,
-    id_city: number,
-};
->>>>>>> origin/Diego-Back
 const RegisterPage: React.FC = () => {
     const [name_user, setName] = React.useState('');
     const [lastname_user, setLastname] = React.useState('');
