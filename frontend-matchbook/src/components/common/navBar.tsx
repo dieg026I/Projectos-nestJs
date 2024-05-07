@@ -29,7 +29,7 @@ export const NavBar: React.FC<{}> = () => {
     const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = useState<null | HTMLElement>(null);
 
     const theme = useTheme();
-    const isMobile = useMediaQuery('(max-width:960px)') ;
+    const isMobile = useMediaQuery('(max-width:1080px)') ;
 
     const handleMobileMenuOpen = (event: React.MouseEvent<HTMLButtonElement>) => {
         setMobileMoreAnchorEl(event.currentTarget);
@@ -67,7 +67,7 @@ export const NavBar: React.FC<{}> = () => {
                             container  // Aumenta este valor para más espacio entre los elementos
                             justifyContent="space-between" // Distribuye el espacio de manera uniforme entre los elementos
                         >
-                            <Grid className="space" item xs={2} sm={2} md={2} lg={2}>
+                            <Grid item xs={2} sm={2} md={2} lg={2}>
                                 <Box display="flex" alignItems="center" justifyContent="center" textAlign="center">
                                     <img src={Logo} alt="Logo Matchbook" width="40" height="40"  /> 
                                     <Typography className="" variant="h1" component="h1"  style={{ fontWeight: 550, color:  "white", fontSize: "25px", marginLeft: "10px"}}>
@@ -88,26 +88,26 @@ export const NavBar: React.FC<{}> = () => {
                                     {renderMobileMenu}
                                 </>
                             ) : (
-                                <Grid item xs={3} sm={3} md={3} lg={3} >
-                                    <Box className="links-container">
-                                        <Link href="/clubdelectura">Club de Lectura</Link>
-                                        <Link href="/marketplace">Marketplace</Link>
+                                <Grid  item xs={3} sm={3} md={3} lg={3} >
+                                    <Box className="links-container text">
+                                        <Link style={{color: "white"}} href="/clubdelectura">Club de Lectura</Link>
+                                        <Link style={{color: "white"}} href="/marketplace">Marketplace</Link>
                                     </Box>
                                 </Grid>
                             )}
-                            <Grid  item xs={3} sm={3} md={3} lg={3}>
+                            <Grid  item xs={4} sm={4} md={4} lg={4}>
                                 {isMobile ? (
                                     <IconButton color="inherit">
                                         <FaSearch />
                                     </IconButton>
                                 ) : (
                                     <div className="searchHome" >
-                                        <FaSearch id="search-icon" />
                                         <input className="search" placeholder="Type to search..." />
+                                        <FaSearch id="search-icon" />
                                     </div>
                                 )}
                             </Grid>
-                            <Grid item xs={4} sm={4} md={4} lg={4}>
+                            <Grid item xs={3} sm={3} md={3} lg={3}>
                                 <Box className="space">
                                     {isMobile ? (
                                         <>
@@ -123,9 +123,9 @@ export const NavBar: React.FC<{}> = () => {
                                         </>
                                     ) : (
                                         <>
-                                            <Button color="inherit" href="/login" style={{paddingLeft: "40px"}}>Inicio de Sesión</Button>
-                                            <Button style={{ backgroundColor: 'orange' }} href="/register">Registro</Button>
-                                            <IconButton href="/cart" color="inherit">
+                                            <Button className="text" color="inherit" href="/login" style={{paddingLeft: "30px", textTransform: "none", fontSize: "16px" }}>Inicio de Sesión</Button>
+                                            <Button style={{ backgroundColor: 'orange' , textTransform: "none", color: "white", fontSize: "16px" }} href="/register">Registrate</Button>
+                                            <IconButton style={{width: "70px"}} href="/cart" color="inherit">
                                                 <FaShoppingCart  />
                                             </IconButton>
                                         </>

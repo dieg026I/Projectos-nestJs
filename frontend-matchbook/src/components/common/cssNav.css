@@ -10,7 +10,6 @@
 }
 
 .space {
-    padding: 0.5rem;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -38,9 +37,9 @@
 .links-container {                            
     margin-right: 20px;
     display: flex;
-    width: 300px;
+    min-width: 300px;
     justify-content: space-evenly;
-    padding-right: 15px;
+    padding-right: 25px;
 }
 
 .link a {
@@ -55,10 +54,11 @@
 
 /* Estilos para el buscador */
 .searchHome{
-    width: 100%;
+    flex: 1;
+    
     height: 2.5rem;
     border: none;
-    border-radius: 10px;
+    border-radius: 20px;
     padding: 0 15px;
     background-color: white;
     display: flex;
@@ -75,7 +75,7 @@
     color: black;
 }
 
-search:focus {
+.search:focus {
     outline: none;
 }
 
@@ -87,4 +87,9 @@ search:focus {
     padding: 10px 10px 10px 0; /* Ajusta estos valores según tus necesidades */
     transition: width 0.3s;
     width: '100%';
+}
+
+.text {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 16px;
 }
