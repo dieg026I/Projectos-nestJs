@@ -140,31 +140,31 @@ const RegisterPage: React.FC = () => {
         }
 
         // Validación de longitud mínima
-        if (password_user.length < 8) {
+        if (password_users.length < 8) {
             alert('La contraseña debe tener al menos 8 caracteres.');
             return;
         }
 
         // Validación de mayúsculas
-        if (!/[A-Z]/.test(password_user)) {
+        if (!/[A-Z]/.test(password_users)) {
             alert('La contraseña debe contener al menos una letra mayúscula.');
             return;
         }
 
         // Validación de minúsculas
-        if (!/[a-z]/.test(password_user)) {
+        if (!/[a-z]/.test(password_users)) {
             alert('La contraseña debe contener al menos una letra minúscula.');
             return;
         }
 
         // Validación de números
-        if (!/[0-9]/.test(password_user)) {
+        if (!/[0-9]/.test(password_users)) {
             alert('La contraseña debe contener al menos un número.');
             return;
         }
 
         // Validación de espacios
-        if (/\s/.test(password_user)) {
+        if (/\s/.test(password_users)) {
             alert('La contraseña no debe contener espacios.');
             return;
         }
@@ -357,7 +357,7 @@ const RegisterPage: React.FC = () => {
                                         className="mb-3"
                                         id="password" 
                                         placeholder="Ingrese su Contraseña"
-                                        value={password_user}
+                                        value={password_users}
                                         onChange={e => setPassword(e.target.value)}
                                         InputLabelProps={{
                                             sx: { fontSize: "16px" } 
