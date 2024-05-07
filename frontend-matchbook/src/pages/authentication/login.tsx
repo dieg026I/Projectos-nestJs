@@ -89,7 +89,7 @@ const LoginPage: React.FC = () => {
               {/* -- Login -- */}
             <Grid className="centrado" item xs={12} sm={6} md={6} lg={4} style={{display: "flex"}}>
 
-              <Card style={{justifyContent: "center", alignItems: "center", borderRadius: "20px", overflowY: "auto", flex: "1 1 auto" }} sx={{ height: "510px", maxWidth: { xs: 310, sm: 500, md: 600, lg: 800, xl: 500} }} >
+              <Card style={{justifyContent: "center", alignItems: "center", borderRadius: "20px", overflowY: "auto", flex: "1 1 auto", paddingRight: "20px", paddingLeft: "20px", paddingTop: "10px" }} sx={{ height: "510px", maxWidth: { xs: 310, sm: 500, md: 600, lg: 800, xl: 500} }} >
                 <CardContent>
 
                   {/*-Titulo Inicio de sesión-*/}
@@ -104,31 +104,30 @@ const LoginPage: React.FC = () => {
                   {/*-Formulario Login-*/}
 
                   {/*-Correo electronico-*/}
+                  <h6>Correo electronico</h6>
                   <TextField fullWidth 
-                      label="Ingresa tu correo electronico"
                       id="email"
                       className="mb-3 formulario"
-                      variant="outlined" 
-                      type="email"
-                      focused
+                      placeholder="Ingrese su correo electrónico"
+                      type="email"  
                       InputLabelProps={{
                         sx: { fontSize: "auto"  } 
                       }}
                       value={email_user}
-                      onChange={e => setEmail(e.target.value)}                      
+                      onChange={e => setEmail(e.target.value)}  
+                                          
                   />
 
                   {/* Línea horizontal */}
                   <hr style={{ margin: "10px 0", opacity: 0.1 }} />
 
                   {/*-Contraseña-*/}
+                  <h6>Contraseña</h6>
                   <TextField fullWidth
-                      label="Ingresa tu contraseña"
                       type="password"
                       className="mb-3"
                       id="password" 
-                      variant="outlined"
-                      focused
+                      placeholder="Ingrese su contraseña"
                       InputLabelProps={{
                         sx: { fontSize: "auto"  } 
                       }}
