@@ -15,6 +15,8 @@ import { FaFacebookF } from "react-icons/fa";
 import "../../App.css";
 import axios from 'axios';
 
+
+
 import logo from "../../assents/img/logoMatch.png";
 import React from "react";
 
@@ -32,20 +34,39 @@ const LoginPage: React.FC = () => {
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
 
+    //  -Validacion-
+    if (!email_user.trim()) {
+      alert('Correo requerido.');
+      return;
+    }
+
+
+    //  -Contraseña-
+    if (!password_user.trim()) {
+      alert('Contraseña requerida.');
+      return;
+    }
+    
     try {
       const response = await axios.post('http://localhost:3001/post/users', {
         email_user,
         password_user
       });
 
+      if (response.status === 200){
+        localStorage.setItem('token', response.data.token);
+      }
+
       console.log(response.data);
 
-    } catch (error) {
-      console.error('Hubo un error al iniciar sesión:', error);
+    } catch (error:any) {
+      if (error.response && error.response.status === 401){
+        alert('Correo electrónico o contraseña incorrectos. Por favor, inténtalo de nuevo.');
+      } else {
+        console.error('Hubo un error al iniciar sesión:', error);
+      }
     }
   };
-
-
 
   return (
     <form onSubmit={handleSubmit}>
@@ -68,7 +89,7 @@ const LoginPage: React.FC = () => {
               {/* -- Login -- */}
             <Grid className="centrado" item xs={12} sm={6} md={6} lg={4} style={{display: "flex"}}>
 
-              <Card style={{justifyContent: "center", alignItems: "center", borderRadius: "20px", overflowY: "auto", flex: "1 1 auto" }} sx={{ height: "510px", maxWidth: { xs: 310, sm: 500, md: 600, lg: 800, xl: 500} }} >
+              <Card style={{justifyContent: "center", alignItems: "center", borderRadius: "20px", overflowY: "auto", flex: "1 1 auto", paddingRight: "20px", paddingLeft: "20px", paddingTop: "10px" }} sx={{ height: "510px", maxWidth: { xs: 310, sm: 500, md: 600, lg: 800, xl: 500} }} >
                 <CardContent>
 
                   {/*-Titulo Inicio de sesión-*/}
@@ -77,37 +98,36 @@ const LoginPage: React.FC = () => {
                   </Typography>
                   
                   <Typography variant="body2" sx={{ marginBottom: '25px' }}>
-                    <p style={{ fontSize: "15px" }} >¿Es un nuevo usuario? <Button href="/register" size="small" style={{ textTransform: "none", fontSize: "15px" }}>Crear una cuenta</Button></p> 
+                    <p style={{ fontSize: "15px" }} >¿Eres un nuevo usuario? <Button href="/register" size="small" style={{ textTransform: "none", fontSize: "15px" }}>Crear una cuenta</Button></p> 
                   </Typography>
 
                   {/*-Formulario Login-*/}
 
                   {/*-Correo electronico-*/}
+                  <h6>Correo electrónico</h6>
                   <TextField fullWidth 
-                      label="Ingresa tu correo electronico"
                       id="email"
                       className="mb-3 formulario"
-                      variant="outlined" 
-                      type="email"
-                      focused
+                      placeholder="Ingrese su correo electrónico"
+                      type="email"  
                       InputLabelProps={{
                         sx: { fontSize: "auto"  } 
                       }}
                       value={email_user}
-                      onChange={e => setEmail(e.target.value)}                      
+                      onChange={e => setEmail(e.target.value)}  
+                                          
                   />
 
                   {/* Línea horizontal */}
                   <hr style={{ margin: "10px 0", opacity: 0.1 }} />
 
                   {/*-Contraseña-*/}
+                  <h6>Contraseña</h6>
                   <TextField fullWidth
-                      label="Ingresa tu contraseña"
                       type="password"
                       className="mb-3"
                       id="password" 
-                      variant="outlined"
-                      focused
+                      placeholder="Ingrese su contraseña"
                       InputLabelProps={{
                         sx: { fontSize: "auto"  } 
                       }}
