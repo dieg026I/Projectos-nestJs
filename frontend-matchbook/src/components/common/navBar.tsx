@@ -29,7 +29,7 @@ export const NavBar: React.FC<{}> = () => {
     const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = useState<null | HTMLElement>(null);
 
     const theme = useTheme();
-    const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+    const isMobile = useMediaQuery('(max-width:960px)') ;
 
     const handleMobileMenuOpen = (event: React.MouseEvent<HTMLButtonElement>) => {
         setMobileMoreAnchorEl(event.currentTarget);
@@ -59,7 +59,7 @@ export const NavBar: React.FC<{}> = () => {
     return (
         <div className="navbar">
             <AppBar position="static" sx={{backgroundColor: "#1e1e1e"}}>
-                <Toolbar>
+                <Toolbar className="space" >
                     <Container maxWidth="xl">
                         <Grid
                             direction="row"
@@ -67,7 +67,7 @@ export const NavBar: React.FC<{}> = () => {
                             container  // Aumenta este valor para más espacio entre los elementos
                             justifyContent="space-between" // Distribuye el espacio de manera uniforme entre los elementos
                         >
-                            <Grid item xs={2} sm={2} md={2} lg={2}>
+                            <Grid className="space" item xs={2} sm={2} md={2} lg={2}>
                                 <Box display="flex" alignItems="center" justifyContent="center" textAlign="center">
                                     <img src={Logo} alt="Logo Matchbook" width="40" height="40"  /> 
                                     <Typography className="" variant="h1" component="h1"  style={{ fontWeight: 550, color:  "white", fontSize: "25px", marginLeft: "10px"}}>
@@ -111,22 +111,22 @@ export const NavBar: React.FC<{}> = () => {
                                 <Box className="space">
                                     {isMobile ? (
                                         <>
-                                            <IconButton color="inherit">
-                                                <FaUser />
+                                            <IconButton href="/login" color="inherit">
+                                                <FaUser  />
                                             </IconButton>
-                                            <IconButton color="inherit">
-                                                <FaRegUserCircle />
+                                            <IconButton href="/register" color="inherit">
+                                                <FaRegUserCircle  />
                                             </IconButton>
-                                            <IconButton color="inherit">
-                                                <FaShoppingCart />
+                                            <IconButton href="/cart" color="inherit">
+                                                <FaShoppingCart  />
                                             </IconButton>
                                         </>
                                     ) : (
                                         <>
-                                            <Button color="inherit" href="/login">Inicio de Sesión</Button>
+                                            <Button color="inherit" href="/login" style={{paddingLeft: "40px"}}>Inicio de Sesión</Button>
                                             <Button style={{ backgroundColor: 'orange' }} href="/register">Registro</Button>
-                                            <IconButton color="inherit">
-                                                <FaShoppingCart />
+                                            <IconButton href="/cart" color="inherit">
+                                                <FaShoppingCart  />
                                             </IconButton>
                                         </>
                                     )}

@@ -98,13 +98,13 @@ const LoginPage: React.FC = () => {
                   </Typography>
                   
                   <Typography variant="body2" sx={{ marginBottom: '25px' }}>
-                    <p style={{ fontSize: "15px" }} >¿Es un nuevo usuario? <Button href="/register" size="small" style={{ textTransform: "none", fontSize: "15px" }}>Crear una cuenta</Button></p> 
+                    <p style={{ fontSize: "15px" }} >¿Eres un nuevo usuario? <Button href="/register" size="small" style={{ textTransform: "none", fontSize: "15px" }}>Crear una cuenta</Button></p> 
                   </Typography>
 
                   {/*-Formulario Login-*/}
 
                   {/*-Correo electronico-*/}
-                  <h6>Correo electronico</h6>
+                  <h6>Correo electrónico</h6>
                   <TextField fullWidth 
                       id="email"
                       className="mb-3 formulario"

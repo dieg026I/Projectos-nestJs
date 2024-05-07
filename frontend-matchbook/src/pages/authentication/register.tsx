@@ -236,11 +236,6 @@ const RegisterPage: React.FC = () => {
 
                                 {/*-Formulario Registro-*/}
                                 
-
-
-                                    {/*-Formulario Registro-*/}
-
-
                                     {/*-Nombre-*/}
                                     <h6>Nombre</h6>
                                     <TextField fullWidth 
@@ -389,7 +384,7 @@ const RegisterPage: React.FC = () => {
                                     <Grid container spacing={2} style={{alignItems: "center", justifyContent: "center", justifyItems: "center"}} >
                                         <Grid item xs={6}>
                                             {/*-Select de Region-*/}
-                                            <h6>Region</h6>
+                                            <h6>Región</h6>
                                             <FormControl fullWidth>
                                                 <InputLabel style={{ fontSize: "16px"}} id="demo-simple-select-standard-label" ></InputLabel>
                                                 <Select 
@@ -455,7 +450,7 @@ const RegisterPage: React.FC = () => {
                                 <br />
                                 {/*-Boton Registrar-*/}
                                 <Typography d-flex justify-content-center h-100 align-items-center text-center text-align-center fontSize = "10px" variant="body2" >
-                                <Button type="submit" onClick={handleSubmit} fullWidth variant="contained"  style={{ textTransform: "none", fontSize: "15px", color: "#fff", backgroundColor: "#1976D2", borderRadius: "20px" }}> Régistrarme </Button> 
+                                <Button type="submit" onClick={handleSubmit} fullWidth variant="contained"  style={{ textTransform: "none", fontSize: "15px", color: "#fff", backgroundColor: "#1976D2", borderRadius: "20px" }}> Registrarme </Button> 
                                 </Typography>
                             </CardContent>
                         </Card>
