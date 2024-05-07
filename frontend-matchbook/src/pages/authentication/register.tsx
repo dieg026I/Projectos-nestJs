@@ -22,7 +22,7 @@ import logo from "../../assents/img/logoMatch.png";
 
 interface Region  {
     id_region: number;
-    name_region: string;
+    name: string;
 };
 interface Cities {
     id_city: number;
@@ -371,7 +371,7 @@ const RegisterPage: React.FC = () => {
                                                     value = {selectedRegion}
                                                 >
                                                 {region.map(region => (
-                                                    <MenuItem key={region.id_region} value={region.id_region}>{region.name_region}</MenuItem>
+                                                    <MenuItem key={region.id_region} value={region.id_region}>{region.name}</MenuItem>
                                                 ))}
                                                 </Select>
                                             </FormControl>

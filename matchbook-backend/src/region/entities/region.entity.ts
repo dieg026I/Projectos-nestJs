@@ -1,5 +1,5 @@
 import { Cities } from 'src/commune/entities/cities.entity';
-import { Entity, Column, PrimaryGeneratedColumn, OneToMany, PrimaryColumn } from 'typeorm';
+import { Entity, Column, OneToMany, PrimaryColumn } from 'typeorm';
 
 @Entity('regions')
 export class Region {
@@ -7,7 +7,7 @@ export class Region {
   id_region: number;
 
   @Column({name: 'name'})
-  name_region: string;
+  name: string;
 
   @OneToMany(() => Cities, (city) => city.region)
   cities: Cities[];
