@@ -14,7 +14,7 @@ import { FcGoogle } from "react-icons/fc";
 import { FaFacebookF } from "react-icons/fa";
 import "../../App.css";
 import axios from 'axios';
-
+import { useNavigate } from 'react-router-dom';
 
 
 import logo from "../../assents/img/logoMatch.png";
@@ -29,7 +29,7 @@ const LoginPage: React.FC = () => {
 
   const [email_user, setEmail] = React.useState('');
   const [password_user, setPassword] = React.useState('');
-
+  const navigate = useNavigate();
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
@@ -48,7 +48,7 @@ const LoginPage: React.FC = () => {
     }
     
     try {
-      const response = await axios.post('http://localhost:3001/post/users', {
+      const response = await axios.post('http://localhost:3001/auth/validate', {
         email_user,
         password_user
       });
@@ -58,7 +58,7 @@ const LoginPage: React.FC = () => {
       }
 
       console.log(response.data);
-
+      navigate('/home');
     } catch (error:any) {
       if (error.response && error.response.status === 401){
         alert('Correo electrónico o contraseña incorrectos. Por favor, inténtalo de nuevo.');
