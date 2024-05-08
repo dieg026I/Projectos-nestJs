@@ -20,7 +20,6 @@ function App() {
         <Route path="/cart" element={<Cart />} />
         <Route path="/clubdelectura" element={<ClubLectura />} />
 
-
         {/* Ruta para la página NotFound */}
         <Route path="*" element={<NotFoundPage />} />
       </Routes>

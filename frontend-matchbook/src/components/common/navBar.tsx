@@ -4,6 +4,7 @@ import "../../components/common/cssNav.css";
 
 import {
     AppBar,
+    Badge,
     Box,
     Button,
     Container,
@@ -48,10 +49,10 @@ export const NavBar: React.FC<{}> = () => {
             onClose={() => setMobileMoreAnchorEl(null)}
         >
             <MenuItem>
-                <Link href="/clubdelectura">Club de Lectura</Link>
+                <Link underline="hover" href="/clubdelectura">Club de Lectura</Link>
             </MenuItem>
             <MenuItem>
-                <Link href="/marketplace">Marketplace</Link>
+                <Link underline="hover" href="/marketplace">Marketplace</Link>
             </MenuItem>
         </Menu>
     );
@@ -59,7 +60,7 @@ export const NavBar: React.FC<{}> = () => {
     return (
         <div className="navbar">
             <AppBar position="static" sx={{backgroundColor: "#1e1e1e"}}>
-                <Toolbar className="space" >
+                <Toolbar style={{padding: "0px", marginRight: "20px"}} >
                     <Container maxWidth="xl">
                         <Grid
                             direction="row"
@@ -90,8 +91,8 @@ export const NavBar: React.FC<{}> = () => {
                             ) : (
                                 <Grid  item xs={3} sm={3} md={3} lg={3} >
                                     <Box className="links-container text">
-                                        <Link style={{color: "white"}} href="/clubdelectura">Club de Lectura</Link>
-                                        <Link style={{color: "white"}} href="/marketplace">Marketplace</Link>
+                                        <Link underline="hover" style={{color: "white"}} href="/clubdelectura">Club de Lectura</Link>
+                                        <Link underline="hover" style={{color: "white"}} href="/marketplace">Marketplace</Link>
                                     </Box>
                                 </Grid>
                             )}
@@ -102,7 +103,7 @@ export const NavBar: React.FC<{}> = () => {
                                     </IconButton>
                                 ) : (
                                     <div className="searchHome" >
-                                        <input className="search" placeholder="Type to search..." />
+                                        <input className="search" placeholder="Buscar" />
                                         <FaSearch id="search-icon" />
                                     </div>
                                 )}
@@ -117,17 +118,18 @@ export const NavBar: React.FC<{}> = () => {
                                             <IconButton href="/register" color="inherit">
                                                 <FaRegUserCircle  />
                                             </IconButton>
-                                            <IconButton href="/cart" color="inherit">
-                                                <FaShoppingCart  />
-                                            </IconButton>
+                                            <Badge badgeContent={1} color="primary">  
+                                                <FaShoppingCart style={{width: "60px", height: "22px"}} href="/cart" color="inherit" />
+                                            </Badge>
+
                                         </>
                                     ) : (
                                         <>
-                                            <Button className="text" color="inherit" href="/login" style={{paddingLeft: "30px", textTransform: "none", fontSize: "16px" }}>Inicio de Sesión</Button>
+                                            <Button className="text" color="inherit" href="/login" style={{paddingLeft: "20px", textTransform: "none", fontSize: "16px" }}>Inicia Sesión</Button>
                                             <Button style={{ backgroundColor: 'orange' , textTransform: "none", color: "white", fontSize: "16px" }} href="/register">Registrate</Button>
-                                            <IconButton style={{width: "70px"}} href="/cart" color="inherit">
-                                                <FaShoppingCart  />
-                                            </IconButton>
+                                            <Badge badgeContent={1} color="primary">
+                                                <FaShoppingCart style={{width: "60px", height: "22px"}} href="/cart" color="inherit" />
+                                            </Badge>
                                         </>
                                     )}
                                 </Box>
