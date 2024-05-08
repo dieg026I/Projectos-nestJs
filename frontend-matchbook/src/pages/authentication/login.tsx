@@ -49,12 +49,12 @@ const LoginPage: React.FC = () => {
     
     try {
       const response = await axios.post('http://localhost:3001/auth/validate', {
-        email_user,
-        password_user
+        email_user : email_user,
+        password_users : password_user
       });
 
       if (response.status === 200){
-        localStorage.setItem('token', response.data.token);
+        localStorage.setItem('access_token', response.data.token);
       }
 
       console.log(response.data);
