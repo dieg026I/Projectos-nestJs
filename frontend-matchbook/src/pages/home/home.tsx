@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Box, Breadcrumbs, Button, Card, CardActions, CardContent, CardMedia, Grid, Link, Typography } from "@mui/material";
 import NavBar from "../../components/common/navBar";
+import Footer from "../../components/common/footer";
 import image1 from "../../assents/img/car1.png";
 import image2 from "../../assents/img/car2.png";
 import libro from "../../assents/img/libro.png";
@@ -124,10 +125,6 @@ export const HomePage: React.FC<HomeProps> = ({}: HomeProps) => {
                             <Button href="/clubdelectura" variant="contained" style={{ textTransform: "none", backgroundColor: '#f05d16', color: 'white', borderRadius: '30px', position: 'absolute', top: '75%', left: '11.3%', transform: 'translate(-50%, -50%)', width: 'auto', padding: '6px 16px' }}>
                                 Ir al Club
                             </Button>
-
-
-
-                        
                     </div>
                     <div>
                         <img className="carousel" src={image2} />
@@ -341,6 +338,7 @@ export const HomePage: React.FC<HomeProps> = ({}: HomeProps) => {
 
 
         </div>
+        <Footer />
     </>
     );
 }
