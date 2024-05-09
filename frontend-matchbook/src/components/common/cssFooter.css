@@ -1,0 +1,48 @@
+
+
+.footer {
+
+    background-color: #1e1e1e;
+    color:#ffff;
+    margin-top: 40px;
+}
+
+#logo {
+    width: 30px;
+    height: 30px;
+}
+
+.logo-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+
+.logo-container span {
+    font-weight: 500;
+    cursor: pointer;
+}
+
+.footerText {
+    list-style-type: none;
+    font-family: 'SF Pro Display Regular' ;
+    font-size: 14px;
+    text-align: left;
+    
+
+}
+
+.footerTitle {
+    font-family: 'SF Pro Display Bold' ;
+    font-size: 14px;
+    text-align: left;
+    margin-left: 30px;
+}
+
+.footerLogos {
+    color: #ffff;
+    justify-content: center;
+    margin-right:  30px;
+
+}

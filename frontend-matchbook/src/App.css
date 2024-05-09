@@ -54,3 +54,45 @@
 
 
 
+/* Home */
+
+.carousel {
+  height: 60%;
+}
+
+.us {
+  background: #1e1e1e;
+  align-items: center;
+  justify-content: center;
+}
+
+
+
+.text {
+  font-family: Inter, sans-serif;
+}
+
+/* SF Pro Display*/
+
+@font-face {
+  font-family: 'SF Pro Display Bold';
+  src: url('../../frontend-matchbook/src/assents/font/SF-Pro-Display/SFPRODISPLAYBOLD.OTF') format('opentype');
+}
+
+@font-face {
+  font-family: 'SF Pro Display Medium';
+  src: url('../../frontend-matchbook/src/assents/font/SF-Pro-Display/SFPRODISPLAYMEDIUM.OTF') format('opentype');
+}
+
+@font-face {
+  font-family: 'SF Pro Display Regular';
+  src: url('../../frontend-matchbook/src/assents/font/SF-Pro-Display/SFPRODISPLAYREGULAR.OTF') format('opentype');
+}
+
+/* Roboto*/
+@font-face {
+  font-family: 'Roboto Bold';
+  src: url('../../frontend-matchbook/src/assents/font/Roboto/Roboto-Bold.ttf') format('opentype');
+}
+
+

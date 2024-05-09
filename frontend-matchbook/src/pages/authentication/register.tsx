@@ -20,6 +20,7 @@ import "../../App.css";
 import axios from 'axios';
 import logo from "../../assents/img/logoMatch.png";
 import { useNavigate } from 'react-router-dom'; //cambio
+
 interface Region  {
     id_region: number;
     name_region: string;
@@ -42,7 +43,7 @@ const RegisterPage: React.FC = () => {
     const [cities, setCities] = React.useState<Cities[]>([]);
     const [id_city, setIdCity] = useState(0);
     const [terms, setTerms] = React.useState(false);
-    const navigate = useNavigate(); //cambio
+
     const handleTermsChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setTerms(event.target.checked);
     };
