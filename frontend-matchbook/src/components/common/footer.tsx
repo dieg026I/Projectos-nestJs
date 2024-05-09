@@ -31,8 +31,8 @@ export const Footer: React.FC<{}> = () => {
                 <Grid item xs={12} sm={6}>
                     <div className="subs" style={{justifyContent:"right", padding: "30px", paddingRight: "50px", display: "flex", }} >
                         {/*<VscMail style={{ position: 'absolute', top: '10px', right: '10px', color: "#d8d5d5" }}/>*/}
-                        <input style={{borderRadius: "30px", borderColor: "#d8d5d5", marginRight: "20px", paddingLeft: "30px",backgroundColor: "#404040", backgroundPosition: "5px center", backgroundRepeat: "no-repeat", color: "#d8d5d5", width: "500px"}} type="email" placeholder="Ingrese tu correo para más novedades" />
-                        <button style={{borderRadius: "30px", backgroundColor: "orange", color: "white", padding: "15px", width: "300px"}}>Subscríbete</button>
+                        <input style={{borderRadius: "30px", borderColor: "#d8d5d5", marginRight: "20px", paddingLeft: "30px",backgroundColor: "#404040", backgroundPosition: "5px center", backgroundRepeat: "no-repeat", color: "#d8d5d5", width: "400px"}} type="email" placeholder="Ingrese tu correo para más novedades" />
+                        <button style={{borderRadius: "30px", backgroundColor: "orange", color: "white", padding: "15px", width: "150px"}}>Subscríbete</button>
                     </div>
                 </Grid>
 
