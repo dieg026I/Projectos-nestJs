@@ -43,7 +43,7 @@ const RegisterPage: React.FC = () => {
     const [cities, setCities] = React.useState<Cities[]>([]);
     const [id_city, setIdCity] = useState(0);
     const [terms, setTerms] = React.useState(false);
-
+    const navigate = useNavigate();
     const handleTermsChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setTerms(event.target.checked);
     };
