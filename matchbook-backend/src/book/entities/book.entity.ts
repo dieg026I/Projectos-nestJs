@@ -1,11 +1,12 @@
-import { Entity, Column, PrimaryGeneratedColumn, ManyToOne } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, OneToMany } from 'typeorm';
 import { Author } from '../../author/entities/author.entity';
 import { Publisher } from '../../publisher/entities/publisher.entity';
+import { Publication } from 'src/publication/entities/publication.entity';
 
 @Entity()
 export class Book {
   @PrimaryGeneratedColumn()
-  id_book: number;
+  id_book: string;
 
   @Column()
   name_book: string;
@@ -24,4 +25,8 @@ export class Book {
 
   @ManyToOne(() => Publisher, publisher => publisher.books)
   publisher_id_publisher: Publisher;
+
+  @OneToMany(() => Publication, publication => publication.book_id_book)
+  publications: Publication[]
+
 }
