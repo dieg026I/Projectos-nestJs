@@ -1,13 +1,18 @@
 
-import React, { useState } from 'react';
-import "../../components/common/cssNav.css";
+import React, { useEffect, useState } from 'react';
+import "../../common/NavBar/cssNav.css";
 
 import {
     AppBar,
+    Avatar,
     Badge,
     Box,
     Button,
     Container,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogTitle,
     Grid,
     IconButton,
     InputBase,
@@ -21,21 +26,64 @@ import {
     useTheme,
 } from "@mui/material"; 
 
-import { FaRegUserCircle, FaSearch, FaShoppingCart, FaUser } from "react-icons/fa"; 
-import  Logo from "../../assents/img/logoMatch.png";
+import { FaPencilAlt, FaRegUserCircle, FaSearch, FaShoppingCart, FaSignOutAlt, FaUser } from "react-icons/fa"; 
+import  Logo from "../../../assents/img/logoMatch.png";
 import MenuIcon from '@mui/icons-material/Menu';
+import { deepOrange } from '@mui/material/colors';
+import axios from 'axios';
+import { RiMoneyDollarCircleLine } from "react-icons/ri";
 
-
-export const NavBar: React.FC<{}> = () => {
+export const NavBarLogin: React.FC<{}> = () => {
     const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = useState<null | HTMLElement>(null);
 
     const theme = useTheme();
     const isMobile = useMediaQuery('(max-width:1080px)') ;
+    
 
     const handleMobileMenuOpen = (event: React.MouseEvent<HTMLButtonElement>) => {
         setMobileMoreAnchorEl(event.currentTarget);
     };
+
+    const [open, setOpen] = useState(false);
+
+    const handleOpen = () => {
+        setOpen(true);
+    };
+
+    const handleClose = () => {
+        setOpen(false);
+    };
+
+    const [email_user, setEmail_user] = useState('');
+    const username = localStorage.getItem('username');
+
+    //button
+    const [bgColor, setBgColor] = useState('transparent');
+    const [textColor, setTextColor] = useState('#f05d16');
+
+    const handleMouseOver = () => {
+        setBgColor('#f05d16');
+        setTextColor('#ffffff');
+        
+    };
+
+    const handleMouseOut = () => {
+        setBgColor('transparent');
+        setTextColor('#f05d16'); 
+    };
+
+    useEffect(() => {
+        const fetchEmail = async () => {
+            try {
+                const response = await axios.get(`http://localhost:3001/users/${email_user}`);
+                setEmail_user(response.data.email_user);
+            } catch (error) {
+                console.error('Hubo un error al obtener el correo electrónico:', error);
+            }
+        };
     
+        fetchEmail();
+    }, [email_user]);
 
     const mobileMenuId = 'primary-search-account-menu-mobile';
     const renderMobileMenu = (
@@ -56,6 +104,10 @@ export const NavBar: React.FC<{}> = () => {
             </MenuItem>
         </Menu>
     );
+
+
+
+    
 
     return (
         <div className="navbar">
@@ -109,15 +161,16 @@ export const NavBar: React.FC<{}> = () => {
                                 )}
                             </Grid>
                             <Grid item xs={3} sm={3} md={3} lg={3}>
-                                <Box className="space">
+                                <Box className="space" >
                                     {isMobile ? (
                                         <>
-                                            <IconButton href="/login" color="inherit">
-                                                <FaUser  />
+                                            <IconButton href="/venta" color="inherit" >
+                                                <RiMoneyDollarCircleLine />
                                             </IconButton>
-                                            <IconButton href="/register" color="inherit">
-                                                <FaRegUserCircle  />
-                                            </IconButton>
+                                            <div onClick={handleOpen}>
+                                                <Avatar style={{backgroundColor: "#6f6d6d"}} src="/broken-image.jpg"  />
+                                                <div>{username}</div> 
+                                            </div>
                                             <Badge badgeContent={1} color="primary">  
                                                 <FaShoppingCart style={{width: "60px", height: "22px"}} href="/cart" color="inherit" />
                                             </Badge>
@@ -125,8 +178,13 @@ export const NavBar: React.FC<{}> = () => {
                                         </>
                                     ) : (
                                         <>
-                                            <Button className="text" color="inherit" href="/login" style={{paddingLeft: "20px", textTransform: "none", fontSize: "16px" }}>Inicia Sesión</Button>
-                                            <Button style={{ backgroundColor: 'orange' , textTransform: "none", color: "white", fontSize: "16px" }} href="/register">Registrate</Button>
+                                            <Button style={{ backgroundColor: '#f05d16' , textTransform: "none", color: "#ffff", fontSize: "16px", marginLeft: "25px" }} href="/venta">Vender</Button>
+                                            <div onClick={handleOpen}>
+                                                <Avatar style={{backgroundColor: "#6f6d6d"}} src="/broken-image.jpg"  />
+                                                <div>{username}</div> 
+                                            </div>
+                                            
+
                                             <Badge badgeContent={1} color="primary">
                                                 <FaShoppingCart style={{width: "60px", height: "22px"}} href="/cart" color="inherit" />
                                             </Badge>
@@ -138,7 +196,68 @@ export const NavBar: React.FC<{}> = () => {
                     </Container>
                 </Toolbar>
             </AppBar>
-        </div>
+
+            <div>
+                <Dialog open={open} onClose={handleClose}>
+                    <div style={{justifyContent:"center", textAlign: "center", position: 'relative', display: 'inline-block' }}>
+                    <DialogTitle>
+                        <Avatar style={{backgroundColor: "#6f6d6d"}} src="/broken-image.jpg" />
+                        <FaPencilAlt style={{ position: 'absolute', right: 0, bottom: 0 }} /> {/* Icono de lápiz */}
+                    </DialogTitle>
+                    </div>
+
+                    <DialogContent style={{justifyContent:"center", textAlign: "center" }}>
+                    <h2 style={{ fontSize: "18px", fontFamily: "SF Pro Display Bold"}}>Na.rubilark</h2> {/*{username} */}
+                    <p style={{ fontSize: "15px", fontFamily: "SF Pro Display Regular"}}>na.rubilar@duocuc.cl</p> {/*{email_user} */}
+                    <Button 
+                        href="/perfil" 
+                        variant="contained"  
+                        style={{ 
+                        textTransform: "none", 
+                        backgroundColor: bgColor, 
+                        color: textColor,  
+                        borderRadius: '30px', 
+                        border: '2px solid #f05d16', 
+                        fontWeight: "bold", 
+                        fontSize:"15px", 
+                        marginBottom: "20px" ,
+                        fontFamily: "SF Pro Display Medium",
+                        }}
+                        onMouseOver={handleMouseOver}
+                        onMouseOut={handleMouseOut}
+                    >
+                        Ir a mi perfil
+                    </Button>
+                    </DialogContent>
+
+                    {/* Línea horizontal */}
+                    <hr style={{ margin: "10px 0", opacity: 0.5 }} />
+
+                    <div style={{justifyContent:"left", display: "flex", flexDirection: "column", paddingRight:"15px"}}>
+                    <DialogActions>   
+                        <ul style={{listStyleType:"none", justifyContent:"left"}}>
+                        <li>Ajustes de mi cuenta</li> 
+                        <li>Ayuda</li>   
+                        
+                        </ul>        
+
+                    </DialogActions>
+                    </div>
+
+                    {/* Línea horizontal */}
+                    <hr style={{ margin: "10px 0", opacity: 0.5 }} />
+
+                    <div style={{justifyContent:"center", textAlign: "center", display: "flex"}}>
+                    <DialogActions>
+                        <Button startIcon={<FaSignOutAlt />}>Salir</Button> {/* Botón de Salir con un icono al lado izquierdo */}
+                    </DialogActions>
+                    </div>
+                </Dialog>
+                </div>
+
+
+
+</div>
     );
 }
-    export default NavBar;
+    export default NavBarLogin;

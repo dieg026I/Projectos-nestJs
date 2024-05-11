@@ -199,6 +199,15 @@ const RegisterPage: React.FC = () => {
 
         
         console.log(response.data);
+
+        const generateUsername = (name_user: string, lastname_user: string, dv_user: string) => {
+            const firstTwoLetters = name_user.slice(0, 2);
+            return `${firstTwoLetters}.${lastname_user}${dv_user}`;
+        }
+        const username = generateUsername(name_user, lastname_user, dv_user);
+        localStorage.setItem('username', username);
+        console.log(username)
+
         navigate('/login'); //cambio
 
     } catch (error) {

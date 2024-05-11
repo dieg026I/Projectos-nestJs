@@ -72,7 +72,22 @@
   font-family: Inter, sans-serif;
 }
 
-/* SF Pro Display*/
+
+/*Venta*/
+.fondoVenta {
+  background-image: url("./assents/img/venta.jpeg") ;
+
+  background-size: cover;
+  background-position: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  
+}
+
+
+/* Font*/
 
 @font-face {
   font-family: 'SF Pro Display Bold';
@@ -94,5 +109,6 @@
   font-family: 'Roboto Bold';
   src: url('../../frontend-matchbook/src/assents/font/Roboto/Roboto-Bold.ttf') format('opentype');
 }
+
 
 

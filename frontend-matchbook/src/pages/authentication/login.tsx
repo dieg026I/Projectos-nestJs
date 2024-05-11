@@ -25,11 +25,12 @@ type FormValue = {
   password: string
 }
 
+
 const LoginPage: React.FC = () => {
 
   const [email_user, setEmail] = React.useState('');
   const [password_user, setPassword] = React.useState('');
-
+  
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
@@ -56,6 +57,9 @@ const LoginPage: React.FC = () => {
       if (response.status === 200){
         localStorage.setItem('token', response.data.token);
       }
+      const username = localStorage.getItem('username');
+
+      
 
       console.log(response.data);
 
@@ -66,6 +70,10 @@ const LoginPage: React.FC = () => {
         console.error('Hubo un error al iniciar sesión:', error);
       }
     }
+
+
+
+
   };
 
   return (

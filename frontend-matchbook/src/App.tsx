@@ -8,6 +8,8 @@ import  RegisterPage  from './pages/authentication/register';
 import NotFoundPage from './pages/notfound/notfound';
 import Cart from './pages/cart/cart';
 import ClubLectura from './pages/clubdelectura/clubLectura';
+import { HomePageLogin } from './pages/homeLogueado/homeLogueado';
+import Venta from './pages/venta/venta';
 
 function App() {
   return (
@@ -19,6 +21,8 @@ function App() {
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/cart" element={<Cart />} />
         <Route path="/clubdelectura" element={<ClubLectura />} />
+        <Route path="/homeLogueado" element={<HomePageLogin />} />
+        <Route path="/venta" element={<Venta />} />
 
         {/* Ruta para la página NotFound */}
         <Route path="*" element={<NotFoundPage />} />
