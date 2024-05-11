@@ -10,6 +10,17 @@ export class PublicationService {
     private publicationRepository: Repository<Publication>,
   ) {}
 
+  async createPublication(files: Express.Multer.File[]): Promise<Publication> {
+    const publication = new Publication();
+    publication.photo_showcase = files[0].path;
+    publication.photo_cover = files[1].path;
+    publication.photo_first_page = files[2].path;
+    publication.photo_back_cover = files[3].path;
+    
+    await this.publicationRepository.save(publication);
+    return publication;
+  }
+  
   findAll(): Promise<Publication[]> {
     return this.publicationRepository.find();
   }

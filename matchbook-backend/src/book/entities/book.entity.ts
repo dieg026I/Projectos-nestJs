@@ -5,7 +5,7 @@ import { Publication } from 'src/publication/entities/publication.entity';
 
 @Entity()
 export class Book {
-  @PrimaryGeneratedColumn()
+  @PrimaryGeneratedColumn('uuid')
   id_book: string;
 
   @Column()
