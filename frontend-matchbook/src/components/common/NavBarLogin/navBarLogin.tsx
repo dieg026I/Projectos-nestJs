@@ -164,7 +164,7 @@ export const NavBarLogin: React.FC<{}> = () => {
                                 <Box className="space" >
                                     {isMobile ? (
                                         <>
-                                            <IconButton href="/venta" color="inherit" >
+                                            <IconButton href="/sales" color="inherit" >
                                                 <RiMoneyDollarCircleLine />
                                             </IconButton>
                                             <div onClick={handleOpen}>
@@ -178,7 +178,7 @@ export const NavBarLogin: React.FC<{}> = () => {
                                         </>
                                     ) : (
                                         <>
-                                            <Button style={{ backgroundColor: '#f05d16' , textTransform: "none", color: "#ffff", fontSize: "16px", marginLeft: "25px" }} href="/venta">Vender</Button>
+                                            <Button style={{ backgroundColor: '#f05d16' , textTransform: "none", color: "#ffff", fontSize: "16px", marginLeft: "25px" }} href="/sales">Vender</Button>
                                             <div onClick={handleOpen}>
                                                 <Avatar style={{backgroundColor: "#6f6d6d"}} src="/broken-image.jpg"  />
                                                 <div>{username}</div> 
