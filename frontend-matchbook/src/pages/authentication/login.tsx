@@ -25,6 +25,7 @@ type FormValue = {
   password: string
 }
 
+
 const LoginPage: React.FC = () => {
 
   const [email_user, setEmail] = React.useState('');
@@ -56,6 +57,9 @@ const LoginPage: React.FC = () => {
       if (response.status === 200){
         localStorage.setItem('access_token', response.data.token);
       }
+      const username = localStorage.getItem('username');
+
+      
 
       console.log(response.data);
       navigate('/home');
@@ -66,6 +70,10 @@ const LoginPage: React.FC = () => {
         console.error('Hubo un error al iniciar sesión:', error);
       }
     }
+
+
+
+
   };
 
   return (

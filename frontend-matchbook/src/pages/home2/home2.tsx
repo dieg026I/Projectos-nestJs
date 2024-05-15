@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Box, Breadcrumbs, Button, Card, CardActions, CardContent, CardMedia, Grid, Link, Typography } from "@mui/material";
-import NavBar from "../../components/common/NavBar/navBar";
+import NavBarLogin from "../../components/common/NavBarLogin/navBarLogin";
 import Footer from "../../components/common/Footer/footer";
 import image1 from "../../assents/img/car1.png";
 import image2 from "../../assents/img/car2.png";
@@ -14,19 +14,24 @@ import "react-responsive-carousel/lib/styles/carousel.min.css";
 import MenuIcon from '@mui/icons-material/Menu';
 import PlaceIcon from '@mui/icons-material/Place';
 import { FaHeart } from "react-icons/fa6";
+import "../../App.css";
 
 
 interface HomeProps {
 
 }
 
+
+{/*-----------------------------------------------------------------------------*/}
+{/* Breadcrumbs*/}
 function handleClick(event: React.MouseEvent<HTMLDivElement, MouseEvent>) {
     event.preventDefault();
-    console.info('You clicked a breadcrumb.');
 }
 
-export const HomePage: React.FC<HomeProps> = ({}: HomeProps) => {
+export const HomePageLogin: React.FC<HomeProps> = ({}: HomeProps) => {
 
+    {/*-----------------------------------------------------------------------------*/}
+    {/* Flechas Carrousel */}
     const arrowStyles: React.CSSProperties = {
         position: 'absolute',
         zIndex: 2,
@@ -41,14 +46,14 @@ export const HomePage: React.FC<HomeProps> = ({}: HomeProps) => {
         color: 'rgb(0, 169, 224)',
     };
 
-    //button
+    {/*-----------------------------------------------------------------------------*/}
+    {/* Animación y diseño Buttons */}
     const [bgColor, setBgColor] = useState('transparent');
     const [textColor, setTextColor] = useState('#000000');
 
     const handleMouseOver = () => {
         setBgColor('#f05d16');
         setTextColor('#ffffff');
-        
     };
 
     const handleMouseOut = () => {
@@ -56,17 +61,18 @@ export const HomePage: React.FC<HomeProps> = ({}: HomeProps) => {
         setTextColor('#000000'); 
     };
 
-    //novedades
+    {/*-----------------------------------------------------------------------------*/}
+    {/* Novedades scroll */}
     const novedadesRef = useRef(null);
 
     const handleLinkClick = (ref: React.RefObject<HTMLElement>) => {
         ref.current?.scrollIntoView({ behavior: 'smooth' });
     };
     
-
+    
     return (
     <>
-        <NavBar />
+        <NavBarLogin />
         <div style={{justifyContent: "center", alignItems: "center", textAlign: "center", alignContent: "center", marginTop: "44px"}}>
             <div style={{color: "black", paddingRight: "5px", paddingLeft: "20px", marginBottom: "15px"}} role="presentation" onClick={handleClick}>
                 <Breadcrumbs separator=" " aria-label="breadcrumb">
@@ -199,7 +205,7 @@ export const HomePage: React.FC<HomeProps> = ({}: HomeProps) => {
                     }>
                         <div>
                         <Grid container spacing={4} justifyContent="center" style={{padding: "20px"}}>
-                        <Card style={{ margin: "10px", width: "230px", borderRadius: "20px", textAlign: "left", position: 'relative'}} sx={{ maxWidth: 345, padding: "10px"}}>
+                            <Card style={{ margin: "10px", width: "230px", borderRadius: "20px", textAlign: "left", position: 'relative'}} sx={{ maxWidth: 345, padding: "10px"}}>
                                 <CardMedia
                                     sx={{ height: 140, position: 'relative' }}
                                 >

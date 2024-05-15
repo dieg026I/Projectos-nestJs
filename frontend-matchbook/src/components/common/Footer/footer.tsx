@@ -1,8 +1,8 @@
 
 import React, { useState } from 'react';
-import "../../components/common/cssFooter.css";
+import "../../common/Footer/cssFooter.css";
 
-import  Logo from "../../assents/img/logoMatch.png";
+import  Logo from "../../../assents/img/logoMatch.png";
 import { Box, Grid, Typography } from '@mui/material';
 import { FaYoutube } from "react-icons/fa6";
 import { FaFacebookF } from "react-icons/fa";
@@ -10,6 +10,7 @@ import { IoLogoInstagram } from "react-icons/io";
 import { FaSpotify } from "react-icons/fa6";
 import { FaLinkedinIn } from "react-icons/fa";
 import { VscMail } from "react-icons/vsc";
+
 
 
 

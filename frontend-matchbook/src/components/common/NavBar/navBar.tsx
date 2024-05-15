@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import "../../components/common/cssNav.css";
+import "../../common/NavBar/cssNav.css";
 
 import {
     AppBar,
@@ -22,7 +22,7 @@ import {
 } from "@mui/material"; 
 
 import { FaRegUserCircle, FaSearch, FaShoppingCart, FaUser } from "react-icons/fa"; 
-import  Logo from "../../assents/img/logoMatch.png";
+import  Logo from "../../../assents/img/logoMatch.png";
 import MenuIcon from '@mui/icons-material/Menu';
 
 
@@ -126,7 +126,7 @@ export const NavBar: React.FC<{}> = () => {
                                     ) : (
                                         <>
                                             <Button className="text" color="inherit" href="/login" style={{paddingLeft: "20px", textTransform: "none", fontSize: "16px" }}>Inicia Sesión</Button>
-                                            <Button style={{ backgroundColor: 'orange' , textTransform: "none", color: "white", fontSize: "16px" }} href="/register">Registrate</Button>
+                                            <Button style={{ backgroundColor: '#f05d16' , textTransform: "none", color: "#ffff", fontSize: "16px" }} href="/register">Registrate</Button>
                                             <Badge badgeContent={1} color="primary">
                                                 <FaShoppingCart style={{width: "60px", height: "22px"}} href="/cart" color="inherit" />
                                             </Badge>
