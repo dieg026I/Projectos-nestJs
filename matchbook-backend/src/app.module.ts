@@ -17,6 +17,8 @@ import { AuthorModule } from './author/author.module';
 import { PublisherModule } from './publisher/publisher.module';
 import { Author } from './author/entities/author.entity';
 import { Publisher } from './publisher/entities/publisher.entity';
+import { PublicationModule } from './publication/publication.module';
+import { CategoryModule } from './category/category.module';
 
 @Module({
   imports: [
@@ -37,7 +39,9 @@ import { Publisher } from './publisher/entities/publisher.entity';
   }),
      BookModule,
      AuthorModule,
-     PublisherModule ],
+     PublisherModule,
+     PublicationModule,
+     CategoryModule ],
   controllers: [AppController],
   providers: [AppService],
 })
