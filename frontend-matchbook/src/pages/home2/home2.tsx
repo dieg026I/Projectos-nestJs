@@ -21,13 +21,17 @@ interface HomeProps {
 
 }
 
+
+{/*-----------------------------------------------------------------------------*/}
+{/* Breadcrumbs*/}
 function handleClick(event: React.MouseEvent<HTMLDivElement, MouseEvent>) {
     event.preventDefault();
-    console.info('You clicked a breadcrumb.');
 }
 
 export const HomePageLogin: React.FC<HomeProps> = ({}: HomeProps) => {
 
+    {/*-----------------------------------------------------------------------------*/}
+    {/* Flechas Carrousel */}
     const arrowStyles: React.CSSProperties = {
         position: 'absolute',
         zIndex: 2,
@@ -42,14 +46,14 @@ export const HomePageLogin: React.FC<HomeProps> = ({}: HomeProps) => {
         color: 'rgb(0, 169, 224)',
     };
 
-    //button
+    {/*-----------------------------------------------------------------------------*/}
+    {/* Animación y diseño Buttons */}
     const [bgColor, setBgColor] = useState('transparent');
     const [textColor, setTextColor] = useState('#000000');
 
     const handleMouseOver = () => {
         setBgColor('#f05d16');
         setTextColor('#ffffff');
-        
     };
 
     const handleMouseOut = () => {
@@ -57,14 +61,15 @@ export const HomePageLogin: React.FC<HomeProps> = ({}: HomeProps) => {
         setTextColor('#000000'); 
     };
 
-    //novedades
+    {/*-----------------------------------------------------------------------------*/}
+    {/* Novedades scroll */}
     const novedadesRef = useRef(null);
 
     const handleLinkClick = (ref: React.RefObject<HTMLElement>) => {
         ref.current?.scrollIntoView({ behavior: 'smooth' });
     };
     
-
+    
     return (
     <>
         <NavBarLogin />

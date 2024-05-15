@@ -16,7 +16,7 @@ function App() {
     <BrowserRouter>
       <Routes>
         {/* Rutas para páginas existentes */}
-        <Route path="/home" element={<HomePage />} />
+        <Route path="/" element={<HomePage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/cart" element={<Cart />} />

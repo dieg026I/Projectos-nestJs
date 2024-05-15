@@ -1,11 +1,12 @@
 import { Autocomplete, Box, Button, Card, CardActionArea, CardActions, CardContent, CardMedia, Checkbox, FormControl, FormControlLabel, FormGroup, FormLabel, Grid, InputLabel, MenuItem, NoSsr, Radio, RadioGroup, Select, SelectChangeEvent, TextField, ThemeProvider, Typography, createTheme } from "@mui/material";
 import { CardBody, CardFooter } from "react-bootstrap";
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import AddIcon from '@mui/icons-material/Add';
 import React from "react";
 import axios from "axios";
 import "../../App.css";
 import DeleteIcon from '@mui/icons-material/Delete';
+
 
 
 const Sales: React.FC = () => {
@@ -17,11 +18,11 @@ const Sales: React.FC = () => {
     const [author_id, setAuthorId] = React.useState('');
     const [publisher_id, setPublisherId] = React.useState('');
     const [cost_book, setCostBook] = React.useState('');
-    const [category_id, setCategoryId] = React.useState('');
+    const [id_category, setCategoryId] = React.useState('');
     const [selectedCategory, setSelectedCategory] = useState(0);
     const [year_book, setYearBook] = React.useState('');
     const [status_book, setStatusBook ] = React.useState('');
-    const [selectedStatus, setSelectedStatus] = useState(0);
+    const [selectedStatus, setSelectedStatus] = useState('');
     const [stock_book, setStockBook] = React.useState('');
     const [description_book, setDescriptionBook] = React.useState('');
 
@@ -66,33 +67,71 @@ const Sales: React.FC = () => {
     };
     
     {/*-----------------------------------------------------------------------------*/}
-    {/* Image */}
-    const [image, setImage] = useState<string | null>(null);
+    {/* Imagenes */}
+    const [imageShowcase, setImageShowcase] = useState<string | null>(null);
+    const [imageCover, setImageCover] = useState<string | null>(null);
+    const [imageFirst, setImageFirst] = useState<string | null>(null);
+    const [imageBack, setImageBack] = useState<string | null>(null);
 
     const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.files) {
-            setImage(URL.createObjectURL(e.target.files[0]));
+            setImageShowcase(URL.createObjectURL(e.target.files[0]));
+        }
+    };
+
+    const handleImageChangeCover = (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (e.target.files) {
+            setImageCover(URL.createObjectURL(e.target.files[0]));
+        }
+    };
+
+    const handleImageChangeFirst = (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (e.target.files) {
+            setImageFirst(URL.createObjectURL(e.target.files[0]));
+        }
+    };
+
+    const handleImageChangeBack = (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (e.target.files) {
+            setImageBack(URL.createObjectURL(e.target.files[0]));
         }
     };
 
     {/*-----------------------------------------------------------------------------*/}
     {/* Category */}
-    const handleCategoryChange = (event: SelectChangeEvent<number>) => {
-        setSelectedCategory(Number(event.target.value));
+
+    //llamar categorias
+    useEffect(() => {
+        axios.get('http://localhost:3001/categories')
+            .then(response => {
+            setCategoryId(response.data);
+            console.log('Mostrar Categorias'+response.data);
+            });
+    }, []);
+
+    const handleCategoryChange = (event: SelectChangeEvent<string>) => {
+        const selectedValue = Number(event.target.value);
+        setSelectedCategory(selectedValue);
+    
+        const id_category = event.target.value;
+    
+        axios.get(`http://localhost:3001/categories/${id_category}`)
+            .then(response => {
+            setCategoryId(response.data);
+            console.log(response.data);
+        });
     };
+    
+    
+    
     
     {/*-----------------------------------------------------------------------------*/}
     {/* Status */}
-    const statusOptions = {
-        10: 'Nuevo',
-        20: 'Usado: Como nuevo',
-        30: 'Usado: Con algo de desgaste',
-        40: 'Usado: Con mucho desgaste',
-        50: 'Usado:  En mal estado',
-    };
+    
         
-    const handleStatusChange = (event: SelectChangeEvent<number>) => {
-        setSelectedStatus(Number(event.target.value));
+    const handleStatusChange = (event: SelectChangeEvent) => {
+    setSelectedStatus(event.target.value);
+    console.log("estado: " + event.target.value)
     };
 
     {/*-----------------------------------------------------------------------------*/}
@@ -111,112 +150,6 @@ const Sales: React.FC = () => {
 
         //  --Validaciones--
 
-    {/*
-        //  -Nombre-
-        if (!name_user.trim()) {
-            alert('Nombre requerido.');
-            return;
-        }
-
-        //  -Apellido-
-        if (!lastname_user.trim()) {
-            alert('Apellido requerido.');
-            return;
-        }
-
-        //  -Rut-
-        if (!rut_user.trim() ) {
-            alert('RUT requerido.');
-            return;
-        }
-
-        if (rut_user.length < 7 || rut_user.length > 8) {
-            alert('El RUT debe tener al menos 7 caracteres y no más de 8 caracteres.');
-            return;
-        }
-
-        //  -Digito Verificador-
-        if (!dv_user.trim() ) {
-            alert('Se requiere el Digito Verificador');
-            return;
-        }
-
-        if (!/^[0-9kK]$/.test(dv_user)) {
-            alert('El dígito verificador debe contener números o k .');
-            return;
-        }
-
-        //  -Telefono-
-        if (!phone_user.trim() ) {
-            alert('Teléfono requerido.');
-            return;
-        }
-
-        if (phone_user.length !== 9) {
-            alert('El teléfono debe tener exactamente 9 dígitos.');
-            return;
-        }
-
-        //  -Correo Electronico-
-        if (!email_user.trim()) {
-            alert('Correo requerido.');
-            return;
-        }
-
-        if (!/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/.test(email_user)) {
-            alert('Por favor, ingresa un correo válido.');
-            return;
-        }
-
-        //  -Contraseña-
-        if (!password_user.trim()) {
-            alert('Contraseña requerida.');
-            return;
-        }
-
-        // Validación de longitud mínima
-        if (password_user.length < 8) {
-            alert('La contraseña debe tener al menos 8 caracteres.');
-            return;
-        }
-
-        // Validación de mayúsculas
-        if (!/[A-Z]/.test(password_user)) {
-            alert('La contraseña debe contener al menos una letra mayúscula.');
-            return;
-        }
-
-        // Validación de minúsculas
-        if (!/[a-z]/.test(password_user)) {
-            alert('La contraseña debe contener al menos una letra minúscula.');
-            return;
-        }
-
-        // Validación de números
-        if (!/[0-9]/.test(password_user)) {
-            alert('La contraseña debe contener al menos un número.');
-            return;
-        }
-
-        // Validación de espacios
-        if (/\s/.test(password_user)) {
-            alert('La contraseña no debe contener espacios.');
-            return;
-        }
-
-
-        //  -Repetir Contraseña-
-        if (password_user !== repeatPassword_user) {
-            alert('Las contraseñas no coinciden.');
-            return;
-        }
-
-        //  -Terminos y condiciones-
-        if (!terms) {
-            alert('Debes aceptar los términos y condiciones.');
-            return;
-        }
-    */}
 
     try {
         const responseA = await axios.post('http://localhost:3001/book', {
@@ -226,7 +159,7 @@ const Sales: React.FC = () => {
             author_id,
             publisher_id,
             cost_book ,
-            category_id,
+            id_category,
             year_book,
             status_book,
             stock_book,
@@ -359,11 +292,11 @@ const Sales: React.FC = () => {
                                                             id="category"
                                                             sx={{ width: '100%', color: "black", borderRadius:"15px"}}
                                                             onChange={handleCategoryChange}
-                                                            value={selectedCategory}
+                                                            value={selectedCategory.toString()}
                                                             placeholder="Selecciona"
                                                             displayEmpty
                                                         >
-                                                        <MenuItem value="" disabled>Selecciona una categoría</MenuItem>   
+                                                        <MenuItem value="" disabled sx={{ color: "black" }}>Selecciona una categoría</MenuItem>  
                                                         </Select>
                                                     </FormControl>
                                                 </Grid>
@@ -442,12 +375,15 @@ const Sales: React.FC = () => {
                                                             value={selectedStatus}
                                                             labelId="status-label"
                                                             sx={{ borderRadius:"15px"}}
-                                                            renderValue={(selected) => selected ? selected : "Selecciona un estado"}
+                                                            displayEmpty                                       
                                                         >
-                                                            <MenuItem value="" disabled sx={{ color: "black" }}>Selecciona un estado</MenuItem>
-                                                            {Object.entries(statusOptions).map(([value, label]) => (
-                                                            <MenuItem key={value} value={value}>{label}</MenuItem>))}
-                                                            
+                                                            <MenuItem value="">Selecciona una opción</MenuItem>
+                                                            <MenuItem value="Nuevo">Nuevo</MenuItem>
+                                                            <MenuItem value="Usado: Como nuevo">Usado: Como nuevo</MenuItem>
+                                                            <MenuItem value="Usado: Con algo de desgaste">Usado: Con algo de desgaste</MenuItem>
+                                                            <MenuItem value="Usado: Con mucho desgaste">Usado: Con mucho desgaste</MenuItem>
+                                                            <MenuItem value="Usado:  En mal estado">Usado:  En mal estado</MenuItem>
+
                                                         </Select>
                                                     </FormControl>
                                                 </Grid>
@@ -523,28 +459,29 @@ const Sales: React.FC = () => {
                                             <Grid container spacing={4} justifyContent="center" style={{padding: "20px", alignContent:"center", textAlign: "center"}}>
                                                 
                                                 {/* Portada de Vitrina */}
-                                                <Card style={{ margin: "10px", alignContent: "center", height:"175px", width: "175px", borderRadius: "20px", textAlign: "center", position: 'relative'}} sx={{ maxWidth: 345, padding: "10px"}}>
+                                                <Card style={{ margin: "10px", alignContent: "center", height:"255px", width: "175px", borderRadius: "20px", textAlign: "center", position: 'relative'}} sx={{ maxWidth: 345, padding: "10px"}}>
                                                     <CardContent style={{padding:"0px", position: "relative"}}>
                                                         <input
                                                             accept="image/*"
                                                             style={{ display: 'none' }}
-                                                            id="raised-button-file"
+                                                            id="image-showcase"
                                                             type="file"
+                                                            value={photo_showcase}
                                                             onChange={handleImageChange}
                                                         />
-                                                        <label htmlFor="raised-button-file">
-                                                            {!image && (
+                                                        <label htmlFor="image-showcase">
+                                                            {!imageShowcase && (
                                                                 <Button component="span">
                                                                     <AddIcon />
                                                                 </Button>
                                                             )}
                                                         </label>
-                                                        {image ? (
+                                                        {imageShowcase ? (
                                                             <>
-                                                            <img src={image} alt="Portada de Vitrina" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                                                            <img src={imageShowcase} alt="Portada Real" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
                                                             <Button 
                                                                 style={{ position: 'absolute', top: -7, right: -20}} 
-                                                                onClick={() => setImage(null)}
+                                                                onClick={() => setImageShowcase(null)}
                                                             >
                                                                 <DeleteIcon style={{color:"black", borderBlockColor:"white"}} />
                                                             </Button>
@@ -558,64 +495,113 @@ const Sales: React.FC = () => {
                                                 </Card>
 
                                                 {/* Portada Real */}
-                                                <Card style={{ margin: "10px", alignContent: "center", height:"175px", width: "175px", borderRadius: "20px", textAlign: "center", position: 'relative'}} sx={{ maxWidth: 345, padding: "10px"}}>
-                                                    <CardContent>
+                                                <Card style={{ margin: "10px", alignContent: "center", height:"255px", width: "175px", borderRadius: "20px", textAlign: "center", position: 'relative'}} sx={{ maxWidth: 345, padding: "10px"}}>
+                                                    <CardContent style={{padding:"0px", position: "relative"}}>
                                                         <input
                                                             accept="image/*"
                                                             style={{ display: 'none' }}
-                                                            id="raised-button-file"
+                                                            id="image-cover"
                                                             type="file"
+                                                            value={photo_cover}
+                                                            onChange={handleImageChangeCover} 
                                                         />
-                                                        <label htmlFor="raised-button-file">
-                                                            <Button component="span">
-                                                                <AddIcon />
-                                                            </Button>
+                                                        <label htmlFor="image-cover">
+                                                            {!imageCover && (
+                                                                <Button component="span">
+                                                                    <AddIcon />
+                                                                </Button>
+                                                            )}
                                                         </label>
-                                                        <Typography variant="body2" color="text.secondary">
-                                                        Portada Real (Fotografía)
-                                                        </Typography>
+                                                        {imageCover ? (
+                                                            <>
+                                                            <img src={imageCover} alt="Portada Real" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                                                            <Button 
+                                                                style={{ position: 'absolute', top: -7, right: -20}} 
+                                                                onClick={() => setImageCover(null)}
+                                                            >
+                                                                <DeleteIcon style={{color:"black", borderBlockColor:"white"}} />
+                                                            </Button>
+                                                            </>
+                                                        ) : (
+                                                            <Typography variant="body2" color="text.secondary">
+                                                                Portada Real (Fotografía)
+                                                            </Typography>
+                                                        )}
                                                     </CardContent>
                                                 </Card>
 
-                                                {/* Portada Página */}
-                                                <Card style={{ margin: "10px", alignContent: "center", height:"175px", width: "175px", borderRadius: "20px", textAlign: "center", position: 'relative'}} sx={{ maxWidth: 345, padding: "10px"}}>
-                                                    <CardContent>
+                                                {/* Portada Página (Fotografía) */}
+                                                <Card style={{ margin: "10px", alignContent: "center", height:"255px", width: "175px", borderRadius: "20px", textAlign: "center", position: 'relative'}} sx={{ maxWidth: 345, padding: "10px"}}>
+                                                    <CardContent style={{padding:"0px", position: "relative"}}>
                                                         <input
                                                             accept="image/*"
                                                             style={{ display: 'none' }}
-                                                            id="raised-button-file"
+                                                            id="image-first"
                                                             type="file"
+                                                            value={photo_first}
+                                                            onChange={handleImageChangeFirst} 
                                                         />
-                                                        <label htmlFor="raised-button-file">
-                                                            <Button component="span">
-                                                                <AddIcon />
-                                                            </Button>
+                                                        <label htmlFor="image-first">
+                                                            {!imageFirst && (
+                                                                <Button component="span">
+                                                                    <AddIcon />
+                                                                </Button>
+                                                            )}
                                                         </label>
-                                                        <Typography variant="body2" color="text.secondary">
-                                                            Portada Página (Fotografía)
-                                                        </Typography>
+                                                        {imageFirst ? (
+                                                            <>
+                                                            <img src={imageFirst} alt="Portada Pagina" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                                                            <Button 
+                                                                style={{ position: 'absolute', top: -7, right: -20}} 
+                                                                onClick={() => setImageFirst(null)}
+                                                            >
+                                                                <DeleteIcon style={{color:"black", borderBlockColor:"white"}} />
+                                                            </Button>
+                                                            </>
+                                                        ) : (
+                                                            <Typography variant="body2" color="text.secondary">
+                                                                Portada Página (Fotografía)
+                                                            </Typography>
+                                                        )}
                                                     </CardContent>
                                                 </Card>
 
-                                                {/* Contraportada */}
-                                                <Card style={{ margin: "10px", alignContent: "center", height:"175px", width: "175px", borderRadius: "20px", textAlign: "center", position: 'relative'}} sx={{ maxWidth: 345, padding: "10px"}}>
-                                                    <CardContent>
+                                                {/* Contraportada (Fotografía) */}
+                                                <Card style={{ margin: "10px", alignContent: "center", height:"255px", width: "175px", borderRadius: "20px", textAlign: "center", position: 'relative'}} sx={{ maxWidth: 345, padding: "10px"}}>
+                                                    <CardContent style={{padding:"0px", position: "relative"}}>
                                                         <input
                                                             accept="image/*"
                                                             style={{ display: 'none' }}
-                                                            id="raised-button-file"
+                                                            id="image-back"
                                                             type="file"
+                                                            value={photo_back}
+                                                            onChange={handleImageChangeBack} 
                                                         />
-                                                        <label htmlFor="raised-button-file">
-                                                            <Button component="span">
-                                                                <AddIcon />
-                                                            </Button>
+                                                        <label htmlFor="image-back">
+                                                            {!imageBack && (
+                                                                <Button component="span">
+                                                                    <AddIcon />
+                                                                </Button>
+                                                            )}
                                                         </label>
-                                                        <Typography variant="body2" color="text.secondary">
-                                                            Contraportada (Fotografía)
-                                                        </Typography>
+                                                        {imageBack ? (
+                                                            <>
+                                                            <img src={imageBack} alt="Contraportada" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                                                            <Button 
+                                                                style={{ position: 'absolute', top: -7, right: -20}} 
+                                                                onClick={() => setImageBack(null)}
+                                                            >
+                                                                <DeleteIcon style={{color:"black", borderBlockColor:"white"}} />
+                                                            </Button>
+                                                            </>
+                                                        ) : (
+                                                            <Typography variant="body2" color="text.secondary">
+                                                                Contraportada (Fotografía)
+                                                            </Typography>
+                                                        )}
                                                     </CardContent>
                                                 </Card>
+
                                             </Grid>
                                         </div>
                                     </>
