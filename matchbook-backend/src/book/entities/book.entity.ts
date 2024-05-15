@@ -1,7 +1,8 @@
-import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, OneToMany } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, OneToMany, ManyToMany } from 'typeorm';
 import { Author } from '../../author/entities/author.entity';
 import { Publisher } from '../../publisher/entities/publisher.entity';
 import { Publication } from 'src/publication/entities/publication.entity';
+import { Category } from 'src/category/entities/category.entity';
 
 @Entity()
 export class Book {
@@ -28,5 +29,8 @@ export class Book {
 
   @OneToMany(() => Publication, publication => publication.book_id_book)
   publications: Publication[]
+
+  @ManyToMany(() => Category, (category) => category.books)
+  categories: Category[];
 
 }
