@@ -21,6 +21,12 @@ export class Book {
   @Column('text')
   description_book: string;
 
+  @Column('text')
+  status_book : string
+
+  @Column('text')
+  format_book: string
+  
   @ManyToOne(() => Author, author => author.books)
   author_id_author: Author;
 
