@@ -62,7 +62,7 @@ const LoginPage: React.FC = () => {
       
 
       console.log(response.data);
-      navigate('/home');
+      navigate('/home2');
     } catch (error:any) {
       if (error.response && error.response.status === 401){
         alert('Correo electrónico o contraseña incorrectos. Por favor, inténtalo de nuevo.');

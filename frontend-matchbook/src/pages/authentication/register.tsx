@@ -28,7 +28,7 @@ interface Region  {
 interface Cities {
     id_city: number;
     name: string;
-  }
+}
 const RegisterPage: React.FC = () => {
     const [name_user, setName] = React.useState('');
     const [lastname_user, setLastname] = React.useState('');
@@ -279,7 +279,7 @@ const RegisterPage: React.FC = () => {
                                                 id="rut"
                                                 className="mb-3 formulario"
                                                 placeholder="Ingrese su Rut"
-                                                type="number"
+                                                type="numeric"
                                                 value={rut_user === null ? '' : rut_user}
 
                                                 onChange={e => setRut(Number(e.target.value))}
