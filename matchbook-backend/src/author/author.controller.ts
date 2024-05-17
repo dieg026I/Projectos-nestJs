@@ -23,11 +23,11 @@ export class AuthorController {
 
   @Put(':id')
   update(@Param('id') id: string, @Body() author: Author) {
-    return this.authorService.update(+id, author);
+    return this.authorService.update(id, author);
   }
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.authorService.remove(+id);
+    return this.authorService.remove(id);
   }
 }

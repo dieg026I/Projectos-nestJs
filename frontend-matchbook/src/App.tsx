@@ -10,22 +10,30 @@ import Cart from './pages/cart/cart';
 import ClubLectura from './pages/clubdelectura/clubLectura';
 import { HomePageLogin } from './pages/home2/home2';
 import Sales from './pages/sales/sales';
+import { NotAccessible } from '@mui/icons-material';
+import { Empty } from 'antd';
 
 
 const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const navigate = useNavigate();
-  const isAuthenticated = localStorage.getItem('access_token') !== null; 
+  const isAuthenticated = localStorage.getItem('access_token') == null; 
+  console.log(localStorage.getItem('access_token'))
+  console.log(isAuthenticated);
 
   useEffect(() => {
     if (!isAuthenticated) {
       navigate('/login');
+      console.log("hola1");
     }
   }, [isAuthenticated, navigate]);
 
   if (!isAuthenticated) {
+    console.log("hola2");
     return null;
+    
   }
 
+  console.log("hola3");
   return <>{children}</>;
 };
 
@@ -51,4 +59,4 @@ function App() {
   );
 }
 
-export default App;
+export default App;

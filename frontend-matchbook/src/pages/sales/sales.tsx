@@ -6,7 +6,8 @@ import React from "react";
 import axios from "axios";
 import "../../App.css";
 import DeleteIcon from '@mui/icons-material/Delete';
-
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 
 const Sales: React.FC = () => {
@@ -170,6 +171,7 @@ const Sales: React.FC = () => {
     
     {/*-----------------------------------------------------------------------------*/}
     {/* Subir Libro */}
+    
     const handleSubmitBook = async (event: React.FormEvent) => {
         event.preventDefault();
 
@@ -178,26 +180,34 @@ const Sales: React.FC = () => {
 
     try {
         const responseA = await axios.post('http://localhost:3001/book', {
-            id_book,
-            name_book,
-            format_book,
-            author_id,
-            publisher_id,
-            cost_book ,
-            id_category,
-            year_book,
-            status_book,
-            stock_book,
-            description_book,
+            id_book : id_book,
+            name_book : name_book,
+            format_book : format_book,
+            author_id : author_id,
+            publisher_id : publisher_id,
+            cost_book : cost_book ,
+            id_category : id_category,
+            year_book : year_book,
+            status_book : status_book,
+            stock_book : stock_book,
+            description_book : description_book,
         });
-
+        handleNext()
         console.log(responseA.data);
+
+        
 
     } catch (error) {
         console.error('Hubo un error al ingresar la publicacion:', error);
         }
     };
 
+    const add_book = (event: React.FormEvent) => {
+        event.preventDefault();
+        handleSubmitBook(event).then(() => {
+          toast("Libro guardado con éxito!");
+        });
+      }
 
     {/*-----------------------------------------------------------------------------*/}
     {/* Publicación */}
@@ -273,15 +283,12 @@ const Sales: React.FC = () => {
                                         <h6 style={{fontFamily:"SF Pro Display Bold"}}>Título</h6>
                                         <FormControl style={{ width:"50%" }}>
                                             <InputLabel style={{ fontSize: "16px"}} ></InputLabel>
-                                            <Select 
-                                                labelId="libro-label"
+                                            <TextField  
                                                 id="name"
                                                 value={name_book}
                                                 onChange={e => setNameBook(e.target.value)}
                                                 sx={{ width: '100%', color: "black", height:"45px", borderRadius:"10px" }}
-                                                
-                                            >
-                                            </Select>
+                                            />
                                         </FormControl>
                                     </CardBody>
                                     </>
@@ -661,9 +668,20 @@ const Sales: React.FC = () => {
                         </div>
                     ) : step === 2 ? (
                         <div style={{justifyContent: "flex-start"}}>
-                        <Button onClick={handleNext} style={{ backgroundColor:"#1eaeff", color: "#ffffff", borderRadius:"30px", textTransform: "none", marginRight:"30px", width:"130px", height:"50px", fontWeight:"bold"}} >
+                        <Button onClick={add_book }  style={{ backgroundColor:"#1eaeff", color: "#ffffff", borderRadius:"30px", textTransform: "none", marginRight:"30px", width:"130px", height:"50px", fontWeight:"bold"}} >
                             Siguiente
                         </Button>
+                        <ToastContainer 
+                        position="top-right"
+                        autoClose={5000}
+                        hideProgressBar={false}
+                        newestOnTop={false}
+                        closeOnClick
+                        rtl={false}
+                        pauseOnFocusLoss
+                        draggable
+                        pauseOnHover
+                        />
                         </div>
                     ) : (
                         <div style={{ display: 'flex', justifyContent: 'flex-start' }}>

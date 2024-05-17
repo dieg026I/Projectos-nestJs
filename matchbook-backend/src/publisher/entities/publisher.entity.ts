@@ -1,10 +1,10 @@
 import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
 import { Book } from '../../book/entities/book.entity';
 
-@Entity()
+@Entity('publisher')
 export class Publisher {
   @PrimaryGeneratedColumn()
-  id_publisher: number;
+  id_publisher: string;
 
   @Column()
   name_publisher: string;

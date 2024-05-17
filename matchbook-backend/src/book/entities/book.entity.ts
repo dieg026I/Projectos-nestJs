@@ -1,10 +1,10 @@
-import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, OneToMany, ManyToMany } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, OneToMany, ManyToMany, JoinColumn } from 'typeorm';
 import { Author } from '../../author/entities/author.entity';
 import { Publisher } from '../../publisher/entities/publisher.entity';
 import { Publication } from 'src/publication/entities/publication.entity';
 import { Category } from 'src/category/entities/category.entity';
 
-@Entity()
+@Entity('book')
 export class Book {
   @PrimaryGeneratedColumn('uuid')
   id_book: string;
@@ -27,10 +27,13 @@ export class Book {
   @Column('text')
   format_book: string
   
-  @ManyToOne(() => Author, author => author.books)
+  @ManyToOne(() => Author, (author) => author.id_author)
+  @JoinColumn({ name: 'author_id_author' })
   author_id_author: Author;
+  
 
   @ManyToOne(() => Publisher, publisher => publisher.books)
+  @JoinColumn({ name: 'author_id_author' })
   publisher_id_publisher: Publisher;
 
   @OneToMany(() => Publication, publication => publication.book_id_book)

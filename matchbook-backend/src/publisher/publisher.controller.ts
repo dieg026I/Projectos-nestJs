@@ -23,11 +23,11 @@ export class PublisherController {
 
   @Put(':id')
   update(@Param('id') id: string, @Body() publisher: Publisher) {
-    return this.publisherService.update(+id, publisher);
+    return this.publisherService.update(id, publisher);
   }
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.publisherService.remove(+id);
+    return this.publisherService.remove(id);
   }
 }
