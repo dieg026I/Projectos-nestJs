@@ -161,6 +161,12 @@ const Sales: React.FC = () => {
 
     };
     
+    const handleDescriptionChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
+        if (event.target.value) {
+            const description_book = event.target.value;
+            setDescriptionBook(description_book);
+        }
+    }
     {/*-----------------------------------------------------------------------------*/}
     {/* Status */}
     
@@ -201,17 +207,18 @@ const Sales: React.FC = () => {
             });
             console.log(responsePublisher.data)
             const publisher_id = responsePublisher.data.id_publisher;
+            let book_id = uuidv4();
     
             // Finalmente, guarda el libro con los IDs del autor y la editorial
             const responseBook = await axios.post('http://localhost:3001/book', {
                 id_book: id_book,
-                name_book: name_book,
+                name_book: book_id,
                 format_book: format_book,
                 author_id_author: author_id,
                 publisher_id_publisher: publisher_id,
                 cost_book: cost_book,
                 year_book: year_book,
-                status_book: status_book,
+                status_book: selectedStatus,
                 stock_book: stock_book,
                 description_book: description_book,
                 categories: [OneCategory]
@@ -504,7 +511,7 @@ const Sales: React.FC = () => {
                                                     <br />
                                                     <h6 style={{color: "#000000", fontFamily:"SF Pro Display Bold"}}>Información Adicional</h6>
 
-                                                    <textarea style={{borderRadius:"10px", height: "180px"}} name="postContent" rows={4} cols={65} />                                                    
+                                                    <textarea style={{borderRadius:"10px", height: "180px"}} value={description_book} onChange={handleDescriptionChange} name="postContent" rows={4} cols={65} />                                                    
                                                 </Grid>
                                             </Grid>
                                         </div>

@@ -1,4 +1,4 @@
-import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, OneToMany, ManyToMany, JoinColumn } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, OneToMany, ManyToMany, JoinColumn, PrimaryColumn } from 'typeorm';
 import { Author } from '../../author/entities/author.entity';
 import { Publisher } from '../../publisher/entities/publisher.entity';
 import { Publication } from 'src/publication/entities/publication.entity';
@@ -6,7 +6,7 @@ import { Category } from 'src/category/entities/category.entity';
 
 @Entity('book')
 export class Book {
-  @PrimaryGeneratedColumn('uuid')
+  @PrimaryColumn()
   id_book: string;
 
   @Column()
