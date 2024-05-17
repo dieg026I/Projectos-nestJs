@@ -207,12 +207,12 @@ const Sales: React.FC = () => {
             });
             console.log(responsePublisher.data)
             const publisher_id = responsePublisher.data.id_publisher;
-            let book_id = uuidv4();
+            const bookId = `${name_book}-${author_name.length}-${publisher_name.slice(0, 3)}`;
     
             // Finalmente, guarda el libro con los IDs del autor y la editorial
             const responseBook = await axios.post('http://localhost:3001/book', {
-                id_book: id_book,
-                name_book: book_id,
+                id_book: bookId,
+                name_book: name_book,
                 format_book: format_book,
                 author_id_author: author_id,
                 publisher_id_publisher: publisher_id,
