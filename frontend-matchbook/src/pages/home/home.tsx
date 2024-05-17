@@ -122,7 +122,7 @@ export const HomePage: React.FC<HomeProps> = ({}: HomeProps) => {
                     <div>
                         <img className="carousel" src={image1}  />
 
-                            <Button href="/clubdelectura" variant="contained" style={{ textTransform: "none", backgroundColor: '#f05d16', color: 'white', borderRadius: '30px', position: 'absolute', top: '75%', left: '11.3%', transform: 'translate(-50%, -50%)', width: 'auto', padding: '6px 16px' }}>
+                            <Button href="/readingClub" variant="contained" style={{ textTransform: "none", backgroundColor: '#f05d16', color: 'white', borderRadius: '30px', position: 'absolute', top: '75%', left: '11.3%', transform: 'translate(-50%, -50%)', width: 'auto', padding: '6px 16px' }}>
                                 Ir al Club
                             </Button>
                     </div>

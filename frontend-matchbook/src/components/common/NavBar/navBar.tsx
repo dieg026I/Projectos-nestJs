@@ -69,12 +69,24 @@ export const NavBar: React.FC<{}> = () => {
                             justifyContent="space-between" // Distribuye el espacio de manera uniforme entre los elementos
                         >
                             <Grid item xs={2} sm={2} md={2} lg={2}>
-                                <Box display="flex" alignItems="center" justifyContent="center" textAlign="center">
-                                    <img src={Logo} alt="Logo Matchbook" width="40" height="40"  /> 
-                                    <Typography className="" variant="h1" component="h1"  style={{ fontWeight: 550, color:  "white", fontSize: "25px", marginLeft: "10px"}}>
-                                        Matchbook
-                                    </Typography>
-                                </Box>
+                                {isMobile ? (
+                                    <Link href="/" underline="none">
+                                        <Box display="flex" alignItems="center" justifyContent="center" textAlign="center">
+                                            <img src={Logo} alt="Logo Matchbook" width="40" height="40"  /> 
+                                        </Box>
+                                    </Link>
+                                
+                                ) : (
+                                    <Link href="/" underline="none">
+                                        <Box display="flex" alignItems="center" justifyContent="center" textAlign="center">
+                                            <img src={Logo} alt="Logo Matchbook" width="40" height="40"  /> 
+                                            <Typography className="" variant="h1" component="h1"  style={{ fontWeight: 550, color:  "white", fontSize: "25px", marginLeft: "10px"}}>
+                                                Matchbook
+                                            </Typography>
+                                        </Box>
+                                    </Link>
+                                    
+                                )}
                             </Grid>
                             {isMobile ? (
                                 <>
@@ -141,4 +153,4 @@ export const NavBar: React.FC<{}> = () => {
         </div>
     );
 }
-    export default NavBar;
+    export default NavBar; 

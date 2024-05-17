@@ -15,27 +15,31 @@ import { FaFacebookF } from "react-icons/fa";
 import "../../App.css";
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-
-
 import logo from "../../assents/img/logoMatch.png";
-import React from "react";
+import React, { useState } from "react";
 
 type FormValue = {
   email: string,
   password: string
 }
 
-
 const LoginPage: React.FC = () => {
 
   const [email_user, setEmail] = React.useState('');
   const [password_user, setPassword] = React.useState('');
   const navigate = useNavigate();
+  const [username, setUsername] = useState('');
 
+
+
+  {/*-----------------------------------------------------------------------------*/}
+  {/* Login */}
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
 
-    //  -Validacion-
+    //  --Validacion--
+
+    //  -Email-
     if (!email_user.trim()) {
       alert('Correo requerido.');
       return;
@@ -48,6 +52,7 @@ const LoginPage: React.FC = () => {
       return;
     }
     
+    //Conexion Base de datos
     try {
       const response = await axios.post('http://localhost:3001/auth/validate', {
         email_user : email_user,
@@ -57,12 +62,14 @@ const LoginPage: React.FC = () => {
       if (response.status === 200){
         localStorage.setItem('access_token', response.data.token);
       }
-      const username = localStorage.getItem('username');
 
-      
+      const username = email_user.substring(0, 12);
+      setUsername(username);
 
       console.log(response.data);
       navigate('/home2');
+
+      //Error
     } catch (error:any) {
       if (error.response && error.response.status === 401){
         alert('Correo electrónico o contraseña incorrectos. Por favor, inténtalo de nuevo.');
@@ -70,10 +77,6 @@ const LoginPage: React.FC = () => {
         console.error('Hubo un error al iniciar sesión:', error);
       }
     }
-
-
-
-
   };
 
   return (
@@ -122,8 +125,7 @@ const LoginPage: React.FC = () => {
                         sx: { fontSize: "auto"  } 
                       }}
                       value={email_user}
-                      onChange={e => setEmail(e.target.value)}  
-                                          
+                      onChange={e => setEmail(e.target.value)}                     
                   />
 
                   {/* Línea horizontal */}
@@ -143,8 +145,6 @@ const LoginPage: React.FC = () => {
                       onChange={e => setPassword(e.target.value)}
                       />
 
-
-
                   <Typography fontSize = "10px" variant="body2">
                     <p style={{color: "#3f3f3fb3"}} > Distingue mayusculas y minusculas  <Button  style={{ textTransform: "none", fontSize: "12px", float: "right" }} size="small">¿Olvidaste tu contraseña?</Button></p> 
                   </Typography>
@@ -157,7 +157,6 @@ const LoginPage: React.FC = () => {
                       <Button fullWidth variant="contained" onClick={handleSubmit} style={{ textTransform: "none", fontSize: "12px", color: "#fff", backgroundColor: "#1976D2", borderRadius: "20px" }}> Ingresar </Button> 
                     </Typography>
                   </div>
-
 
                   <br />
 
@@ -186,7 +185,6 @@ const LoginPage: React.FC = () => {
       </Box> 
     </form>
   );
-
 }
 
 export default LoginPage;

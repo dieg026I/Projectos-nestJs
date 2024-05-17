@@ -29,6 +29,7 @@ interface Cities {
     id_city: number;
     name: string;
 }
+
 const RegisterPage: React.FC = () => {
     const [name_user, setName] = React.useState('');
     const [lastname_user, setLastname] = React.useState('');
@@ -169,7 +170,6 @@ const RegisterPage: React.FC = () => {
             alert('La contraseña no debe contener espacios.');
             return;
         }
-
 
         //  -Repetir Contraseña-
         if (password_users !== repeatPassword_user) {
