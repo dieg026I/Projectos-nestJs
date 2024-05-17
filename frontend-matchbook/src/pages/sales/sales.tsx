@@ -8,7 +8,16 @@ import "../../App.css";
 import DeleteIcon from '@mui/icons-material/Delete';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { v4 as uuidv4 } from 'uuid';
+interface Author {
+    id_author: string;
+    name_author: string;
+}
 
+interface Category {
+    id_category: string;
+    name_category: string;
+}
 
 const Sales: React.FC = () => {
 
@@ -16,15 +25,16 @@ const Sales: React.FC = () => {
     const [id_book, setIdbook] = React.useState('');
     const [name_book, setNameBook] = React.useState('');
     const [format_book, setFormatBook] = React.useState('');
-    const [author_id, setAuthorId] = React.useState('');
-    const [publisher_id, setPublisherId] = React.useState('');
-    const [cost_book, setCostBook] = React.useState('');
-    const [id_category, setCategoryId] = React.useState('');
-    const [selectedCategory, setSelectedCategory] = useState(0);
-    const [year_book, setYearBook] = React.useState('');
+    const [author_name, setAuthorName] = React.useState('');
+    const [publisher_name, setPublisherName] = React.useState('');
+    const [cost_book, setCostBook] = React.useState(0);
+    const [category, setCategory] = React.useState<Category[]>([]);
+    const [OneCategory, setOneCategory] = React.useState<Category>();
+    const [selectedCategory, setSelectedCategory] = useState('');
+    const [year_book, setYearBook] = React.useState(0);
     const [status_book, setStatusBook ] = React.useState('');
     const [selectedStatus, setSelectedStatus] = useState('');
-    const [stock_book, setStockBook] = React.useState('');
+    const [stock_book, setStockBook] = React.useState(0);
     const [description_book, setDescriptionBook] = React.useState('');
 
     {/* Publicación */}
@@ -134,22 +144,21 @@ const Sales: React.FC = () => {
     useEffect(() => {
         axios.get('http://localhost:3001/categories')
             .then(response => {
-            setCategoryId(response.data);
-            console.log('Mostrar Categorias'+response.data);
+            setCategory(response.data);
+            console.log('Mostrar Categorias: '+ response.data);
             });
     }, []);
 
     const handleCategoryChange = (event: SelectChangeEvent<string>) => {
-        const selectedValue = Number(event.target.value);
+        const selectedValue = (event.target.value);
         setSelectedCategory(selectedValue);
-    
-        const id_category = event.target.value;
-    
+        let id_category = selectedValue
         axios.get(`http://localhost:3001/categories/${id_category}`)
             .then(response => {
-            setCategoryId(response.data);
-            console.log(response.data);
-        });
+            setOneCategory(response.data);
+            console.log('Mostrar Categorias: ' + response.data);
+            });
+
     };
     
     {/*-----------------------------------------------------------------------------*/}
@@ -174,40 +183,53 @@ const Sales: React.FC = () => {
     
     const handleSubmitBook = async (event: React.FormEvent) => {
         event.preventDefault();
-
-        //  --Validaciones--
-
-
-    try {
-        const responseA = await axios.post('http://localhost:3001/book', {
-            id_book : id_book,
-            name_book : name_book,
-            format_book : format_book,
-            author_id : author_id,
-            publisher_id : publisher_id,
-            cost_book : cost_book ,
-            id_category : id_category,
-            year_book : year_book,
-            status_book : status_book,
-            stock_book : stock_book,
-            description_book : description_book,
-        });
-        handleNext()
-        console.log(responseA.data);
-
-        
-
-    } catch (error) {
-        console.error('Hubo un error al ingresar la publicacion:', error);
+    
+        try {
+            // Primero, guarda el autor y obtén su ID
+            let id_author = uuidv4();
+            const responseAuthor = await axios.post('http://localhost:3001/author', {
+            id_author: id_author,    
+            name_author: author_name,
+            });
+            console.log(responseAuthor.data)
+            const author_id = responseAuthor.data.id_author
+            // Luego, guarda la editorial y obtén su ID
+            let id_publisher = uuidv4();
+            const responsePublisher = await axios.post('http://localhost:3001/publisher', {
+                id_publisher: id_publisher,    
+                name_publisher: publisher_name  
+            });
+            console.log(responsePublisher.data)
+            const publisher_id = responsePublisher.data.id_publisher;
+    
+            // Finalmente, guarda el libro con los IDs del autor y la editorial
+            const responseBook = await axios.post('http://localhost:3001/book', {
+                id_book: id_book,
+                name_book: name_book,
+                format_book: format_book,
+                author_id_author: author_id,
+                publisher_id_publisher: publisher_id,
+                cost_book: cost_book,
+                year_book: year_book,
+                status_book: status_book,
+                stock_book: stock_book,
+                description_book: description_book,
+                categories: [OneCategory]
+            });
+    
+            console.log(responseBook.data);
+            handleNext();
+        } catch (error) {
+            console.error('Hubo un error al ingresar la publicación:', error);
         }
     };
-
+    
     const add_book = (event: React.FormEvent) => {
         event.preventDefault();
         handleSubmitBook(event).then(() => {
-          toast("Libro guardado con éxito!");
+            toast("Libro guardado con éxito!");
         });
-      }
+    };
 
     {/*-----------------------------------------------------------------------------*/}
     {/* Publicación */}
@@ -317,8 +339,8 @@ const Sales: React.FC = () => {
                                                         className="mb-3 formulario"
                                                         placeholder="Autor/a de la obra"
                                                         type="text"
-                                                        value={author_id}
-                                                        onChange={e => setAuthorId(e.target.value)}
+                                                        value={author_name}
+                                                        onChange={e => setAuthorName(e.target.value)}
                                                         InputLabelProps={{
                                                             sx: { fontSize: "16px"} 
                                                         }}
@@ -340,7 +362,10 @@ const Sales: React.FC = () => {
                                                             placeholder="Selecciona"
                                                             displayEmpty
                                                         >
-                                                        <MenuItem value="" disabled sx={{ color: "black" }}>Selecciona una categoría</MenuItem>  
+                                                        <MenuItem value="" disabled sx={{ color: "black" }}>Selecciona una categoría</MenuItem> 
+                                                        {category.map(category => (
+                                                        <MenuItem value={category.id_category} key={category.id_category}  sx={{ color: "black" }}>{category.name_category}</MenuItem>
+                                                        ))}
                                                         </Select>
                                                     </FormControl>
                                                 </Grid>
@@ -355,8 +380,8 @@ const Sales: React.FC = () => {
                                                         className="mb-3 formulario"
                                                         placeholder="Editorial"
                                                         type="text"
-                                                        value={publisher_id}
-                                                        onChange={e => setPublisherId(e.target.value)}
+                                                        value={publisher_name}
+                                                        onChange={e => setPublisherName(e.target.value)}
                                                         InputLabelProps={{
                                                             sx: { fontSize: "16px" } 
                                                         }}
@@ -372,7 +397,7 @@ const Sales: React.FC = () => {
                                                         placeholder="Año"
                                                         type="year"
                                                         value={year_book}
-                                                        onChange={e => setYearBook(e.target.value)}
+                                                        onChange={e => setYearBook (Number(e.target.value))}
                                                         InputLabelProps={{
                                                             sx: { fontSize: "16px" } 
                                                         }}
@@ -399,7 +424,7 @@ const Sales: React.FC = () => {
                                                         placeholder="Precio"
                                                         type="numeric"
                                                         value={cost_book}
-                                                        onChange={e => setCostBook(e.target.value)}
+                                                        onChange={e => setCostBook(Number(e.target.value))}
                                                         InputLabelProps={{
                                                             sx: { fontSize: "16px" } 
                                                         }}
@@ -472,7 +497,7 @@ const Sales: React.FC = () => {
                                                                 label="Número de Libros"
                                                                 type="number"
                                                                 value={stock_book}
-                                                                onChange={(event) => setStockBook(event.target.value)}
+                                                                onChange={(event) => setStockBook(Number(event.target.value))}
                                                             />
                                                         )}
                                                     </FormGroup>
@@ -668,7 +693,7 @@ const Sales: React.FC = () => {
                         </div>
                     ) : step === 2 ? (
                         <div style={{justifyContent: "flex-start"}}>
-                        <Button onClick={add_book }  style={{ backgroundColor:"#1eaeff", color: "#ffffff", borderRadius:"30px", textTransform: "none", marginRight:"30px", width:"130px", height:"50px", fontWeight:"bold"}} >
+                        <Button onClick={add_book}  style={{ backgroundColor:"#1eaeff", color: "#ffffff", borderRadius:"30px", textTransform: "none", marginRight:"30px", width:"130px", height:"50px", fontWeight:"bold"}} >
                             Siguiente
                         </Button>
                         <ToastContainer 

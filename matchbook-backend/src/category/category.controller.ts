@@ -10,10 +10,10 @@ export class CategoryController {
     return this.categoryService.findAll();
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
+  @Get(':id_category')
+  findOne(@Param('id_category') id: string) {
     return this.categoryService.findOne(id);
   }
 
-  // Otros endpoints como POST, PUT, DELETE...
+
 }

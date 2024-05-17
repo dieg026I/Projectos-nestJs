@@ -12,19 +12,22 @@ export class Book {
   @Column()
   name_book: string;
 
-  @Column('decimal')
+  @Column()
   cost_book: number;
 
-  @Column('int')
+  @Column()
   year_book: number;
 
-  @Column('text')
+  @Column()
   description_book: string;
 
-  @Column('text')
+  @Column()
   status_book : string
 
-  @Column('text')
+  @Column()  
+  stock_book : number
+
+  @Column()
   format_book: string
   
   @ManyToOne(() => Author, (author) => author.id_author)
@@ -33,7 +36,7 @@ export class Book {
   
 
   @ManyToOne(() => Publisher, publisher => publisher.books)
-  @JoinColumn({ name: 'author_id_author' })
+  @JoinColumn({ name: 'publisher_id_publisher' })
   publisher_id_publisher: Publisher;
 
   @OneToMany(() => Publication, publication => publication.book_id_book)
