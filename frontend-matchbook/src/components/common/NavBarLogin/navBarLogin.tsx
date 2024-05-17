@@ -27,7 +27,8 @@ import {
     useTheme,
 } from "@mui/material"; 
 
-import { FaPencilAlt, FaRegUserCircle, FaSearch, FaShoppingCart, FaSignOutAlt, FaUser } from "react-icons/fa"; 
+import { PiPencilSimpleBold } from "react-icons/pi";
+import {  FaRegUserCircle, FaSearch, FaShoppingCart, FaSignOutAlt, FaUser } from "react-icons/fa"; 
 import  Logo from "../../../assents/img/logoMatch.png";
 import MenuIcon from '@mui/icons-material/Menu';
 import { deepOrange } from '@mui/material/colors';
@@ -37,14 +38,14 @@ import { RiMoneyDollarCircleLine } from "react-icons/ri";
 export const NavBarLogin: React.FC<{}> = () => {
     const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = useState<null | HTMLElement>(null);
 
-    const theme = useTheme();
+    {/* Resposivo */}
     const isMobile = useMediaQuery('(max-width:1080px)') ;
     
-
     const handleMobileMenuOpen = (event: React.MouseEvent<HTMLButtonElement>) => {
         setMobileMoreAnchorEl(event.currentTarget);
     };
 
+    {/* Abrir Perfil */}
     const [open, setOpen] = useState(false);
 
     const handleOpen = () => {
@@ -55,38 +56,48 @@ export const NavBarLogin: React.FC<{}> = () => {
         setOpen(false);
     };
 
+    {/* Nombre de usuario */}
     const [email_user, setEmail_user] = useState('');
     const username = localStorage.getItem('username');
 
-    //button
-    const [bgColor, setBgColor] = useState('transparent');
-    const [textColor, setTextColor] = useState('#f05d16');
+    {/* Colores Boton Perfil */}
+    const [bgColorProfile, setBgColorProfile] = useState('transparent');
+    const [textColorProfile, setTextColorProfile] = useState('#f05d16');
+    const [borderColorProfile, setBorderColorProfile] = useState('#ffffff');
 
-    const handleMouseOver = () => {
-        setBgColor('#f05d16');
-        setTextColor('#ffffff');
+    const handleMouseOverProfile = () => {
+        setBgColorProfile('#f05d16');
+        setTextColorProfile('#ffffff');
+        setBorderColorProfile('#f05d16');
         
     };
 
-    const handleMouseOut = () => {
-        setBgColor('transparent');
-        setTextColor('#f05d16'); 
+    const handleMouseOutProfile = () => {
+        setBgColorProfile('transparent');
+        setTextColorProfile('#f05d16'); 
+        setBorderColorProfile('#ffffff');
     };
 
-    useEffect(() => {
-        const fetchEmail = async () => {
-            try {
-                const response = await axios.get(`http://localhost:3001/users/${email_user}`);
-                setEmail_user(response.data.email_user);
-            } catch (error) {
-                console.error('Hubo un error al obtener el correo electrónico:', error);
-            }
-        };
-    
-        fetchEmail();
-    }, [email_user]);
+    {/* Colores Boton Lapiz */}
+    const [bgColorPencil, setBgColorPencil] = useState('#ffffff');
+    const [textColorPencil, setTextColorPencil] = useState('#00a9e0');
+    const [borderColorPencil, setBorderColorPencil] = useState('#ffffff');
 
-    const mobileMenuId = 'primary-search-account-menu-mobile';
+    const handleMouseOverPencil = () => {
+        setBgColorPencil('#00a9e0');
+        setTextColorPencil('#ffffff');
+        setBorderColorPencil('#00a9e0');
+        
+    };
+
+    const handleMouseOutPencil = () => {
+        setBgColorPencil('#ffffff');
+        setTextColorPencil('#00a9e0'); 
+        setBorderColorPencil('#ffffff');
+    };
+
+
+    const mobileMenuId = 'mobile-navBarLogin';
     const renderMobileMenu = (
         <Menu
             anchorEl={mobileMoreAnchorEl}
@@ -98,7 +109,7 @@ export const NavBarLogin: React.FC<{}> = () => {
             onClose={() => setMobileMoreAnchorEl(null)}
         >
             <MenuItem>
-                <Link underline="hover" href="/clubdelectura">Club de Lectura</Link>
+                <Link underline="hover" href="/readingClub">Club de Lectura</Link>
             </MenuItem>
             <MenuItem>
                 <Link underline="hover" href="/marketplace">Marketplace</Link>
@@ -132,13 +143,26 @@ export const NavBarLogin: React.FC<{}> = () => {
                             justifyContent="space-between" // Distribuye el espacio de manera uniforme entre los elementos
                         >
                             <Grid item xs={2} sm={2} md={2} lg={2}>
-                                <Box display="flex" alignItems="center" justifyContent="center" textAlign="center">
-                                    <img src={Logo} alt="Logo Matchbook" width="40" height="40"  /> 
-                                    <Typography className="" variant="h1" component="h1"  style={{ fontWeight: 550, color:  "white", fontSize: "25px", marginLeft: "10px"}}>
-                                        Matchbook
-                                    </Typography>
-                                </Box>
+                                {isMobile ? (
+                                    <Link href="/home2" underline="none">
+                                        <Box display="flex" alignItems="center" justifyContent="center" textAlign="center">
+                                            <img src={Logo} alt="Logo Matchbook" width="40" height="40"  /> 
+                                        </Box>
+                                    </Link>
+                                
+                                ) : (
+                                    <Link href="/home2" underline="none">
+                                        <Box display="flex" alignItems="center" justifyContent="center" textAlign="center">
+                                            <img src={Logo} alt="Logo Matchbook" width="40" height="40"  /> 
+                                            <Typography className="" variant="h1" component="h1"  style={{ fontWeight: 550, color:  "white", fontSize: "25px", marginLeft: "10px"}}>
+                                                Matchbook
+                                            </Typography>
+                                        </Box>
+                                    </Link>
+                                    
+                                )}
                             </Grid>
+
                             {isMobile ? (
                                 <>
                                     <IconButton
@@ -147,14 +171,14 @@ export const NavBarLogin: React.FC<{}> = () => {
                                         aria-label="open drawer"
                                         onClick={handleMobileMenuOpen}
                                     >
-                                        <MenuIcon />
+                                        <MenuIcon style={{ width: "30px", height:"30px"}}  />
                                     </IconButton>
                                     {renderMobileMenu}
                                 </>
                             ) : (
                                 <Grid  item xs={3} sm={3} md={3} lg={3} >
                                     <Box className="links-container text">
-                                        <Link underline="hover" style={{color: "white"}} href="/clubdelectura">Club de Lectura</Link>
+                                        <Link underline="hover" style={{color: "white"}} href="/readingClub">Club de Lectura</Link>
                                         <Link underline="hover" style={{color: "white"}} href="/marketplace">Marketplace</Link>
                                     </Box>
                                 </Grid>
@@ -162,7 +186,7 @@ export const NavBarLogin: React.FC<{}> = () => {
                             <Grid  item xs={4} sm={4} md={4} lg={4}>
                                 {isMobile ? (
                                     <IconButton color="inherit">
-                                        <FaSearch />
+                                        <FaSearch style={{ width: "30px", height:"30px"}}  />
                                     </IconButton>
                                 ) : (
                                     <div className="searchHome" >
@@ -175,11 +199,11 @@ export const NavBarLogin: React.FC<{}> = () => {
                                 <Box className="space" >
                                     {isMobile ? (
                                         <>
-                                            <IconButton href="/sales" color="inherit" >
-                                                <RiMoneyDollarCircleLine />
+                                            <IconButton href="/sales" color="inherit"  >
+                                                <RiMoneyDollarCircleLine style={{ width: "48px", height:"48px"}} />
                                             </IconButton>
                                             <div onClick={handleOpen}>
-                                                <Avatar style={{backgroundColor: "#6f6d6d"}} src="/broken-image.jpg"  />
+                                                <Avatar style={{backgroundColor: "#f05d16"}} src="/broken-image.jpg"  />
                                                 <div>{username}</div> 
                                             </div>
                                             <Badge badgeContent={1} color="primary">  
@@ -191,7 +215,7 @@ export const NavBarLogin: React.FC<{}> = () => {
                                         <>
                                             <Button style={{ backgroundColor: '#f05d16' , textTransform: "none", color: "#ffff", fontSize: "16px", marginLeft: "25px" }} href="/sales">Vender</Button>
                                             <div onClick={handleOpen}>
-                                                <Avatar style={{backgroundColor: "#6f6d6d"}} src="/broken-image.jpg"  />
+                                                <Avatar style={{backgroundColor: "#f05d16"}} src="/broken-image.jpg"  />
                                                 <div>{username}</div> 
                                             </div>
                                             
@@ -209,51 +233,66 @@ export const NavBarLogin: React.FC<{}> = () => {
             </AppBar>
 
             <div>
-                <Dialog open={open} onClose={handleClose}>
-                    <div style={{justifyContent:"center", textAlign: "center", position: 'relative', display: 'inline-block' }}>
-                    <DialogTitle>
-                        <Avatar style={{backgroundColor: "#6f6d6d"}} src="/broken-image.jpg" />
-                        <FaPencilAlt style={{ position: 'absolute', right: 0, bottom: 0 }} /> {/* Icono de lápiz */}
-                    </DialogTitle>
+                <Dialog open={open} onClose={handleClose} PaperProps={{ style: { width: '300px', maxHeight: '80vh', margin: 'auto', borderRadius:"20px"}, }}  >
+                    <div style={{justifyContent:"center", textAlign: "center", position: 'relative',  }}>
+                        <DialogTitle>
+                            <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                                <Avatar style={{backgroundColor: "#f05d16", width:"50px", height:"50px"}} src="/broken-image.jpg" />
+                                <div style={{ 
+                                    width: '20px', 
+                                    height: '20px', 
+                                    backgroundColor: bgColorPencil, 
+                                    borderRadius: '50%', 
+                                    display: 'flex', 
+                                    justifyContent: 'center', 
+                                    alignItems: 'center',
+                                    position: 'absolute', 
+                                    top: '27%', 
+                                    left: '160px', 
+                                    transform: 'translateY(-50%)',
+                                    boxShadow: '0px 3px 6px rgba(0, 0, 0, 0.36)'
+                                }}>
+                                    <PiPencilSimpleBold style={{ color: textColorPencil, width:"13px", height:"25px"}} onMouseOver={handleMouseOverPencil} onMouseOut={handleMouseOutPencil} /> {/* Icono de lápiz */}
+                                </div>
+                            </div>
+                        </DialogTitle>
+                        <DialogContent style={{justifyContent:"center", textAlign: "center", paddingBottom: "0px", marginBottom:"0px"}}>
+                            <h2 style={{ fontSize: "18px", fontFamily: "SF Pro Display Bold"}}>Na.rubilark</h2> {/*{username} */}
+                            <p style={{ fontSize: "15px", fontFamily: "SF Pro Display Regular"}}>na.rubilar@duocuc.cl</p> {/*{email_user} */}
+                            <Button fullWidth
+                                href="/profile" 
+                                variant="contained"  
+                                style={{ 
+                                textTransform: "none", 
+                                backgroundColor: bgColorProfile, 
+                                color: textColorProfile,  
+                                borderRadius: '30px', 
+                                border: '2px solid borderColor',
+                                boxShadow: '0px 3px 6px rgba(0, 0, 0, 0.36)',
+                                fontSize:"15px", 
+                                marginBottom: "20px" ,
+                                fontFamily: "SF Pro Display Bold",
+                                }}
+                                onMouseOver={handleMouseOverProfile}
+                                onMouseOut={handleMouseOutProfile}
+                            >
+                                Ir a mi perfil
+                            </Button>
+                        </DialogContent>
                     </div>
-
-                    <DialogContent style={{justifyContent:"center", textAlign: "center" }}>
-                    <h2 style={{ fontSize: "18px", fontFamily: "SF Pro Display Bold"}}>Na.rubilark</h2> {/*{username} */}
-                    <p style={{ fontSize: "15px", fontFamily: "SF Pro Display Regular"}}>na.rubilar@duocuc.cl</p> {/*{email_user} */}
-                    <Button 
-                        href="/perfil" 
-                        variant="contained"  
-                        style={{ 
-                        textTransform: "none", 
-                        backgroundColor: bgColor, 
-                        color: textColor,  
-                        borderRadius: '30px', 
-                        border: '2px solid #f05d16', 
-                        fontWeight: "bold", 
-                        fontSize:"15px", 
-                        marginBottom: "20px" ,
-                        fontFamily: "SF Pro Display Medium",
-                        }}
-                        onMouseOver={handleMouseOver}
-                        onMouseOut={handleMouseOut}
-                    >
-                        Ir a mi perfil
-                    </Button>
-                    </DialogContent>
 
                     {/* Línea horizontal */}
                     <hr style={{ margin: "10px 0", opacity: 0.5 }} />
 
-                    <div style={{justifyContent:"left", display: "flex", flexDirection: "column", paddingRight:"15px"}}>
-                    <DialogActions>   
-                        <ul style={{listStyleType:"none", justifyContent:"left"}}>
-                        <li>Ajustes de mi cuenta</li> 
-                        <li>Ayuda</li>   
-                        
-                        </ul>        
-
-                    </DialogActions>
+                    <div style={{alignItems:"flex-start", display: "flex", flexDirection: "column", paddingRight:"8px"}}>
+                        <DialogActions style={{paddingLeft:"26px"}}>   
+                            <ul style={{listStyleType:"none", padding: "0px", fontSize: "13px", marginBottom:"2px", fontFamily: "SF Pro Display Medium",}}>
+                                <li style={{marginBottom:"8px"}}>Ajustes de mi cuenta</li> 
+                                <li>Ayuda</li>   
+                            </ul>        
+                        </DialogActions>
                     </div>
+
 
                     {/* Línea horizontal */}
                     <hr style={{ margin: "10px 0", opacity: 0.5 }} />
@@ -263,8 +302,9 @@ export const NavBarLogin: React.FC<{}> = () => {
                         <Button onClick={logout} startIcon={<FaSignOutAlt />}>Salir</Button> {/* Botón de Salir con un icono al lado izquierdo */}
                     </DialogActions>
                     </div>
+
                 </Dialog>
-                </div>
+            </div>
 
 
 

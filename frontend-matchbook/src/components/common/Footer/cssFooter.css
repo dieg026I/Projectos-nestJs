@@ -29,8 +29,6 @@
     font-family: 'SF Pro Display Regular' ;
     font-size: 14px;
     text-align: left;
-    
-
 }
 
 .footerTitle {
@@ -42,7 +40,57 @@
 
 .footerLogos {
     color: #ffff;
-    justify-content: center;
-    margin-right:  30px;
+    justify-content: left;
+    margin-right:  96px;
+    display: flex;
+    flex-direction: row;
+}
 
+.inputEmail {
+    height: '55px';
+    borderRadius: "30px";
+    borderColor: "#d8d5d5";
+    paddingLeft: "50px";
+    backgroundColor: "#404040";
+    color: "#d8d5d5";
+    width: "400px";
+}
+
+.icon {
+    width: "25px";
+    height: "25px";
+}
+
+/* Cuando la pantalla tiene 900px o menos de ancho */
+@media (max-width: 900px) {
+    .inputEmail {
+        width: "80%";
+    }
+
+    .icon {
+        width: "35px";
+        height: "35px";
+        margin-right:  0px;
+        
+    }
+
+}
+
+/* Cuando la pantalla tiene 600px o menos de ancho */
+@media (max-width: 600px) {
+    .footerLogos {
+        flex-direction: column;
+        align-items: center; /* Centra los logos verticalmente */
+    }
+
+    .inputEmail {
+        width: "100%";
+    }
+
+    .icon {
+        width: "35px";
+        height: "35px";
+        margin-right:  0px;
+        
+    }
 }

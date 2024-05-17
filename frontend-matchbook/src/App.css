@@ -86,6 +86,30 @@
   
 }
 
+/* - NavBar -  */
+.navbar {
+  z-index: 1000; /* Un valor alto para asegurarte de que la navbar siempre esté en la parte superior */
+  /* ...otros estilos... */
+}
+
+.step {
+  z-index: 1; /* Un valor más bajo para los pasos */
+  /* ...otros estilos... */
+}
+
+
+/*Profile*/
+.imgProfile {
+  background-image: url("./assents/img/imgProfile.jpg") ;
+  background-size: cover;
+  background-position: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 90vh;
+  
+}
+
 
 /* Font*/
 
@@ -109,6 +133,8 @@
   font-family: 'Roboto Bold';
   src: url('../../frontend-matchbook/src/assents/font/Roboto/Roboto-Bold.ttf') format('opentype');
 }
+
+
 
 
 

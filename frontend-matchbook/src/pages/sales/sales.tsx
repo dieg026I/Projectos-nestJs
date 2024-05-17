@@ -272,68 +272,77 @@ const Sales: React.FC = () => {
     };
 
     return (
-        <NoSsr>
-        <ThemeProvider theme={theme}>
-        <div>
-            <Box className="fondoVenta">
-                <Card  sx={{ borderRadius:"20px",width:"1100px", maxWidth: "1400px", maxHeight:"100%" }} ref={contentRef} style={contentStyle} >
-                
-                    <CardActionArea disableRipple>
-                        <CardContent style={{backgroundColor:"#002E5D", alignContent:"center"}}>
-                            <div style={{textAlign: "center", alignContent:"center", color:"#ffff", fontFamily: "SF Pro Display Medium", paddingTop:"10px"}} >
-                                <h3>Indica tu libro ({step}/3)</h3>
-                            </div>
-                        </CardContent>
-                        <CardContent  >
-                                {step === 1 && (
-                                    <>
-                                    {/* --Paso 1--*/}
-                                    <CardContent style={{margin:"15px"}}>
-                                        {step === 1 && (
-                                            <>
-                                                <Grid container justifyContent="space-between">
-                                                    <Typography gutterBottom variant="h4" style={{fontFamily:"SF Pro Display Bold", color:"#1eaeff"}} >
-                                                        Paso 1
-                                                    </Typography>
-                                                    <Typography variant="body2"  style={{fontFamily:"SF Pro Display Bold", color:"#002E5D"}}>
-                                                        ¡Recuerda que solo puedes vender libros originales!
-                                                    </Typography>
-                                                </Grid>
-                                                <Typography variant="body2" color="text.secondary">
-                                                    Detalla la información del libro
-                                                </Typography>
-                                                <Typography variant="body2" color="red">
-                                                    (*) campos obligatorios
-                                                </Typography>
-                                            </>
-                                        )}
-                                    </CardContent>
-                                    <CardBody style={{marginLeft:"30px", }}>
-                                        <h6 style={{fontFamily:"SF Pro Display Bold"}}>Título</h6>
-                                        <FormControl style={{ width:"50%" }}>
-                                            <InputLabel style={{ fontSize: "16px"}} ></InputLabel>
-                                            <TextField  
-                                                id="name"
-                                                value={name_book}
-                                                onChange={e => setNameBook(e.target.value)}
-                                                sx={{ width: '100%', color: "black", height:"45px", borderRadius:"10px" }}
-                                            />
-                                        </FormControl>
-                                    </CardBody>
-                                    </>
-                                )}
+        <>
+            <NavBarLogin />
+            
+                <NoSsr>
+                    <ThemeProvider theme={theme}>
+                    
+                        <div>
+                            
+                            <Box className="fondoVenta" sx={{ paddingTop: step === 2 ? '64px' : '0px' }}>
+                                
+                                <Card  sx={{ marginTop:"90px", borderRadius:"20px",width:"1100px", maxWidth: "1400px", maxHeight:"100%" }} ref={contentRef} style={contentStyle} >
+                                
+                                    <CardActionArea disableRipple>
+                                        <CardContent style={{backgroundColor:"#002E5D", alignContent:"center"}}>
+                                            <div style={{textAlign: "center", alignContent:"center", color:"#ffff", fontFamily: "SF Pro Display Medium", paddingTop:"10px"}} >
+                                                <h3>Indica tu libro ({step}/3)</h3>
+                                            </div>
+                                        </CardContent>
+                                        <CardContent  >
+                                                {step === 1 && (
+                                                    <>
+                                                    {/* --Paso 1--*/}
+                                                    <CardContent style={{margin:"15px"}}>
+                                                        {step === 1 && (
+                                                            <>
+                                                                <Grid container justifyContent="space-between">
+                                                                    <Typography gutterBottom variant="h4" style={{fontFamily:"SF Pro Display Bold", color:"#1eaeff"}} >
+                                                                        Paso 1
+                                                                    </Typography>
+                                                                    <Typography variant="body2"  style={{fontFamily:"SF Pro Display Bold", color:"#002E5D"}}>
+                                                                        ¡Recuerda que solo puedes vender libros originales!
+                                                                    </Typography>
+                                                                </Grid>
+                                                                <Typography variant="body2" color="text.secondary">
+                                                                    Detalla la información del libro
+                                                                </Typography>
+                                                                <Typography variant="body2" color="red">
+                                                                    (*) campos obligatorios
+                                                                </Typography>
+                                                            </>
+                                                        )}
+                                                    </CardContent>
+                                                    <CardBody style={{marginLeft:"30px", }}>
+                                                        <h6 style={{fontFamily:"SF Pro Display Bold"}}>Título</h6>
+                                                        <FormControl style={{ width:"50%" }}>
+                                                            <InputLabel style={{ fontSize: "16px"}} ></InputLabel>
+                                                            <Select 
+                                                                labelId="libro-label"
+                                                                id="name"
+                                                                value={name_book}
+                                                                onChange={e => setNameBook(e.target.value)}
+                                                                sx={{ width: '100%', color: "black", height:"45px", borderRadius:"10px" }}
+                                                                
+                                                            >
+                                                            </Select>
+                                                        </FormControl>
+                                                    </CardBody>
+                                                    </>
+                                                )}
 
-                                {/* --Paso 2--*/}
-                                {step === 2 && (
-                                    <>
-                                    <div style={{marginTop:"10px", marginLeft:"50px", marginRight:"50px"}}>
-                                        <Typography gutterBottom variant="h4" style={{fontFamily:"SF Pro Display Bold", color:"#1eaeff"}} >
-                                            Paso 2
-                                        </Typography>
-                                        <Typography variant="body2" color="text.secondary">
-                                            Completa la información del libro
-                                        </Typography>
-                                        <br />
+                                                {/* --Paso 2--*/}
+                                                {step === 2 && (
+                                                    <>
+                                                    <div style={{marginTop:"10px", marginLeft:"50px", marginRight:"50px"}}>
+                                                        <Typography gutterBottom variant="h4" style={{fontFamily:"SF Pro Display Bold", color:"#1eaeff"}} >
+                                                            Paso 2
+                                                        </Typography>
+                                                        <Typography variant="body2" color="text.secondary">
+                                                            Completa la información del libro
+                                                        </Typography>
+                                                        <br />
 
                                         <div >
                                             <Grid container spacing={2} alignItems="center" >
@@ -460,31 +469,31 @@ const Sales: React.FC = () => {
                                                             <MenuItem value="Usado: Con mucho desgaste">Usado: Con mucho desgaste</MenuItem>
                                                             <MenuItem value="Usado:  En mal estado">Usado:  En mal estado</MenuItem>
 
-                                                        </Select>
-                                                    </FormControl>
-                                                </Grid>
-                                            </Grid>
-                                            <Grid container spacing={2} >
-                                                {/* Formato */}
-                                                <Grid item xs={6}>
-                                                    <FormControl>
-                                                        <FormLabel id="format" style={{color: "#000000", fontFamily:"SF Pro Display Bold"}} >Formato</FormLabel>
-                                                        <RadioGroup
-                                                            row
-                                                            aria-labelledby="format"
-                                                            name="format"
-                                                            value={format_book}
-                                                            onChange={(event) => setFormatBook(event.target.value)}
-                                                        >
-                                                            <FormControlLabel value="dura" control={<Radio />} label="Tapa Dura" />
-                                                            <FormControlLabel value="blanda" control={<Radio />} label="Tapa Blanda" />
-                                                        </RadioGroup>
-                                                    </FormControl>
-                                                    <br />
-                                                    <br />
-                                                    <h6>¿Cuál es la comisión por vender?</h6>
-                                                    <p>Matchbook descontará un 10% del total de cada venta realizada. 
-                                                    Este descuento se realiza al momento de asignar el saldo de una transacción.</p>
+                                                                        </Select>
+                                                                    </FormControl>
+                                                                </Grid>
+                                                            </Grid>
+                                                            <Grid container spacing={2} >
+                                                                {/* Formato */}
+                                                                <Grid item xs={6}>
+                                                                    <FormControl>
+                                                                        <FormLabel id="format" style={{color: "#000000", fontFamily:"SF Pro Display Bold"}} >Formato</FormLabel>
+                                                                        <RadioGroup
+                                                                            row
+                                                                            aria-labelledby="format"
+                                                                            name="format"
+                                                                            value={format_book}
+                                                                            onChange={(event) => setFormatBook(event.target.value)}
+                                                                        >
+                                                                            <FormControlLabel value="dura" control={<Radio />} label="Tapa Dura" />
+                                                                            <FormControlLabel value="blanda" control={<Radio />} label="Tapa Blanda" />
+                                                                        </RadioGroup>
+                                                                    </FormControl>
+                                                                    <br />
+                                                                    <br />
+                                                                    <h6>¿Cuál es la comisión por vender?</h6>
+                                                                    <p>Matchbook descontará un 10% del total de cada venta realizada. 
+                                                                    Este descuento se realiza al momento de asignar el saldo de una transacción.</p>
 
                                                     <br />
                                                     <h6>¿Cómo recibo mi dinero?</h6>
@@ -570,113 +579,113 @@ const Sales: React.FC = () => {
                                                     </CardContent>
                                                 </Card>
 
-                                                {/* Portada Real */}
-                                                <Card style={{ margin: "10px", alignContent: "center", height:"255px", width: "175px", borderRadius: "20px", textAlign: "center", position: 'relative'}} sx={{ maxWidth: 345, padding: "10px"}}>
-                                                    <CardContent style={{padding:"0px", position: "relative"}}>
-                                                        <input
-                                                            accept="image/*"
-                                                            style={{ display: 'none' }}
-                                                            id="image-cover"
-                                                            type="file"
-                                                            value={photo_cover}
-                                                            onChange={handleImageChangeCover} 
-                                                        />
-                                                        <label htmlFor="image-cover">
-                                                            {!imageCover && (
-                                                                <Button component="span">
-                                                                    <AddIcon />
-                                                                </Button>
-                                                            )}
-                                                        </label>
-                                                        {imageCover ? (
-                                                            <>
-                                                            <img src={imageCover} alt="Portada Real" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
-                                                            <Button 
-                                                                style={{ position: 'absolute', top: -7, right: -20}} 
-                                                                onClick={() => setImageCover(null)}
-                                                            >
-                                                                <DeleteIcon style={{color:"black", borderBlockColor:"white"}} />
-                                                            </Button>
-                                                            </>
-                                                        ) : (
-                                                            <Typography variant="body2" color="text.secondary">
-                                                                Portada Real (Fotografía)
-                                                            </Typography>
-                                                        )}
-                                                    </CardContent>
-                                                </Card>
+                                                                {/* Portada Real */}
+                                                                <Card style={{ margin: "10px", alignContent: "center", height:"255px", width: "175px", borderRadius: "20px", textAlign: "center", position: 'relative'}} sx={{ maxWidth: 345, padding: "10px"}}>
+                                                                    <CardContent style={{padding:"0px", position: "relative"}}>
+                                                                        <input
+                                                                            accept="image/*"
+                                                                            style={{ display: 'none' }}
+                                                                            id="image-cover"
+                                                                            type="file"
+                                                                            value={photo_cover}
+                                                                            onChange={handleImageChangeCover} 
+                                                                        />
+                                                                        <label htmlFor="image-cover">
+                                                                            {!imageCover && (
+                                                                                <Button component="span">
+                                                                                    <AddIcon />
+                                                                                </Button>
+                                                                            )}
+                                                                        </label>
+                                                                        {imageCover ? (
+                                                                            <>
+                                                                            <img src={imageCover} alt="Portada Real" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                                                                            <Button 
+                                                                                style={{ position: 'absolute', top: -7, right: -20}} 
+                                                                                onClick={() => setImageCover(null)}
+                                                                            >
+                                                                                <DeleteIcon style={{color:"black", borderBlockColor:"white"}} />
+                                                                            </Button>
+                                                                            </>
+                                                                        ) : (
+                                                                            <Typography variant="body2" color="text.secondary">
+                                                                                Portada Real (Fotografía)
+                                                                            </Typography>
+                                                                        )}
+                                                                    </CardContent>
+                                                                </Card>
 
-                                                {/* Portada Página (Fotografía) */}
-                                                <Card style={{ margin: "10px", alignContent: "center", height:"255px", width: "175px", borderRadius: "20px", textAlign: "center", position: 'relative'}} sx={{ maxWidth: 345, padding: "10px"}}>
-                                                    <CardContent style={{padding:"0px", position: "relative"}}>
-                                                        <input
-                                                            accept="image/*"
-                                                            style={{ display: 'none' }}
-                                                            id="image-first"
-                                                            type="file"
-                                                            value={photo_first}
-                                                            onChange={handleImageChangeFirst} 
-                                                        />
-                                                        <label htmlFor="image-first">
-                                                            {!imageFirst && (
-                                                                <Button component="span">
-                                                                    <AddIcon />
-                                                                </Button>
-                                                            )}
-                                                        </label>
-                                                        {imageFirst ? (
-                                                            <>
-                                                            <img src={imageFirst} alt="Portada Pagina" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
-                                                            <Button 
-                                                                style={{ position: 'absolute', top: -7, right: -20}} 
-                                                                onClick={() => setImageFirst(null)}
-                                                            >
-                                                                <DeleteIcon style={{color:"black", borderBlockColor:"white"}} />
-                                                            </Button>
-                                                            </>
-                                                        ) : (
-                                                            <Typography variant="body2" color="text.secondary">
-                                                                Portada Página (Fotografía)
-                                                            </Typography>
-                                                        )}
-                                                    </CardContent>
-                                                </Card>
+                                                                {/* Portada Página (Fotografía) */}
+                                                                <Card style={{ margin: "10px", alignContent: "center", height:"255px", width: "175px", borderRadius: "20px", textAlign: "center", position: 'relative'}} sx={{ maxWidth: 345, padding: "10px"}}>
+                                                                    <CardContent style={{padding:"0px", position: "relative"}}>
+                                                                        <input
+                                                                            accept="image/*"
+                                                                            style={{ display: 'none' }}
+                                                                            id="image-first"
+                                                                            type="file"
+                                                                            value={photo_first}
+                                                                            onChange={handleImageChangeFirst} 
+                                                                        />
+                                                                        <label htmlFor="image-first">
+                                                                            {!imageFirst && (
+                                                                                <Button component="span">
+                                                                                    <AddIcon />
+                                                                                </Button>
+                                                                            )}
+                                                                        </label>
+                                                                        {imageFirst ? (
+                                                                            <>
+                                                                            <img src={imageFirst} alt="Portada Pagina" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                                                                            <Button 
+                                                                                style={{ position: 'absolute', top: -7, right: -20}} 
+                                                                                onClick={() => setImageFirst(null)}
+                                                                            >
+                                                                                <DeleteIcon style={{color:"black", borderBlockColor:"white"}} />
+                                                                            </Button>
+                                                                            </>
+                                                                        ) : (
+                                                                            <Typography variant="body2" color="text.secondary">
+                                                                                Portada Página (Fotografía)
+                                                                            </Typography>
+                                                                        )}
+                                                                    </CardContent>
+                                                                </Card>
 
-                                                {/* Contraportada (Fotografía) */}
-                                                <Card style={{ margin: "10px", alignContent: "center", height:"255px", width: "175px", borderRadius: "20px", textAlign: "center", position: 'relative'}} sx={{ maxWidth: 345, padding: "10px"}}>
-                                                    <CardContent style={{padding:"0px", position: "relative"}}>
-                                                        <input
-                                                            accept="image/*"
-                                                            style={{ display: 'none' }}
-                                                            id="image-back"
-                                                            type="file"
-                                                            value={photo_back}
-                                                            onChange={handleImageChangeBack} 
-                                                        />
-                                                        <label htmlFor="image-back">
-                                                            {!imageBack && (
-                                                                <Button component="span">
-                                                                    <AddIcon />
-                                                                </Button>
-                                                            )}
-                                                        </label>
-                                                        {imageBack ? (
-                                                            <>
-                                                            <img src={imageBack} alt="Contraportada" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
-                                                            <Button 
-                                                                style={{ position: 'absolute', top: -7, right: -20}} 
-                                                                onClick={() => setImageBack(null)}
-                                                            >
-                                                                <DeleteIcon style={{color:"black", borderBlockColor:"white"}} />
-                                                            </Button>
-                                                            </>
-                                                        ) : (
-                                                            <Typography variant="body2" color="text.secondary">
-                                                                Contraportada (Fotografía)
-                                                            </Typography>
-                                                        )}
-                                                    </CardContent>
-                                                </Card>
+                                                                {/* Contraportada (Fotografía) */}
+                                                                <Card style={{ margin: "10px", alignContent: "center", height:"255px", width: "175px", borderRadius: "20px", textAlign: "center", position: 'relative'}} sx={{ maxWidth: 345, padding: "10px"}}>
+                                                                    <CardContent style={{padding:"0px", position: "relative"}}>
+                                                                        <input
+                                                                            accept="image/*"
+                                                                            style={{ display: 'none' }}
+                                                                            id="image-back"
+                                                                            type="file"
+                                                                            value={photo_back}
+                                                                            onChange={handleImageChangeBack} 
+                                                                        />
+                                                                        <label htmlFor="image-back">
+                                                                            {!imageBack && (
+                                                                                <Button component="span">
+                                                                                    <AddIcon />
+                                                                                </Button>
+                                                                            )}
+                                                                        </label>
+                                                                        {imageBack ? (
+                                                                            <>
+                                                                            <img src={imageBack} alt="Contraportada" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                                                                            <Button 
+                                                                                style={{ position: 'absolute', top: -7, right: -20}} 
+                                                                                onClick={() => setImageBack(null)}
+                                                                            >
+                                                                                <DeleteIcon style={{color:"black", borderBlockColor:"white"}} />
+                                                                            </Button>
+                                                                            </>
+                                                                        ) : (
+                                                                            <Typography variant="body2" color="text.secondary">
+                                                                                Contraportada (Fotografía)
+                                                                            </Typography>
+                                                                        )}
+                                                                    </CardContent>
+                                                                </Card>
 
                                             </Grid>
                                         </div>
