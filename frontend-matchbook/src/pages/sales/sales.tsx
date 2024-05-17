@@ -9,6 +9,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { v4 as uuidv4 } from 'uuid';
+import NavBarLogin from "../../components/common/NavBarLogin/navBarLogin";
 interface Author {
     id_author: string;
     name_author: string;
@@ -742,6 +743,7 @@ const Sales: React.FC = () => {
         </div>
         </ThemeProvider>
     </NoSsr>
+    </>
     );
 }
 export default Sales;
