@@ -135,6 +135,11 @@
 }
 
 
+/* SF Pro Text*/
+@font-face {
+  font-family: 'SF Pro Text Bold';
+  src: url('../../frontend-matchbook/src/assents/font/SF-Pro-Text/SF-Pro-Text-Bold.otf') format('opentype');
+}
 
 
 

@@ -12,6 +12,7 @@ import Sales from './pages/sales/sales';
 import NavBarLogin from './components/common/NavBarLogin/navBarLogin';
 import Profile from './pages/profile/profile';
 import ReadingClub from './pages/readingClub/readingClub';
+import Marketplace from './pages/marketplace/marketplace';
 
 
 const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
@@ -48,6 +49,7 @@ function App() {
         <Route path="/home2" element={<HomePageLogin />} />
         <Route path="/sales" element={<Sales />} />
         <Route path="/profile" element={<Profile />} />
+        <Route path="/marketplace" element={<Marketplace />} />
 
         {/* Ruta para la página NotFound */}
         <Route path="*" element={<NotFoundPage />} />
