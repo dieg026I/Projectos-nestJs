@@ -1,10 +1,10 @@
-import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, OneToMany, PrimaryColumn } from 'typeorm';
 import { Book } from '../../book/entities/book.entity';
 
-@Entity()
+@Entity('author')
 export class Author {
-  @PrimaryGeneratedColumn()
-  id_author: number;
+  @PrimaryColumn()
+  id_author: string;
 
   @Column()
   name_author: string;

@@ -17,18 +17,24 @@ import Marketplace from './pages/marketplace/marketplace';
 
 const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const navigate = useNavigate();
-  const isAuthenticated = localStorage.getItem('access_token') !== null; 
+  const isAuthenticated = localStorage.getItem('access_token') == null; 
+  console.log(localStorage.getItem('access_token'))
+  console.log(isAuthenticated);
 
   useEffect(() => {
     if (!isAuthenticated) {
       navigate('/login');
+      console.log("hola1");
     }
   }, [isAuthenticated, navigate]);
 
   if (!isAuthenticated) {
+    console.log("hola2");
     return null;
+    
   }
 
+  console.log("hola3");
   return <>{children}</>;
 };
 
@@ -60,4 +66,4 @@ function App() {
   );
 }
 
-export default App;
+export default App;

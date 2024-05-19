@@ -22,11 +22,11 @@ export class PublisherService {
     return this.publisherRepository.findOne({ where: {name_publisher}});
   }
 
-  update(id: number, publisher: Publisher) {
+  update(id: string, publisher: Publisher) {
     return this.publisherRepository.update(id, publisher);
   }
 
-  remove(id: number) {
+  remove(id: string) {
     return this.publisherRepository.delete(id);
   }
 }

@@ -17,6 +17,10 @@ import { AuthorModule } from './author/author.module';
 import { PublisherModule } from './publisher/publisher.module';
 import { Author } from './author/entities/author.entity';
 import { Publisher } from './publisher/entities/publisher.entity';
+import { PublicationModule } from './publication/publication.module';
+import { CategoryModule } from './category/category.module';
+import { Publication } from './publication/entities/publication.entity';
+import { Category } from './category/entities/category.entity';
 
 @Module({
   imports: [
@@ -27,7 +31,7 @@ import { Publisher } from './publisher/entities/publisher.entity';
     username: 'postgres',
     password: '95809580Dd',
     database: 'Matchbook_BD',
-    entities: [Users, Cities, Region, Book, Author, Publisher],
+    entities: [Users, Cities, Region, Book, Author, Publisher, Publication, Category],
     synchronize: false, // Solo para entornos de desarrollo
     autoLoadEntities: false,
   }),RegionModule,CommuneModule, UsersModule, AuthModule,
@@ -37,7 +41,9 @@ import { Publisher } from './publisher/entities/publisher.entity';
   }),
      BookModule,
      AuthorModule,
-     PublisherModule ],
+     PublisherModule,
+     PublicationModule,
+     CategoryModule ],
   controllers: [AppController],
   providers: [AppService],
 })

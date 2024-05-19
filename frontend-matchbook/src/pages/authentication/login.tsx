@@ -61,6 +61,10 @@ const LoginPage: React.FC = () => {
 
       if (response.status === 200){
         localStorage.setItem('access_token', response.data.token);
+        console.log(localStorage.getItem('access_token'));
+        setTimeout(() => {
+          navigate('/home2');
+        }, 5000);
       }
 
       const username = email_user.substring(0, 12);

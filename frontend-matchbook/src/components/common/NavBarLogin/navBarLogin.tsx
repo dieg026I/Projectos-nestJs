@@ -1,6 +1,7 @@
 
 import React, { useEffect, useState } from 'react';
 import "../../common/NavBar/cssNav.css";
+import { useNavigate } from 'react-router-dom';
 
 import {
     AppBar,
@@ -115,6 +116,20 @@ export const NavBarLogin: React.FC<{}> = () => {
             </MenuItem>
         </Menu>
     );
+
+    const navigate = useNavigate();
+
+    const logout = () => {
+        // Elimina el token del almacenamiento local
+        localStorage.removeItem('access_token');
+      
+        // Redirige al usuario a la página de inicio de sesión
+        navigate('/login');
+    };
+      
+
+
+    
 
     return (
         <div className="navbar">
@@ -282,10 +297,10 @@ export const NavBarLogin: React.FC<{}> = () => {
                     {/* Línea horizontal */}
                     <hr style={{ margin: "10px 0", opacity: 0.5 }} />
 
-                    <div style={{justifyContent:"flex-start", textAlign: "left", display: "flex", alignItems:"center"}}>
-                        <DialogActions style={{paddingLeft:"26px"}} >
-                            <Button style={{textTransform: "none" , color:"#f05d16"}} startIcon={<FaSignOutAlt  />}>Salir</Button> {/* Botón de Salir con un icono al lado izquierdo */}
-                        </DialogActions>
+                    <div style={{justifyContent:"center", textAlign: "center", display: "flex"}}>
+                    <DialogActions>
+                        <Button onClick={logout} startIcon={<FaSignOutAlt />}>Salir</Button> {/* Botón de Salir con un icono al lado izquierdo */}
+                    </DialogActions>
                     </div>
 
                 </Dialog>

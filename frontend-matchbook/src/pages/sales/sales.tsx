@@ -6,7 +6,19 @@ import React from "react";
 import axios from "axios";
 import "../../App.css";
 import DeleteIcon from '@mui/icons-material/Delete';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { v4 as uuidv4 } from 'uuid';
 import NavBarLogin from "../../components/common/NavBarLogin/navBarLogin";
+interface Author {
+    id_author: string;
+    name_author: string;
+}
+
+interface Category {
+    id_category: string;
+    name_category: string;
+}
 
 const Sales: React.FC = () => {
 
@@ -14,15 +26,16 @@ const Sales: React.FC = () => {
     const [id_book, setIdbook] = React.useState('');
     const [name_book, setNameBook] = React.useState('');
     const [format_book, setFormatBook] = React.useState('');
-    const [author_id, setAuthorId] = React.useState('');
-    const [publisher_id, setPublisherId] = React.useState('');
-    const [cost_book, setCostBook] = React.useState('');
-    const [id_category, setCategoryId] = React.useState('');
-    const [selectedCategory, setSelectedCategory] = useState(0);
-    const [year_book, setYearBook] = React.useState('');
+    const [author_name, setAuthorName] = React.useState('');
+    const [publisher_name, setPublisherName] = React.useState('');
+    const [cost_book, setCostBook] = React.useState(0);
+    const [category, setCategory] = React.useState<Category[]>([]);
+    const [OneCategory, setOneCategory] = React.useState<Category>();
+    const [selectedCategory, setSelectedCategory] = useState('');
+    const [year_book, setYearBook] = React.useState(0);
     const [status_book, setStatusBook ] = React.useState('');
     const [selectedStatus, setSelectedStatus] = useState('');
-    const [stock_book, setStockBook] = React.useState('');
+    const [stock_book, setStockBook] = React.useState(0);
     const [description_book, setDescriptionBook] = React.useState('');
 
     {/* Publicación */}
@@ -132,24 +145,29 @@ const Sales: React.FC = () => {
     useEffect(() => {
         axios.get('http://localhost:3001/categories')
             .then(response => {
-            setCategoryId(response.data);
-            console.log('Mostrar Categorias'+response.data);
+            setCategory(response.data);
+            console.log('Mostrar Categorias: '+ response.data);
             });
     }, []);
 
     const handleCategoryChange = (event: SelectChangeEvent<string>) => {
-        const selectedValue = Number(event.target.value);
+        const selectedValue = (event.target.value);
         setSelectedCategory(selectedValue);
-    
-        const id_category = event.target.value;
-    
+        let id_category = selectedValue
         axios.get(`http://localhost:3001/categories/${id_category}`)
             .then(response => {
-            setCategoryId(response.data);
-            console.log(response.data);
-        });
+            setOneCategory(response.data);
+            console.log('Mostrar Categorias: ' + response.data);
+            });
+
     };
     
+    const handleDescriptionChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
+        if (event.target.value) {
+            const description_book = event.target.value;
+            setDescriptionBook(description_book);
+        }
+    }
     {/*-----------------------------------------------------------------------------*/}
     {/* Status */}
     
@@ -169,31 +187,56 @@ const Sales: React.FC = () => {
     
     {/*-----------------------------------------------------------------------------*/}
     {/* Subir Libro */}
+    
     const handleSubmitBook = async (event: React.FormEvent) => {
         event.preventDefault();
-
-        //  --Validaciones--
-
-    try {
-        const responseA = await axios.post('http://localhost:3001/book', {
-            id_book,
-            name_book,
-            format_book,
-            author_id,
-            publisher_id,
-            cost_book ,
-            id_category,
-            year_book,
-            status_book,
-            stock_book,
-            description_book,
-        });
-
-        console.log(responseA.data);
-
-    } catch (error) {
-        console.error('Hubo un error al ingresar la publicacion:', error);
+    
+        try {
+            // Primero, guarda el autor y obtén su ID
+            let id_author = uuidv4();
+            const responseAuthor = await axios.post('http://localhost:3001/author', {
+            id_author: id_author,    
+            name_author: author_name,
+            });
+            console.log(responseAuthor.data)
+            const author_id = responseAuthor.data.id_author
+            // Luego, guarda la editorial y obtén su ID
+            let id_publisher = uuidv4();
+            const responsePublisher = await axios.post('http://localhost:3001/publisher', {
+                id_publisher: id_publisher,    
+                name_publisher: publisher_name  
+            });
+            console.log(responsePublisher.data)
+            const publisher_id = responsePublisher.data.id_publisher;
+            const bookId = `${name_book}-${author_name.length}-${publisher_name.slice(0, 3)}`;
+    
+            // Finalmente, guarda el libro con los IDs del autor y la editorial
+            const responseBook = await axios.post('http://localhost:3001/book', {
+                id_book: bookId,
+                name_book: name_book,
+                format_book: format_book,
+                author_id_author: author_id,
+                publisher_id_publisher: publisher_id,
+                cost_book: cost_book,
+                year_book: year_book,
+                status_book: selectedStatus,
+                stock_book: stock_book,
+                description_book: description_book,
+                categories: [OneCategory]
+            });
+    
+            console.log(responseBook.data);
+            handleNext();
+        } catch (error) {
+            console.error('Hubo un error al ingresar la publicación:', error);
         }
+    };
+    
+    const add_book = (event: React.FormEvent) => {
+        event.preventDefault();
+        handleSubmitBook(event).then(() => {
+            toast("Libro guardado con éxito!");
+        });
     };
 
     {/*-----------------------------------------------------------------------------*/}
@@ -302,127 +345,130 @@ const Sales: React.FC = () => {
                                                         </Typography>
                                                         <br />
 
-                                                        <div >
-                                                            <Grid container spacing={2} alignItems="center" >
-                                                                {/* Autor */}
-                                                                <Grid item xs={6}>
-                                                                    <h6 style={{fontFamily:"SF Pro Display Bold"}}>Autor</h6>
-                                                                    <TextField fullWidth 
-                                                                        style={{ color: "black", borderRadius: 20 }}
-                                                                        id="author"
-                                                                        className="mb-3 formulario"
-                                                                        placeholder="Autor/a de la obra"
-                                                                        type="text"
-                                                                        value={author_id}
-                                                                        onChange={e => setAuthorId(e.target.value)}
-                                                                        InputLabelProps={{
-                                                                            sx: { fontSize: "16px"} 
-                                                                        }}
-                                                                        
-                                                                        sx={{ borderRadius: 20 }}
-                                                                    />
-                                                                </Grid>
-                                                                {/* Categoría */}
-                                                                <Grid item xs={6}>
-                                                                    <h6 style={{fontFamily:"SF Pro Display Bold"}}>Categoría</h6>
-                                                                    <FormControl fullWidth>
-                                                                        <InputLabel style={{ fontSize: "16px"}} id="demo-simple-select-standard-label" ></InputLabel>
-                                                                        <Select 
-                                                                            labelId="category-label"
-                                                                            id="category"
-                                                                            sx={{ width: '100%', color: "black", borderRadius:"15px"}}
-                                                                            onChange={handleCategoryChange}
-                                                                            value={selectedCategory.toString()}
-                                                                            placeholder="Selecciona"
-                                                                            displayEmpty
-                                                                        >
-                                                                        <MenuItem value="" disabled sx={{ color: "black" }}>Selecciona una categoría</MenuItem>  
-                                                                        </Select>
-                                                                    </FormControl>
-                                                                </Grid>
-                                                            </Grid>
-                                                            <Grid container spacing={2} alignItems="center">
-                                                                {/* Editorial */}
-                                                                <Grid item xs={6}>
-                                                                    <h6 style={{fontFamily:"SF Pro Display Bold"}}>Editorial</h6>
-                                                                    <TextField fullWidth 
-                                                                        style={{ color: "black"}}
-                                                                        id="publisher"
-                                                                        className="mb-3 formulario"
-                                                                        placeholder="Editorial"
-                                                                        type="text"
-                                                                        value={publisher_id}
-                                                                        onChange={e => setPublisherId(e.target.value)}
-                                                                        InputLabelProps={{
-                                                                            sx: { fontSize: "16px" } 
-                                                                        }}
-                                                                    />
-                                                                </Grid>
-                                                                {/* Año */}
-                                                                <Grid item xs={6}>
-                                                                    <h6 style={{fontFamily:"SF Pro Display Bold"}}>Año</h6>
-                                                                    <TextField fullWidth 
-                                                                        style={{ color: "black" }}
-                                                                        id="year"
-                                                                        className="mb-3 formulario"
-                                                                        placeholder="Año"
-                                                                        type="year"
-                                                                        value={year_book}
-                                                                        onChange={e => setYearBook(e.target.value)}
-                                                                        InputLabelProps={{
-                                                                            sx: { fontSize: "16px" } 
-                                                                        }}
-                                                                        InputProps={{
-                                                                            inputProps: { 
-                                                                                min: 0, 
-                                                                                style: { 
-                                                                                    MozAppearance: 'textfield',
-                                                                                    appearance: 'textfield'
-                                                                                }
-                                                                            }
-                                                                        }}
-                                                                    />
-                                                                </Grid>
-                                                            </Grid>
-                                                            <Grid container spacing={2}  >
-                                                                {/* Precio de venta */}
-                                                                <Grid item xs={6}>
-                                                                    <h6 style={{fontFamily:"SF Pro Display Bold"}}>Precio de venta</h6>
-                                                                    <TextField fullWidth 
-                                                                        style={{ color: "black" }}
-                                                                        id="cost"
-                                                                        className="mb-3 formulario"
-                                                                        placeholder="Precio"
-                                                                        type="numeric"
-                                                                        value={cost_book}
-                                                                        onChange={e => setCostBook(e.target.value)}
-                                                                        InputLabelProps={{
-                                                                            sx: { fontSize: "16px" } 
-                                                                        }}
-                                                                        variant="outlined"
-                                                                        sx={{ borderRadius: 20 }}
-                                                                    />
-                                                                </Grid>
-                                                                {/* Estado del libro */}
-                                                                <Grid item xs={6}>
-                                                                    <FormControl fullWidth>
-                                                                        <h6 style={{fontFamily:"SF Pro Display Bold"}}>Estado del libro</h6>
-                                                                        <Select fullWidth 
-                                                                            style={{ color: "black" }}
-                                                                            id="status"
-                                                                            className="mb-3 formulario"
-                                                                            onChange={handleStatusChange}
-                                                                            value={selectedStatus}
-                                                                            labelId="status-label"
-                                                                            sx={{ borderRadius:"15px"}}
-                                                                            displayEmpty                                       
-                                                                        >
-                                                                            <MenuItem value="">Selecciona una opción</MenuItem>
-                                                                            <MenuItem value="Nuevo">Nuevo</MenuItem>
-                                                                            <MenuItem value="Usado: Como nuevo">Usado: Como nuevo</MenuItem>
-                                                                            <MenuItem value="Usado: Con algo de desgaste">Usado: Con algo de desgaste</MenuItem>
-                                                                            <MenuItem value="Usado: Con mucho desgaste">Usado: Con mucho desgaste</MenuItem>
-                                                                            <MenuItem value="Usado:  En mal estado">Usado:  En mal estado</MenuItem>
+                                        <div >
+                                            <Grid container spacing={2} alignItems="center" >
+                                                {/* Autor */}
+                                                <Grid item xs={6}>
+                                                    <h6 style={{fontFamily:"SF Pro Display Bold"}}>Autor</h6>
+                                                    <TextField fullWidth 
+                                                        style={{ color: "black", borderRadius: 20 }}
+                                                        id="author"
+                                                        className="mb-3 formulario"
+                                                        placeholder="Autor/a de la obra"
+                                                        type="text"
+                                                        value={author_name}
+                                                        onChange={e => setAuthorName(e.target.value)}
+                                                        InputLabelProps={{
+                                                            sx: { fontSize: "16px"} 
+                                                        }}
+                                                        
+                                                        sx={{ borderRadius: 20 }}
+                                                    />
+                                                </Grid>
+                                                {/* Categoría */}
+                                                <Grid item xs={6}>
+                                                    <h6 style={{fontFamily:"SF Pro Display Bold"}}>Categoría</h6>
+                                                    <FormControl fullWidth>
+                                                        <InputLabel style={{ fontSize: "16px"}} id="demo-simple-select-standard-label" ></InputLabel>
+                                                        <Select 
+                                                            labelId="category-label"
+                                                            id="category"
+                                                            sx={{ width: '100%', color: "black", borderRadius:"15px"}}
+                                                            onChange={handleCategoryChange}
+                                                            value={selectedCategory.toString()}
+                                                            placeholder="Selecciona"
+                                                            displayEmpty
+                                                        >
+                                                        <MenuItem value="" disabled sx={{ color: "black" }}>Selecciona una categoría</MenuItem> 
+                                                        {category.map(category => (
+                                                        <MenuItem value={category.id_category} key={category.id_category}  sx={{ color: "black" }}>{category.name_category}</MenuItem>
+                                                        ))}
+                                                        </Select>
+                                                    </FormControl>
+                                                </Grid>
+                                            </Grid>
+                                            <Grid container spacing={2} alignItems="center">
+                                                {/* Editorial */}
+                                                <Grid item xs={6}>
+                                                    <h6 style={{fontFamily:"SF Pro Display Bold"}}>Editorial</h6>
+                                                    <TextField fullWidth 
+                                                        style={{ color: "black"}}
+                                                        id="publisher"
+                                                        className="mb-3 formulario"
+                                                        placeholder="Editorial"
+                                                        type="text"
+                                                        value={publisher_name}
+                                                        onChange={e => setPublisherName(e.target.value)}
+                                                        InputLabelProps={{
+                                                            sx: { fontSize: "16px" } 
+                                                        }}
+                                                    />
+                                                </Grid>
+                                                {/* Año */}
+                                                <Grid item xs={6}>
+                                                    <h6 style={{fontFamily:"SF Pro Display Bold"}}>Año</h6>
+                                                    <TextField fullWidth 
+                                                        style={{ color: "black" }}
+                                                        id="year"
+                                                        className="mb-3 formulario"
+                                                        placeholder="Año"
+                                                        type="year"
+                                                        value={year_book}
+                                                        onChange={e => setYearBook (Number(e.target.value))}
+                                                        InputLabelProps={{
+                                                            sx: { fontSize: "16px" } 
+                                                        }}
+                                                        InputProps={{
+                                                            inputProps: { 
+                                                                min: 0, 
+                                                                style: { 
+                                                                    MozAppearance: 'textfield',
+                                                                    appearance: 'textfield'
+                                                                }
+                                                            }
+                                                        }}
+                                                    />
+                                                </Grid>
+                                            </Grid>
+                                            <Grid container spacing={2}  >
+                                                {/* Precio de venta */}
+                                                <Grid item xs={6}>
+                                                    <h6 style={{fontFamily:"SF Pro Display Bold"}}>Precio de venta</h6>
+                                                    <TextField fullWidth 
+                                                        style={{ color: "black" }}
+                                                        id="cost"
+                                                        className="mb-3 formulario"
+                                                        placeholder="Precio"
+                                                        type="numeric"
+                                                        value={cost_book}
+                                                        onChange={e => setCostBook(Number(e.target.value))}
+                                                        InputLabelProps={{
+                                                            sx: { fontSize: "16px" } 
+                                                        }}
+                                                        variant="outlined"
+                                                        sx={{ borderRadius: 20 }}
+                                                    />
+                                                </Grid>
+                                                {/* Estado del libro */}
+                                                <Grid item xs={6}>
+                                                    <FormControl fullWidth>
+                                                        <h6 style={{fontFamily:"SF Pro Display Bold"}}>Estado del libro</h6>
+                                                        <Select fullWidth 
+                                                            style={{ color: "black" }}
+                                                            id="status"
+                                                            className="mb-3 formulario"
+                                                            onChange={handleStatusChange}
+                                                            value={selectedStatus}
+                                                            labelId="status-label"
+                                                            sx={{ borderRadius:"15px"}}
+                                                            displayEmpty                                       
+                                                        >
+                                                            <MenuItem value="">Selecciona una opción</MenuItem>
+                                                            <MenuItem value="Nuevo">Nuevo</MenuItem>
+                                                            <MenuItem value="Usado: Como nuevo">Usado: Como nuevo</MenuItem>
+                                                            <MenuItem value="Usado: Con algo de desgaste">Usado: Con algo de desgaste</MenuItem>
+                                                            <MenuItem value="Usado: Con mucho desgaste">Usado: Con mucho desgaste</MenuItem>
+                                                            <MenuItem value="Usado:  En mal estado">Usado:  En mal estado</MenuItem>
 
                                                                         </Select>
                                                                     </FormControl>
@@ -450,88 +496,89 @@ const Sales: React.FC = () => {
                                                                     <p>Matchbook descontará un 10% del total de cada venta realizada. 
                                                                     Este descuento se realiza al momento de asignar el saldo de una transacción.</p>
 
-                                                                    <br />
-                                                                    <h6>¿Cómo recibo mi dinero?</h6>
-                                                                    <p>Puedes solicitar tu dinero en "Mis ventas" una vez que tus libros sean recibidos por el comprador.</p>
-                                                                </Grid>
-                                                                {/* Num ejemplares */}
-                                                                <Grid item xs={6} alignItems="flex-start">
-                                                                    <FormGroup>
-                                                                        <FormControlLabel
-                                                                            control={<Checkbox checked={isChecked} onChange={handleCheckboxChange} />}
-                                                                            label="Deseo publicar más de un ejemplar"
-                                                                        />
-                                                                        {isChecked && (
-                                                                            <TextField 
-                                                                                fullWidth 
-                                                                                id="stock"
-                                                                                label="Número de Libros"
-                                                                                type="number"
-                                                                                value={stock_book}
-                                                                                onChange={(event) => setStockBook(event.target.value)}
-                                                                            />
-                                                                        )}
-                                                                    </FormGroup>
-                                                                    <br />
-                                                                    <h6 style={{color: "#000000", fontFamily:"SF Pro Display Bold"}}>Información Adicional</h6>
+                                                    <br />
+                                                    <h6>¿Cómo recibo mi dinero?</h6>
+                                                    <p>Puedes solicitar tu dinero en "Mis ventas" una vez que tus libros sean recibidos por el comprador.</p>
+                                                </Grid>
+                                                {/* Num ejemplares */}
+                                                <Grid item xs={6} alignItems="flex-start">
+                                                    <FormGroup>
+                                                        <FormControlLabel
+                                                            control={<Checkbox checked={isChecked} onChange={handleCheckboxChange} />}
+                                                            label="Deseo publicar más de un ejemplar"
+                                                        />
+                                                        {isChecked && (
+                                                            <TextField 
+                                                                fullWidth 
+                                                                id="stock"
+                                                                label="Número de Libros"
+                                                                type="number"
+                                                                value={stock_book}
+                                                                onChange={(event) => setStockBook(Number(event.target.value))}
+                                                            />
+                                                        )}
+                                                    </FormGroup>
+                                                    <br />
+                                                    <h6 style={{color: "#000000", fontFamily:"SF Pro Display Bold"}}>Información Adicional</h6>
 
-                                                                    <textarea style={{borderRadius:"10px", height: "180px"}} name="postContent" rows={4} cols={65} />                                                    
-                                                                </Grid>
-                                                            </Grid>
-                                                        </div>
-                                                        </div>
-                                                    </>
-                                                )}
-                                                {/* --Paso 3--*/}
-                                                {step === 3 && (
-                                                    <>
-                                                        <Typography gutterBottom variant="h4" style={{fontFamily:"SF Pro Display Bold", color:"#1eaeff"}} >
-                                                            Paso 3
-                                                        </Typography>
-                                                        <Typography variant="body2" color="text.secondary">
-                                                            Añade 3 fotografías iluminadas de tu libro
-                                                        </Typography>
-                                                        
-                                                        <br />
-                                                        <br />
-                                                        <div style={{backgroundColor:"#002E5D"}}>
-                                                            <Grid container spacing={4} justifyContent="center" style={{padding: "20px", alignContent:"center", textAlign: "center"}}>
-                                                                
-                                                                {/* Portada de Vitrina */}
-                                                                <Card style={{ margin: "10px", alignContent: "center", height:"255px", width: "175px", borderRadius: "20px", textAlign: "center", position: 'relative'}} sx={{ maxWidth: 345, padding: "10px"}}>
-                                                                    <CardContent style={{padding:"0px", position: "relative"}}>
-                                                                        <input
-                                                                            accept="image/*"
-                                                                            style={{ display: 'none' }}
-                                                                            id="image-showcase"
-                                                                            type="file"
-                                                                            value={photo_showcase}
-                                                                            onChange={handleImageChange}
-                                                                        />
-                                                                        <label htmlFor="image-showcase">
-                                                                            {!imageShowcase && (
-                                                                                <Button component="span">
-                                                                                    <AddIcon />
-                                                                                </Button>
-                                                                            )}
-                                                                        </label>
-                                                                        {imageShowcase ? (
-                                                                            <>
-                                                                            <img src={imageShowcase} alt="Portada Real" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
-                                                                            <Button 
-                                                                                style={{ position: 'absolute', top: -7, right: -20}} 
-                                                                                onClick={() => setImageShowcase(null)}
-                                                                            >
-                                                                                <DeleteIcon style={{color:"black", borderBlockColor:"white"}} />
-                                                                            </Button>
-                                                                            </>
-                                                                        ) : (
-                                                                            <Typography variant="body2" color="text.secondary">
-                                                                                Portada de Vitrina (opcional)
-                                                                            </Typography>
-                                                                        )}
-                                                                    </CardContent>
-                                                                </Card>
+                                                    <textarea style={{borderRadius:"10px", height: "180px"}} value={description_book} onChange={handleDescriptionChange} name="postContent" rows={4} cols={65} />                                                    
+                                                </Grid>
+                                            </Grid>
+                                        </div>
+                                        </div>
+                                    </>
+
+                                )}
+                                {/* --Paso 3--*/}
+                                {step === 3 && (
+                                    <>
+                                        <Typography gutterBottom variant="h4" style={{fontFamily:"SF Pro Display Bold", color:"#1eaeff"}} >
+                                            Paso 3
+                                        </Typography>
+                                        <Typography variant="body2" color="text.secondary">
+                                            Añade 3 fotografías iluminadas de tu libro
+                                        </Typography>
+                                        
+                                        <br />
+                                        <br />
+                                        <div style={{backgroundColor:"#002E5D"}}>
+                                            <Grid container spacing={4} justifyContent="center" style={{padding: "20px", alignContent:"center", textAlign: "center"}}>
+                                                
+                                                {/* Portada de Vitrina */}
+                                                <Card style={{ margin: "10px", alignContent: "center", height:"255px", width: "175px", borderRadius: "20px", textAlign: "center", position: 'relative'}} sx={{ maxWidth: 345, padding: "10px"}}>
+                                                    <CardContent style={{padding:"0px", position: "relative"}}>
+                                                        <input
+                                                            accept="image/*"
+                                                            style={{ display: 'none' }}
+                                                            id="image-showcase"
+                                                            type="file"
+                                                            value={photo_showcase}
+                                                            onChange={handleImageChange}
+                                                        />
+                                                        <label htmlFor="image-showcase">
+                                                            {!imageShowcase && (
+                                                                <Button component="span">
+                                                                    <AddIcon />
+                                                                </Button>
+                                                            )}
+                                                        </label>
+                                                        {imageShowcase ? (
+                                                            <>
+                                                            <img src={imageShowcase} alt="Portada Real" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                                                            <Button 
+                                                                style={{ position: 'absolute', top: -7, right: -20}} 
+                                                                onClick={() => setImageShowcase(null)}
+                                                            >
+                                                                <DeleteIcon style={{color:"black", borderBlockColor:"white"}} />
+                                                            </Button>
+                                                            </>
+                                                        ) : (
+                                                            <Typography variant="body2" color="text.secondary">
+                                                                Portada de Vitrina (opcional)
+                                                            </Typography>
+                                                        )}
+                                                    </CardContent>
+                                                </Card>
 
                                                                 {/* Portada Real */}
                                                                 <Card style={{ margin: "10px", alignContent: "center", height:"255px", width: "175px", borderRadius: "20px", textAlign: "center", position: 'relative'}} sx={{ maxWidth: 345, padding: "10px"}}>
@@ -641,51 +688,62 @@ const Sales: React.FC = () => {
                                                                     </CardContent>
                                                                 </Card>
 
-                                                            </Grid>
-                                                        </div>
-                                                    </>
-                                                )}            
-                                        </CardContent>
-                                    </CardActionArea>
-                                    <CardActions style={{ justifyContent: 'space-between', marginRight:"50%", marginLeft:"60%" }}>
-                                        {step > 1 && (
-                                            <div style={{justifyContent: "flex-end"}}>
-                                            <Button onClick={handlePrevious} style={{ backgroundColor:"#1eaeff", color: "#ffffff", borderRadius:"30px", textTransform: "none", marginRight:"30px", width:"130px", height:"50px", fontWeight:"bold"}} >
-                                                Anterior
-                                            </Button>
-                                            </div>
-                                        )}
-                                        {step === 1 ? (
-                                            <div style={{justifyContent: "flex-start"}}>
-                                            <Button onClick={handleNext} style={{ backgroundColor:"#1eaeff", color: "#ffffff", borderRadius:"30px", textTransform: "none", marginRight:"30px", width:"130px", height:"50px", fontWeight:"bold"}} >
-                                                Siguiente
-                                            </Button>
-                                            </div>
-                                        ) : step === 2 ? (
-                                            <div style={{justifyContent: "flex-start"}}>
-                                            <Button onClick={handleNext} style={{ backgroundColor:"#1eaeff", color: "#ffffff", borderRadius:"30px", textTransform: "none", marginRight:"30px", width:"130px", height:"50px", fontWeight:"bold"}} >
-                                                Siguiente
-                                            </Button>
-                                            </div>
-                                        ) : (
-                                            <div style={{ display: 'flex', justifyContent: 'flex-start' }}>
-                                            <Button onClick={handleAddAnother} style={{ backgroundColor:"#1eaeff", color: "#ffffff", borderRadius:"30px", textTransform: "none",  width:"130px", height:"50px", fontWeight:"bold"}} >
-                                                Agregar otro
-                                            </Button>
-                                            <Button onClick={handleSubmitPublication} style={{ backgroundColor:"#1eaeff", color: "#ffffff", borderRadius:"30px", textTransform: "none",  width:"130px", height:"50px", fontWeight:"bold"}} >
-                                                Completado
-                                            </Button>
-                                            </div>
-                                        )}
-                                    </CardActions>
-                                    <CardContent style={{backgroundColor:"#002E5D"}}>
-                                    </CardContent>
-                                </Card> 
-                            </Box>
+                                            </Grid>
+                                        </div>
+                                    </>
+                                )}            
+                        </CardContent>
+                    </CardActionArea>
+                    <CardActions style={{ justifyContent: 'space-between', marginRight:"50%", marginLeft:"60%" }}>
+                    {step > 1 && (
+                        <div style={{justifyContent: "flex-end"}}>
+                        <Button onClick={handlePrevious} style={{ backgroundColor:"#1eaeff", color: "#ffffff", borderRadius:"30px", textTransform: "none", marginRight:"30px", width:"130px", height:"50px", fontWeight:"bold"}} >
+                            Anterior
+                        </Button>
                         </div>
-                    </ThemeProvider>
-            </NoSsr>
-        </>
+                    )}
+                    {step === 1 ? (
+                        <div style={{justifyContent: "flex-start"}}>
+                        <Button onClick={handleNext} style={{ backgroundColor:"#1eaeff", color: "#ffffff", borderRadius:"30px", textTransform: "none", marginRight:"30px", width:"130px", height:"50px", fontWeight:"bold"}} >
+                            Siguiente
+                        </Button>
+                        </div>
+                    ) : step === 2 ? (
+                        <div style={{justifyContent: "flex-start"}}>
+                        <Button onClick={add_book}  style={{ backgroundColor:"#1eaeff", color: "#ffffff", borderRadius:"30px", textTransform: "none", marginRight:"30px", width:"130px", height:"50px", fontWeight:"bold"}} >
+                            Siguiente
+                        </Button>
+                        <ToastContainer 
+                        position="top-right"
+                        autoClose={5000}
+                        hideProgressBar={false}
+                        newestOnTop={false}
+                        closeOnClick
+                        rtl={false}
+                        pauseOnFocusLoss
+                        draggable
+                        pauseOnHover
+                        />
+                        </div>
+                    ) : (
+                        <div style={{ display: 'flex', justifyContent: 'flex-start' }}>
+                        <Button onClick={handleAddAnother} style={{ backgroundColor:"#1eaeff", color: "#ffffff", borderRadius:"30px", textTransform: "none",  width:"130px", height:"50px", fontWeight:"bold"}} >
+                            Agregar otro
+                        </Button>
+                        <Button onClick={handleSubmitPublication} style={{ backgroundColor:"#1eaeff", color: "#ffffff", borderRadius:"30px", textTransform: "none",  width:"130px", height:"50px", fontWeight:"bold"}} >
+                            Completado
+                        </Button>
+                        </div>
+                    )}
+                    </CardActions>
+                    <CardContent style={{backgroundColor:"#002E5D"}}>
+                    </CardContent>
+                </Card> 
+            </Box>
+        </div>
+        </ThemeProvider>
+    </NoSsr>
+    </>
     );
 }
 export default Sales;

@@ -18,7 +18,7 @@ export class BookController {
 
   @Get(':name_book')
   findOne(@Param('name_book') name_book: string) {
-    return this.bookService.findOne(name_book);
+    return this.bookService.findOnebyName(name_book);
   }
 
   @Put(':id')
