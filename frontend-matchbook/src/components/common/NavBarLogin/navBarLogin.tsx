@@ -28,12 +28,10 @@ import {
 } from "@mui/material"; 
 
 import { PiPencilSimpleBold } from "react-icons/pi";
-import {  FaRegUserCircle, FaSearch, FaShoppingCart, FaSignOutAlt, FaUser } from "react-icons/fa"; 
+import { LuShoppingCart, LuSearch, LuMenu, LuDollarSign, LuLogOut } from "react-icons/lu";
 import  Logo from "../../../assents/img/logoMatch.png";
-import MenuIcon from '@mui/icons-material/Menu';
 import { deepOrange } from '@mui/material/colors';
 import axios from 'axios';
-import { RiMoneyDollarCircleLine } from "react-icons/ri";
 
 export const NavBarLogin: React.FC<{}> = () => {
     const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = useState<null | HTMLElement>(null);
@@ -122,11 +120,10 @@ export const NavBarLogin: React.FC<{}> = () => {
     const logout = () => {
         // Elimina el token del almacenamiento local
         localStorage.removeItem('access_token');
-      
+
         // Redirige al usuario a la página de inicio de sesión
         navigate('/login');
     };
-      
 
 
     
@@ -171,7 +168,7 @@ export const NavBarLogin: React.FC<{}> = () => {
                                         aria-label="open drawer"
                                         onClick={handleMobileMenuOpen}
                                     >
-                                        <MenuIcon style={{ width: "30px", height:"30px"}}  />
+                                        <LuMenu style={{ width: "30px", height:"30px"}}  />
                                     </IconButton>
                                     {renderMobileMenu}
                                 </>
@@ -186,12 +183,12 @@ export const NavBarLogin: React.FC<{}> = () => {
                             <Grid  item xs={4} sm={4} md={4} lg={4}>
                                 {isMobile ? (
                                     <IconButton color="inherit">
-                                        <FaSearch style={{ width: "30px", height:"30px"}}  />
+                                        <LuSearch style={{ width: "30px", height:"30px"}}  />
                                     </IconButton>
                                 ) : (
                                     <div className="searchHome" >
                                         <input className="search" placeholder="Buscar" />
-                                        <FaSearch id="search-icon" />
+                                        <LuSearch id="search-icon" />
                                     </div>
                                 )}
                             </Grid>
@@ -200,14 +197,14 @@ export const NavBarLogin: React.FC<{}> = () => {
                                     {isMobile ? (
                                         <>
                                             <IconButton href="/sales" color="inherit"  >
-                                                <RiMoneyDollarCircleLine style={{ width: "48px", height:"48px"}} />
+                                                <LuDollarSign style={{ width: "48px", height:"48px"}} />
                                             </IconButton>
                                             <div onClick={handleOpen}>
                                                 <Avatar style={{backgroundColor: "#f05d16"}} src="/broken-image.jpg"  />
                                                 <div>{username}</div> 
                                             </div>
                                             <Badge badgeContent={1} color="primary">  
-                                                <FaShoppingCart style={{width: "60px", height: "22px"}} href="/cart" color="inherit" />
+                                                <LuShoppingCart style={{width: "60px", height: "22px"}} href="/cart" color="inherit" />
                                             </Badge>
 
                                         </>
@@ -221,7 +218,7 @@ export const NavBarLogin: React.FC<{}> = () => {
                                             
 
                                             <Badge badgeContent={1} color="primary">
-                                                <FaShoppingCart style={{width: "60px", height: "22px"}} href="/cart" color="inherit" />
+                                                <LuShoppingCart style={{width: "60px", height: "22px"}} href="/cart" color="inherit" />
                                             </Badge>
                                         </>
                                     )}
@@ -299,7 +296,7 @@ export const NavBarLogin: React.FC<{}> = () => {
 
                     <div style={{justifyContent:"center", textAlign: "center", display: "flex"}}>
                     <DialogActions>
-                        <Button onClick={logout} startIcon={<FaSignOutAlt />}>Salir</Button> {/* Botón de Salir con un icono al lado izquierdo */}
+                        <Button onClick={logout} startIcon={<LuLogOut />}>Salir</Button> {/* Botón de Salir con un icono al lado izquierdo */}
                     </DialogActions>
                     </div>
 

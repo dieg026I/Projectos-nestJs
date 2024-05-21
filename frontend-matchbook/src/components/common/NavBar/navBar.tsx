@@ -21,10 +21,8 @@ import {
     useTheme,
 } from "@mui/material"; 
 
-import { FaRegUserCircle, FaSearch, FaShoppingCart, FaUser } from "react-icons/fa"; 
+import { LuShoppingCart, LuSearch, LuMenu, LuUserCircle2, LuUser2 } from "react-icons/lu";
 import  Logo from "../../../assents/img/logoMatch.png";
-import MenuIcon from '@mui/icons-material/Menu';
-
 
 export const NavBar: React.FC<{}> = () => {
     const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = useState<null | HTMLElement>(null);
@@ -96,7 +94,7 @@ export const NavBar: React.FC<{}> = () => {
                                         aria-label="open drawer"
                                         onClick={handleMobileMenuOpen}
                                     >
-                                        <MenuIcon />
+                                        <LuMenu />
                                     </IconButton>
                                     {renderMobileMenu}
                                 </>
@@ -111,12 +109,12 @@ export const NavBar: React.FC<{}> = () => {
                             <Grid  item xs={4} sm={4} md={4} lg={4}>
                                 {isMobile ? (
                                     <IconButton color="inherit">
-                                        <FaSearch />
+                                        <LuSearch />
                                     </IconButton>
                                 ) : (
                                     <div className="searchHome" >
                                         <input className="search" placeholder="Buscar" />
-                                        <FaSearch id="search-icon" />
+                                        <LuSearch id="search-icon" />
                                     </div>
                                 )}
                             </Grid>
@@ -125,13 +123,13 @@ export const NavBar: React.FC<{}> = () => {
                                     {isMobile ? (
                                         <>
                                             <IconButton href="/login" color="inherit">
-                                                <FaUser  />
+                                                <LuUser2  />
                                             </IconButton>
                                             <IconButton href="/register" color="inherit">
-                                                <FaRegUserCircle  />
+                                                <LuUserCircle2  />
                                             </IconButton>
                                             <Badge badgeContent={1} color="primary">  
-                                                <FaShoppingCart style={{width: "60px", height: "22px"}} href="/cart" color="inherit" />
+                                                <LuShoppingCart style={{width: "60px", height: "22px"}} href="/cart" color="inherit" />
                                             </Badge>
 
                                         </>
@@ -140,7 +138,7 @@ export const NavBar: React.FC<{}> = () => {
                                             <Button className="text" color="inherit" href="/login" style={{paddingLeft: "20px", textTransform: "none", fontSize: "16px" }}>Inicia Sesión</Button>
                                             <Button style={{ backgroundColor: '#f05d16' , textTransform: "none", color: "#ffff", fontSize: "16px" }} href="/register">Registrate</Button>
                                             <Badge badgeContent={1} color="primary">
-                                                <FaShoppingCart style={{width: "60px", height: "22px"}} href="/cart" color="inherit" />
+                                                <LuShoppingCart style={{width: "60px", height: "22px"}} href="/cart" color="inherit" />
                                             </Badge>
                                         </>
                                     )}
