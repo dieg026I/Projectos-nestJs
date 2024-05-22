@@ -105,6 +105,7 @@ export const NavBarLogin: React.FC<{}> = () => {
             transformOrigin={{ vertical: 'top', horizontal: 'right' }}
             open={Boolean(mobileMoreAnchorEl)}
             onClose={() => setMobileMoreAnchorEl(null)}
+            style={{justifyContent:"left"}}
         >
             <MenuItem>
                 <Link underline="hover" href="/readingClub">Club de Lectura</Link>
@@ -142,21 +143,20 @@ export const NavBarLogin: React.FC<{}> = () => {
                             <Grid item xs={2} sm={2} md={2} lg={2}>
                                 {isMobile ? (
                                     <Link href="/home2" underline="none">
-                                        <Box display="flex" alignItems="center" justifyContent="center" textAlign="center">
+                                        <Box display="flex" alignItems="center" justifyContent="left" textAlign="center">
                                             <img src={Logo} alt="Logo Matchbook" width="40" height="40"  /> 
                                         </Box>
                                     </Link>
                                 
                                 ) : (
                                     <Link href="/home2" underline="none">
-                                        <Box display="flex" alignItems="center" justifyContent="center" textAlign="center">
+                                        <Box display="flex" alignItems="center" justifyContent="left" textAlign="center">
                                             <img src={Logo} alt="Logo Matchbook" width="40" height="40"  /> 
                                             <Typography className="" variant="h1" component="h1"  style={{ fontWeight: 550, color:  "white", fontSize: "25px", marginLeft: "10px"}}>
                                                 Matchbook
                                             </Typography>
                                         </Box>
                                     </Link>
-                                    
                                 )}
                             </Grid>
 
@@ -166,7 +166,9 @@ export const NavBarLogin: React.FC<{}> = () => {
                                         edge="start"
                                         color="inherit"
                                         aria-label="open drawer"
+                                        
                                         onClick={handleMobileMenuOpen}
+                                        
                                     >
                                         <LuMenu style={{ width: "30px", height:"30px"}}  />
                                     </IconButton>
@@ -197,14 +199,14 @@ export const NavBarLogin: React.FC<{}> = () => {
                                     {isMobile ? (
                                         <>
                                             <IconButton href="/sales" color="inherit"  >
-                                                <LuDollarSign style={{ width: "48px", height:"48px"}} />
+                                                <LuDollarSign style={{ width: "35px", height:"35px"}} />
                                             </IconButton>
                                             <div onClick={handleOpen}>
                                                 <Avatar style={{backgroundColor: "#f05d16"}} src="/broken-image.jpg"  />
                                                 <div>{username}</div> 
                                             </div>
                                             <Badge badgeContent={1} color="primary">  
-                                                <LuShoppingCart style={{width: "60px", height: "22px"}} href="/cart" color="inherit" />
+                                                <LuShoppingCart style={{width: "30px", height:"30px"}} href="/cart" color="inherit" />
                                             </Badge>
 
                                         </>
@@ -218,7 +220,7 @@ export const NavBarLogin: React.FC<{}> = () => {
                                             
 
                                             <Badge badgeContent={1} color="primary">
-                                                <LuShoppingCart style={{width: "60px", height: "22px"}} href="/cart" color="inherit" />
+                                                <LuShoppingCart style={{width: "30px", height:"30px"}} href="/cart" color="inherit" />
                                             </Badge>
                                         </>
                                     )}
