@@ -15,10 +15,42 @@ import MenuIcon from '@mui/icons-material/Menu';
 import PlaceIcon from '@mui/icons-material/Place';
 import { FaHeart } from "react-icons/fa6";
 import "../../App.css";
+import axios from "axios";
 
 
 interface HomeProps {
+}
 
+interface Publication {
+    id_publication: string;
+    date_publication: Date;
+    user_rut_user: number;
+    book_id_book: string;
+    photo_showcase: string;
+    photo_cover: string;
+    photo_first_page: string;
+    photo_back_cover: string;
+}
+
+interface Book {
+    id_book: string;
+    name_book: string;
+    format_book: string;
+    author_id_author: string;
+    author_name: string;
+    publisher_name: string;
+    publisher_id_publisher: string;
+    cost_book: number;
+    category: string;
+    year_book: number;
+    status_book: string;
+    stock_book: number;
+    description_book: string;
+}
+
+interface BookAndPublication {
+    book: Book;
+    publication: Publication;
 }
 
 {/*-----------------------------------------------------------------------------*/}
@@ -27,7 +59,50 @@ function handleClick(event: React.MouseEvent<HTMLDivElement, MouseEvent>) {
     event.preventDefault();
 }
 
-export const HomePageLogin: React.FC<HomeProps> = ({}: HomeProps) => {
+    export const HomePageLogin: React.FC<HomeProps> = ({}: HomeProps) => {
+    ;
+    const [booksAndPublications, setBooksAndPublications] = useState<BookAndPublication[]>([]);
+    const [refreshData, setRefreshData] = useState(false); // Nuevo estado para forzar la actualización de los datos
+    
+    {/* Libro y Publicación */}
+    const fetchBooksAndPublications = async () => {
+        // Obtén todas las publicaciones
+        const responsePublications = await axios.get('http://localhost:3001/publications');
+        const publications: Publication[] = responsePublications.data;
+    
+        // Para cada publicación, obtén su libro correspondiente
+        const booksAndPublications = await Promise.all(publications.map(async (publication) => {
+            const responseBook = await axios.get(`http://localhost:3001/book/${publication.book_id_book}`);
+            const book: Book = responseBook.data;
+
+              // Obtén el autor del libro
+        const responseAuthor = await axios.get(`http://localhost:3001/author/${book.author_id_author}`);
+        const author = responseAuthor.data;
+
+        // Agrega el nombre del autor al libro
+        book.author_name = author.name_author;
+
+        const responsePublisher = await axios.get(`http://localhost:3001/publisher/${book.publisher_id_publisher}`);
+        const publisher = responsePublisher.data;
+
+        // Agrega el nombre del editor al libro
+        book.publisher_name = publisher.name_publisher;
+    
+            // Devuelve el libro y su publicación correspondiente
+            return { book, publication };
+        }));
+    
+        return booksAndPublications;
+    };
+    
+    
+
+    useEffect(() => {
+        fetchBooksAndPublications().then((data: BookAndPublication[]) => {
+            setBooksAndPublications(data);
+        });
+    }, [refreshData]); // Agrega refreshData como una dependencia del useEffect
+
 
     {/*-----------------------------------------------------------------------------*/}
     {/* Flechas Carrousel */}
@@ -68,7 +143,7 @@ export const HomePageLogin: React.FC<HomeProps> = ({}: HomeProps) => {
         ref.current?.scrollIntoView({ behavior: 'smooth' });
     };
     
-    
+
     return (
     <>
         <NavBarLogin />
@@ -145,16 +220,16 @@ export const HomePageLogin: React.FC<HomeProps> = ({}: HomeProps) => {
                 
                 <Grid container spacing={4} justifyContent="center" style={{padding: "20px"}}>
                     <Grid item xs={12} sm={6} md={3} lg={3}>
-                        <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
-                            <Card sx={{ width: "70px", height: "70px" }}>
-                                <img src={us1} style={{ width: "100%", height: "100%" }} alt="chile" /> 
+                        <div style={{ display: "flex", flexDirection: "column", alignItems: "center"}}>
+                            <Card sx={{ width: "70px", height: "70px" , backgroundColor:"#f2f4f8" }}>
+                                <img src={us1} style={{ width: "100%", height: "100%", padding:"2px" }} alt="chile" /> 
                             </Card>
                             <p style={{ paddingTop: "10px" }}>Nuestra misión es acercar la lectura a las personas</p>
                         </div>
                     </Grid>
                     <Grid item xs={12} sm={6} md={3} lg={3}>
                         <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
-                            <Card sx={{ width: "70px", height: "70px" }}>
+                            <Card sx={{ width: "70px", height: "70px"}} >
                                 <img src={us2} style={{ width: "100%", height: "100%" }} alt="chile" />
                             </Card>
                             <p style={{ paddingTop: "10px" }}>Incentivamos la existencia de una comunidad lectora</p>
@@ -203,70 +278,61 @@ export const HomePageLogin: React.FC<HomeProps> = ({}: HomeProps) => {
                         )
                     }>
                         <div>
-                        <Grid container spacing={4} justifyContent="center" style={{padding: "20px"}}>
-                            <Card style={{ margin: "10px", width: "230px", borderRadius: "20px", textAlign: "left", position: 'relative'}} sx={{ maxWidth: 345, padding: "10px"}}>
-                                <CardMedia
-                                    sx={{ height: 140, position: 'relative' }}
-                                >
-                                    <img 
-                                    src={libro} 
-                                    alt="green iguana" 
-                                    style={{ 
-                                        height: '140px', 
-                                        width: 'auto', 
-                                        maxWidth: '100%', 
-                                        display: 'block', 
-                                        marginLeft: 'auto', 
-                                        marginRight: 'auto' 
-                                    }}
-                                />
-                                    <FaHeart style={{ position: 'absolute', top: '10px', right: '10px', color: '#f05d16' }} />
-                                </CardMedia>
-                                    
-                                    <CardContent style={{padding: "5px", paddingTop: "15px"}}>
-                                        <Typography gutterBottom variant="h5" component="div" style={{fontSize: "15px", fontWeight: "bold", paddingTop: "5px", fontFamily: "SF Pro Display Medium"}}>
-                                        Cómo Ganar Amigos e Influir en las Personas
-                                        </Typography>
-                                        <Typography variant="body2" color="text.secondary" style={{ fontFamily: "SF Pro Display Regular"}}>
-                                        Dale Carnegie
-                                        </Typography>
-                                        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                                        <Typography gutterBottom variant="h5" component="div" style={{fontSize: "25px", fontWeight: "bold", paddingTop: "5px"}}>
-                                            $6.990
-                                        </Typography>
-                                        <Box sx={{ display: 'flex', fontSize: "13px" }}>
-                                            <PlaceIcon style={{ color:"#00a9e0", alignItems: 'center' }} />
-                                            <span>Viña del Mar</span>
-                                        </Box>
-                                        </Box>
-                                    </CardContent>
-                                    <CardActions>
-                                        <Button fullWidth href="/" variant="contained"  style={{ textTransform: "none", backgroundColor: 'white', color: '#f05d16', borderRadius: '30px', borderBlockColor: "black", fontWeight: "bold", fontSize:"15px" }}>
-                                            Agregar al Carro
-                                        </Button>
-                                    </CardActions>
-                                </Card>
-                                {/* Segundo Card */}
-                                <Card style={{ margin: "20px", width: "230px", borderRadius: "20px", textAlign: "left"}} sx={{ maxWidth: 345, padding: "10px"}}>
-                                <h1>agsfdgndgndt</h1>
-                                </Card>
+                            <Grid container spacing={4} justifyContent="center" style={{padding: "20px"}}>
+                                {booksAndPublications.map(({ book, publication }) => (
+                                    <Card key={book.id_book} style={{ margin: "10px", width: "230px", borderRadius: "20px", textAlign: "left", position: 'relative', padding:"22px"}} sx={{ maxWidth: 345, padding: "10px"}}>
+                                        {/* Imagen libros */}
+                                        <CardMedia
+                                            sx={{ height: 140, position: 'relative' }}
+                                        >
+                                            <img 
+                                            src={publication.photo_showcase}
+                                            alt="Imagen del libro" 
+                                            style={{ 
+                                                height: '140px', 
+                                                width: 'auto', 
+                                                maxWidth: '100%', 
+                                                display: 'block', 
+                                                marginLeft: 'auto', 
+                                                marginRight: 'auto' 
+                                            }}
+                                        />
+                                        <FaHeart style={{ position: 'absolute', top: '10px', right: '10px', color: '#f05d16' }} />
+                                        </CardMedia>
+                                            
+                                        <CardContent style={{padding: "5px", paddingTop: "15px"}}>
+                                            {/* Titulo Libro */}
+                                            <Typography gutterBottom variant="h5" component="div" style={{fontSize: "17px",  paddingTop: "5px", fontFamily: "SF Pro Display Medium"}}>
+                                            {book.name_book} 
+                                            </Typography>
 
-                                {/* Segundo Card */}
-                                <Card style={{ margin: "20px", width: "230px", borderRadius: "20px", textAlign: "left"}} sx={{ maxWidth: 345, padding: "10px"}}>
-                                <h1>agsfdgndgndt</h1>
-                                </Card>
+                                            {/* Autor Libro */}
+                                            <Typography variant="body2" color="text.secondary" style={{ fontFamily: "SF Pro Display Regular"}}>
+                                            {book.author_name} 
+                                            </Typography>
 
-                                {/* Segundo Card */}
-                                <Card style={{ margin: "20px", width: "230px", borderRadius: "20px", textAlign: "left"}} sx={{ maxWidth: 345, padding: "10px"}}>
-                                <h1>agsfdgndgndt</h1>
-                                </Card>
+                                            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' , fontSize: "14px" }}>
+                                            
+                                                {/* Precio Libro */}
+                                                <Typography gutterBottom variant="h5" component="div" style={{fontSize: "20px", fontWeight: "bold", paddingTop: "5px"}}>
+                                                    ${book.cost_book}
+                                                </Typography>
 
-                                {/* Segundo Card */}
-                                <Card style={{ margin: "20px", width: "230px", borderRadius: "20px", textAlign: "left"}} sx={{ maxWidth: 345, padding: "10px"}}>
-                                <h1>agsfdgndgndt</h1>
-                                </Card>
+                                                {/* Ubicación Libro */}
+                                                <Box sx={{ display: 'flex', fontSize: "13px" }}>
+                                                    <PlaceIcon style={{ color:"#00a9e0", alignItems: 'center' }} />
+                                                    <span>Viña del Mar</span>
+                                                </Box>
+                                            </Box>
+                                        </CardContent>
+                                        <CardActions>
+                                            <Button fullWidth href="/" variant="contained"  style={{ textTransform: "none", backgroundColor: 'white', color: '#f05d16', borderRadius: '30px', borderBlockColor: "black", fontWeight: "bold", fontSize:"15px" }}>
+                                                Agregar al Carro
+                                            </Button>
+                                        </CardActions>
+                                    </Card>
+                                ))}
                             </Grid>
-                            
                         </div>
                         <div>
                             <Card style={{ margin: "30px", width: "230px", borderRadius: "20px", textAlign: "left"}} sx={{ maxWidth: 345, padding: "10px"}}>

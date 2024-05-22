@@ -212,16 +212,17 @@ export const NavBarLogin: React.FC<{}> = () => {
                                         </>
                                     ) : (
                                         <>
-                                            <Button style={{ backgroundColor: '#f05d16' , textTransform: "none", color: "#ffff", fontSize: "16px", marginLeft: "25px" }} href="/sales">Vender</Button>
+
+                                            <Badge badgeContent={1} color="primary">
+                                                <LuShoppingCart style={{width: "30px", height:"30px", marginLeft:"40px"}} href="/cart" color="inherit" />
+                                            </Badge>
+
+                                            <Button style={{ backgroundColor: '#f05d16' , textTransform: "none", color: "#ffff", fontSize: "16px", marginLeft: "10px", borderRadius:"20px", width:"90px", padding:"6px" }} href="/sales">Vender</Button>
+
                                             <div onClick={handleOpen}>
                                                 <Avatar style={{backgroundColor: "#f05d16"}} src="/broken-image.jpg"  />
                                                 <div>{username}</div> 
                                             </div>
-                                            
-
-                                            <Badge badgeContent={1} color="primary">
-                                                <LuShoppingCart style={{width: "30px", height:"30px"}} href="/cart" color="inherit" />
-                                            </Badge>
                                         </>
                                     )}
                                 </Box>

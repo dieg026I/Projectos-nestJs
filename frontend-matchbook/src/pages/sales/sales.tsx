@@ -13,6 +13,7 @@ import NavBarLogin from "../../components/common/NavBarLogin/navBarLogin";
 import { UserContext } from "../UserContext";
 import { Navigate, useNavigate } from "react-router-dom";
 import { Console } from "console";
+import Footer from "../../components/common/Footer/footer";
 
 interface Author {
     id_author: string;
@@ -265,7 +266,6 @@ const Sales: React.FC = () => {
 
     {/*-----------------------------------------------------------------------------*/}
     {/* Publicación */}
-     
     
     const handleSubmitPublication = async (event: React.FormEvent) => {
         event.preventDefault();
@@ -277,17 +277,17 @@ const Sales: React.FC = () => {
 
             if (photo_showcase) {
                 formData.append('images', photo_showcase);
-              }
-              if (photo_cover) {
+            }
+            if (photo_cover) {
                 formData.append('images', photo_cover);
-              }
-              if (photo_first_page) {
+            }
+            if (photo_first_page) {
                 formData.append('images', photo_first_page);
-              }
-              if (photo_back_cover) {
+            }
+            if (photo_back_cover) {
                 formData.append('images', photo_back_cover);
-              }
-              const userString = localStorage.getItem("user");
+            }
+            const userString = localStorage.getItem("user");
 
             if (userString !== null) {
                 const user = JSON.parse(userString);
@@ -302,12 +302,13 @@ const Sales: React.FC = () => {
     try {
         const response = await axios.post('http://localhost:3001/publications/upload', formData, {
             headers: {
-              'Content-Type': 'multipart/form-data',
+            'Content-Type': 'multipart/form-data',
             },
-          });
-      
-          console.log(response.data);
-            navigate('/')
+        });
+    
+        console.log(response.data);
+        
+        navigate('/home2')
     
     }catch (error) {
         console.error('Hubo un error al registrar el libro:', error);
@@ -601,7 +602,6 @@ const Sales: React.FC = () => {
                                                                     style={{ display: 'none' }}
                                                                     id="image-showcase"
                                                                     type="file"
-                                                                    value={photo_showcase}
                                                                     onChange={handleImageChange}
                                                                 />
                                                                 <label htmlFor="image-showcase">
@@ -636,7 +636,6 @@ const Sales: React.FC = () => {
                                                                         style={{ display: 'none' }}
                                                                         id="image-cover"
                                                                         type="file"
-                                                                        value={photo_cover}
                                                                         onChange={handleImageChangeCover} 
                                                                     />
                                                                     <label htmlFor="image-cover">
@@ -672,7 +671,6 @@ const Sales: React.FC = () => {
                                                                         style={{ display: 'none' }}
                                                                         id="image-first"
                                                                         type="file"
-                                                                        value={photo_first}
                                                                         onChange={handleImageChangeFirst} 
                                                                     />
                                                                     <label htmlFor="image-first">
@@ -708,7 +706,6 @@ const Sales: React.FC = () => {
                                                                         style={{ display: 'none' }}
                                                                         id="image-back"
                                                                         type="file"
-                                                                        value={photo_back}
                                                                         onChange={handleImageChangeBack} 
                                                                     />
                                                                     <label htmlFor="image-back">
