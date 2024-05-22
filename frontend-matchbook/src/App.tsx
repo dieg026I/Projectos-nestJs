@@ -16,7 +16,7 @@ import ReadingClub from './pages/readingClub/readingClub';
 
 const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const navigate = useNavigate();
-  const isAuthenticated = localStorage.getItem('access_token') == null; 
+  const isAuthenticated = localStorage.getItem('access_token') != null; 
   console.log(localStorage.getItem('access_token'))
   console.log(isAuthenticated);
 
@@ -40,7 +40,7 @@ const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({ children }) =
 function App() {
   
   const [username, setUsername] = useState(''); 
-
+  const [user, setUser] = useState(null);
   return (
     <BrowserRouter>
 
@@ -51,9 +51,9 @@ function App() {
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/cart" element={<Cart />} />
         <Route path="/readingClub" element={<ReadingClub />} />
-        <Route path="/home2" element={<HomePageLogin />} />
-        <Route path="/sales" element={<Sales />} />
-        <Route path="/profile" element={<Profile />} />
+        <Route path="/home2" element={<ProtectedRoute><HomePageLogin /></ProtectedRoute>} />
+        <Route path="/sales" element={<ProtectedRoute><Sales /></ProtectedRoute>} />
+        <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
 
         {/* Ruta para la página NotFound */}
         <Route path="*" element={<NotFoundPage />} />

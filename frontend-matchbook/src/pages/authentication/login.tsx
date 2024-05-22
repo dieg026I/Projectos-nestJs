@@ -16,24 +16,36 @@ import "../../App.css";
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import logo from "../../assents/img/logoMatch.png";
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
+
 
 type FormValue = {
   email: string,
   password: string
+
 }
 
+interface User {
+  name_user: string,
+  lastname_user: string,
+  rut_user: number,
+  dv_user: string,
+  phone_user: number,
+  email_user: string,
+  password_users: string,
+  city_id: number,
+
+}
 const LoginPage: React.FC = () => {
 
   const [email_user, setEmail] = React.useState('');
   const [password_user, setPassword] = React.useState('');
   const navigate = useNavigate();
-  const [username, setUsername] = useState('');
-
-
+  const [user, setUser] = useState<User | null>(null);
 
   {/*-----------------------------------------------------------------------------*/}
   {/* Login */}
+  
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
 
@@ -59,20 +71,25 @@ const LoginPage: React.FC = () => {
         password_users : password_user
       });
 
-      if (response.status === 200){
-        localStorage.setItem('access_token', response.data.token);
-        console.log(localStorage.getItem('access_token'));
-        setTimeout(() => {
-          navigate('/home2');
-        }, 5000);
+      if (response.status === 201 && response.data.access_token ){
+        const token = response.data.access_token;
+        const user = response.data.user;
+        if (user) {
+          localStorage.setItem("user", JSON.stringify(user));
+          console.log("Usuario Guardado: ", JSON.parse(localStorage.getItem("user") || '{}'));
+        } else {
+          console.log("No hay usuario guardado");
+        }
+        localStorage.setItem("access_token", token);
+        console.log("Token guardado: ", localStorage.getItem("access_token"));  
+        
+
+        console.log(response.data + "navegacion exitosa");
+        navigate('/home2');
+
+      } else {
+        console.log("Error: No se recibió un token válido en la respuesta.");
       }
-
-      const username = email_user.substring(0, 12);
-      setUsername(username);
-
-      console.log(response.data);
-      navigate('/home2');
-
       //Error
     } catch (error:any) {
       if (error.response && error.response.status === 401){

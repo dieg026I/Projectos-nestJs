@@ -24,8 +24,10 @@ export class AuthService {
   async login(user: any) {
     const payload = {user_email : user.email_user, sub: 'user.rut_user' };
     const secretKeyToken = 'secretKey';
+    
     return {
-      access_token: this.jwtService.sign(payload, {secret: secretKeyToken})
+      access_token: this.jwtService.sign(payload, {secret: secretKeyToken}),
+      user: user
     };
   }
 }
