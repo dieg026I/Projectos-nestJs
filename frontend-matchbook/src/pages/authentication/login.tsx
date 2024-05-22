@@ -16,24 +16,36 @@ import "../../App.css";
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import logo from "../../assents/img/logoMatch.png";
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
+
 
 type FormValue = {
   email: string,
   password: string
+
 }
 
+interface User {
+  name_user: string,
+  lastname_user: string,
+  rut_user: number,
+  dv_user: string,
+  phone_user: number,
+  email_user: string,
+  password_users: string,
+  city_id: number,
+
+}
 const LoginPage: React.FC = () => {
 
   const [email_user, setEmail] = React.useState('');
   const [password_user, setPassword] = React.useState('');
   const navigate = useNavigate();
-  const [username, setUsername] = useState('');
-
-
+  const [user, setUser] = useState<User | null>(null);
 
   {/*-----------------------------------------------------------------------------*/}
   {/* Login */}
+  
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
 
@@ -59,13 +71,18 @@ const LoginPage: React.FC = () => {
         password_users : password_user
       });
 
-      // Depurar respuesta
-      console.log("Respuesta del servidor: ", response);
-
-      if (response.status === 201 && response.data.access_token){
+      if (response.status === 201 && response.data.access_token ){
         const token = response.data.access_token;
+        const user = response.data.user;
+        if (user) {
+          localStorage.setItem("user", JSON.stringify(user));
+          console.log("Usuario Guardado: ", JSON.parse(localStorage.getItem("user") || '{}'));
+        } else {
+          console.log("No hay usuario guardado");
+        }
         localStorage.setItem("access_token", token);
-        console.log("Token guardado: ", localStorage.getItem("access_token"));
+        console.log("Token guardado: ", localStorage.getItem("access_token"));  
+        
 
         console.log(response.data + "navegacion exitosa");
         navigate('/home2');
@@ -73,11 +90,6 @@ const LoginPage: React.FC = () => {
       } else {
         console.log("Error: No se recibió un token válido en la respuesta.");
       }
-
-      const username = email_user.substring(0, 12);
-      setUsername(username);
-
-
       //Error
     } catch (error:any) {
       if (error.response && error.response.status === 401){

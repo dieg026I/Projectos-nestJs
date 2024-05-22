@@ -1,4 +1,4 @@
-import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, OneToMany, ManyToMany, JoinColumn, PrimaryColumn } from 'typeorm';
+import { Entity, Column, ManyToOne, OneToMany, ManyToMany, JoinColumn, PrimaryColumn } from 'typeorm';
 import { Author } from '../../author/entities/author.entity';
 import { Publisher } from '../../publisher/entities/publisher.entity';
 import { Publication } from 'src/publication/entities/publication.entity';

@@ -1,4 +1,4 @@
-import { Controller, Get, Param, Delete, Post, UseInterceptors, UploadedFile, UploadedFiles } from '@nestjs/common';
+import { Controller, Get, Param, Delete, Post, UseInterceptors, UploadedFile, UploadedFiles, Body } from '@nestjs/common';
 import { PublicationService } from './publication.service';
 import { Publication } from './entities/publication.entity';
 import { FilesInterceptor } from '@nestjs/platform-express';
@@ -9,8 +9,9 @@ export class PublicationController {
 
   @Post('upload')
   @UseInterceptors(FilesInterceptor('images', 4, multerConfig))
-  async uploadFiles(@UploadedFiles() files) {
-    const publication = await this.publicationService.createPublication(files);
+  async uploadFiles(@UploadedFiles() files, @Body() body) {
+    const { id_publication, rut_user, id_book } = body;
+    const publication = await this.publicationService.createPublication(files, id_publication, rut_user, id_book);
     return publication;
   }
   

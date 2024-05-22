@@ -42,7 +42,7 @@ const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({ children }) =
 function App() {
   
   const [username, setUsername] = useState(''); 
-
+  const [user, setUser] = useState(null);
   return (
     <BrowserRouter>
 

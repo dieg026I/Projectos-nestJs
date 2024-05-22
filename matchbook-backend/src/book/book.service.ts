@@ -18,8 +18,8 @@ export class BookService {
     return this.bookRepository.find();
   }
 
-  findOnebyName(name_book: string): Promise<Book> {
-    return this.bookRepository.findOne({ where: { name_book } });
+  findOnebyName(id_book: string): Promise<Book> {
+    return this.bookRepository.findOne({ where: { id_book } });
   }
 
   update(id: number, book: Book) {

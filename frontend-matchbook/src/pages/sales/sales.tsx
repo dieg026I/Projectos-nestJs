@@ -1,6 +1,6 @@
 import { Autocomplete, Box, Button, Card, CardActionArea, CardActions, CardContent, CardMedia, Checkbox, FormControl, FormControlLabel, FormGroup, FormLabel, Grid, InputLabel, MenuItem, NoSsr, Radio, RadioGroup, Select, SelectChangeEvent, TextField, ThemeProvider, Typography, createTheme } from "@mui/material";
 import { CardBody, CardFooter } from "react-bootstrap";
-import { useEffect, useRef, useState } from 'react';
+import { useContext, useEffect, useRef, useState } from 'react';
 import AddIcon from '@mui/icons-material/Add';
 import React from "react";
 import axios from "axios";
@@ -10,7 +10,10 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { v4 as uuidv4 } from 'uuid';
 import NavBarLogin from "../../components/common/NavBarLogin/navBarLogin";
-import Footer from "../../components/common/Footer/footer";
+import { UserContext } from "../UserContext";
+import { Navigate, useNavigate } from "react-router-dom";
+import { Console } from "console";
+
 interface Author {
     id_author: string;
     name_author: string;
@@ -20,11 +23,23 @@ interface Category {
     id_category: string;
     name_category: string;
 }
+interface Book {
+    id_book: string;
+    name_book: string;
+    format_book: string;
+    author_name: string;
+    publisher_name: string;
+    cost_book: number;
+    category: string;
+    year_book: number;
+    status_book: string;
+    stock_book: number;
+    description_book: string;
+}
 
 const Sales: React.FC = () => {
 
     {/* Book */}
-    const [id_book, setIdbook] = React.useState('');
     const [name_book, setNameBook] = React.useState('');
     const [format_book, setFormatBook] = React.useState('');
     const [author_name, setAuthorName] = React.useState('');
@@ -42,11 +57,12 @@ const Sales: React.FC = () => {
     {/* Publicación */}
     const [id_publication, setIdPublication] = React.useState('');
     const [date_publication, setDatePublication] = React.useState('');
-    const [photo_showcase, setPhotoShowcase] = React.useState('');
-    const [photo_cover, setPhotoCover] = React.useState('');
-    const [photo_first, setPhotoFirst] = React.useState('');
-    const [photo_back, setPhotoBack] = React.useState('');
-
+    const [photo_showcase, setPhotoShowcase] = React.useState<File | null>(null);
+    const [photo_cover, setPhotoCover] = React.useState<File | null>(null);
+    const [photo_first_page, setPhotoFirstPage] = React.useState<File | null>(null);
+    const [photo_back_cover, setPhotoBackCover] = React.useState<File | null>(null);
+    const [book, setBook] = React.useState<Book>();
+    const navigate = useNavigate();
     {/*-----------------------------------------------------------------------------*/}
     {/* Eliminar Animaciones */}
     const theme = createTheme({
@@ -117,24 +133,28 @@ const Sales: React.FC = () => {
 
     const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.files) {
+            setPhotoShowcase(e.target.files[0]);
             setImageShowcase(URL.createObjectURL(e.target.files[0]));
         }
     };
 
     const handleImageChangeCover = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.files) {
+            setPhotoCover(e.target.files[0])
             setImageCover(URL.createObjectURL(e.target.files[0]));
         }
     };
 
     const handleImageChangeFirst = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.files) {
+            setPhotoFirstPage(e.target.files[0])
             setImageFirst(URL.createObjectURL(e.target.files[0]));
         }
     };
 
     const handleImageChangeBack = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.files) {
+            setPhotoBackCover(e.target.files[0])
             setImageBack(URL.createObjectURL(e.target.files[0]));
         }
     };
@@ -209,7 +229,8 @@ const Sales: React.FC = () => {
             });
             console.log(responsePublisher.data)
             const publisher_id = responsePublisher.data.id_publisher;
-            const bookId = `${name_book}-${author_name.length}-${publisher_name.slice(0, 3)}`;
+            const bookId = `${name_book}-${author_name.length}-${publisher_name.slice(0, 3)}`.toLowerCase();
+
     
             // Finalmente, guarda el libro con los IDs del autor y la editorial
             const responseBook = await axios.post('http://localhost:3001/book', {
@@ -231,6 +252,8 @@ const Sales: React.FC = () => {
         } catch (error) {
             console.error('Hubo un error al ingresar la publicación:', error);
         }
+        const userString = localStorage.getItem('user');
+        console.log('Usuario: ' + userString )
     };
     
     const add_book = (event: React.FormEvent) => {
@@ -242,22 +265,51 @@ const Sales: React.FC = () => {
 
     {/*-----------------------------------------------------------------------------*/}
     {/* Publicación */}
+     
+    
     const handleSubmitPublication = async (event: React.FormEvent) => {
         event.preventDefault();
+        
+        const formData = new FormData();
 
+        const bookId = `${name_book}-${author_name.length}-${publisher_name.slice(0, 3)}`.toLowerCase()
+            const id_publication = uuidv4();
+
+            if (photo_showcase) {
+                formData.append('images', photo_showcase);
+              }
+              if (photo_cover) {
+                formData.append('images', photo_cover);
+              }
+              if (photo_first_page) {
+                formData.append('images', photo_first_page);
+              }
+              if (photo_back_cover) {
+                formData.append('images', photo_back_cover);
+              }
+              const userString = localStorage.getItem("user");
+
+            if (userString !== null) {
+                const user = JSON.parse(userString);
+                formData.append('rut_user', JSON.stringify(user.rut_user));
+            }           
+
+            formData.append('id_publication', id_publication);
+            
+            if(bookId){
+            formData.append('id_book', bookId);
+            }
     try {
-        const responseB = await axios.post('http://localhost:3001/publication', {
-            id_publication,
-            date_publication,
-            photo_showcase,
-            photo_cover,
-            photo_first,
-            photo_back
-        });
-
-        console.log(responseB.data);
-
-    } catch (error) {
+        const response = await axios.post('http://localhost:3001/publications/upload', formData, {
+            headers: {
+              'Content-Type': 'multipart/form-data',
+            },
+          });
+      
+          console.log(response.data);
+            navigate('/')
+    
+    }catch (error) {
         console.error('Hubo un error al registrar el libro:', error);
         }
     
@@ -275,56 +327,61 @@ const Sales: React.FC = () => {
 
     return (
         <>
-            <NavBarLogin />           
-            <NoSsr>
-                <ThemeProvider theme={theme}>
-                    <div>
-                        <Box className="fondoVenta" sx={{ paddingTop: step === 2 ? '64px' : '0px' }}>
-                            <Card  sx={{ marginTop:"90px", borderRadius:"20px",width:"1100px", maxWidth: "1400px", maxHeight:"100%" }} ref={contentRef} style={contentStyle} >
-                                <CardActionArea disableRipple>
-                                    <CardContent style={{backgroundColor:"#002E5D", alignContent:"center"}}>
-                                        <div style={{textAlign: "center", alignContent:"center", color:"#ffff", fontFamily: "SF Pro Display Medium", paddingTop:"10px"}} >
-                                            <h3>Indica tu libro ({step}/3)</h3>
-                                        </div>
-                                    </CardContent>
-                                    <CardContent  >
-                                        {step === 1 && (
-                                            <>
-                                                {/* --Paso 1--*/}
-                                                <CardContent style={{margin:"15px"}}>
-                                                    {step === 1 && (
-                                                        <>
-                                                            <Grid container justifyContent="space-between">
-                                                                <Typography gutterBottom variant="h4" style={{fontFamily:"SF Pro Display Bold", color:"#1eaeff"}} >
-                                                                    Paso 1
+            <NavBarLogin />
+            
+                <NoSsr>
+                    <ThemeProvider theme={theme}>
+                    
+                        <div>
+                            
+                            <Box className="fondoVenta" sx={{ paddingTop: step === 2 ? '64px' : '0px' }}>
+                                
+                                <Card  sx={{ marginTop:"90px", borderRadius:"20px",width:"1100px", maxWidth: "1400px", maxHeight:"100%" }} ref={contentRef} style={contentStyle} >
+                                
+                                    <CardActionArea disableRipple>
+                                        <CardContent style={{backgroundColor:"#002E5D", alignContent:"center"}}>
+                                            <div style={{textAlign: "center", alignContent:"center", color:"#ffff", fontFamily: "SF Pro Display Medium", paddingTop:"10px"}} >
+                                                <h3>Indica tu libro ({step}/3)</h3>
+                                            </div>
+                                        </CardContent>
+                                        <CardContent  >
+                                                {step === 1 && (
+                                                    <>
+                                                    {/* --Paso 1--*/}
+                                                    <CardContent style={{margin:"15px"}}>
+                                                        {step === 1 && (
+                                                            <>
+                                                                <Grid container justifyContent="space-between">
+                                                                    <Typography gutterBottom variant="h4" style={{fontFamily:"SF Pro Display Bold", color:"#1eaeff"}} >
+                                                                        Paso 1
+                                                                    </Typography>
+                                                                    <Typography variant="body2"  style={{fontFamily:"SF Pro Display Bold", color:"#002E5D"}}>
+                                                                        ¡Recuerda que solo puedes vender libros originales!
+                                                                    </Typography>
+                                                                </Grid>
+                                                                <Typography variant="body2" color="text.secondary">
+                                                                    Detalla la información del libro
                                                                 </Typography>
-                                                                <Typography variant="body2"  style={{fontFamily:"SF Pro Display Bold", color:"#002E5D"}}>
-                                                                    ¡Recuerda que solo puedes vender libros originales!
+                                                                <Typography variant="body2" color="red">
+                                                                    (*) campos obligatorios
                                                                 </Typography>
-                                                            </Grid>
-                                                            <Typography variant="body2" color="text.secondary">
-                                                                Detalla la información del libro
-                                                            </Typography>
-                                                            <Typography variant="body2" color="red">
-                                                                (*) campos obligatorios
-                                                            </Typography>
-                                                        </>
-                                                    )}
-                                                </CardContent>
-                                                <CardBody style={{marginLeft:"30px", }}>
-                                                    <h6 style={{fontFamily:"SF Pro Display Bold"}}>Título</h6>
-                                                    <FormControl style={{ width:"50%" }}>
-                                                        <InputLabel style={{ fontSize: "16px"}} ></InputLabel>
-                                                        <TextField
-                                                            id="name"
-                                                            value={name_book}
-                                                            onChange={e => setNameBook(e.target.value)}
-                                                            sx={{ width: '100%', color: "black", height:"45px", borderRadius:"10px" }} 
-                                                        />
-                                                    </FormControl>
-                                                </CardBody>
-                                            </>
-                                        )}
+                                                            </>
+                                                        )}
+                                                    </CardContent>
+                                                    <CardBody style={{marginLeft:"30px", }}>
+                                                        <h6 style={{fontFamily:"SF Pro Display Bold"}}>Título</h6>
+                                                        <FormControl style={{ width:"50%" }}>
+                                                            <InputLabel style={{ fontSize: "16px"}} ></InputLabel>
+                                                            < TextField
+                                                                id="name"
+                                                                value={name_book}
+                                                                onChange={e => setNameBook(e.target.value)}
+                                                                sx={{ width: '100%', color: "black", height:"45px", borderRadius:"10px" }}
+                                                            />
+                                                        </FormControl>
+                                                    </CardBody>
+                                                    </>
+                                                )}
 
                                         {/* --Paso 2--*/}
                                         {step === 2 && (
