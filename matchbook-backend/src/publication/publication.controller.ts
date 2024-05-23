@@ -15,7 +15,10 @@ export class PublicationController {
     return publication;
   }
   
-  
+  @Get('publication')
+  findAllPublication() {
+    return this.publicationService.findAllWithBooks();
+  }
   
   @Get()
   findAll(): Promise<Publication[]> {
@@ -31,5 +34,7 @@ export class PublicationController {
   remove(@Param('id') id: string): Promise<void> {
     return this.publicationService.remove(id);
   }
+
+
 }
 

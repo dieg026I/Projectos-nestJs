@@ -18,8 +18,8 @@ export class PublisherService {
     return this.publisherRepository.find();
   }
 
-  findOneForName(name_publisher: string): Promise<Publisher> {
-    return this.publisherRepository.findOne({ where: {name_publisher}});
+  findOneForName(id_publisher: string): Promise<Publisher> {
+    return this.publisherRepository.findOne({ where: {id_publisher}});
   }
 
   update(id: string, publisher: Publisher) {

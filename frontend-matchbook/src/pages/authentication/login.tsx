@@ -174,7 +174,7 @@ const LoginPage: React.FC = () => {
                   
                   {/*-Boton Ingresar-*/}
                   <div style={{ width: '100%' }}>
-                    <Typography d-flex justify-content-center h-100 alight-items-center text-center text-alight-center fontSize = "10px" variant="body2">
+                    <Typography style={{textAlign:"center", justifyContent:"center", alignItems:"center", fontSize:"10px"}} d-flex h-100 text-center variant="body2">
                       <Button fullWidth variant="contained" onClick={handleSubmit} style={{ textTransform: "none", fontSize: "12px", color: "#fff", backgroundColor: "#1976D2", borderRadius: "20px" }}> Ingresar </Button> 
                     </Typography>
                   </div>
@@ -182,7 +182,7 @@ const LoginPage: React.FC = () => {
                   <br />
 
                   {/*-Boton Google-*/} 
-                  <Typography d-flex justify-content-center h-100 alight-items-center text-center text-alight-center fontSize = "10px" variant="body2">
+                  <Typography style={{textAlign:"center", justifyContent:"center", alignItems:"center", fontSize:"10px"}} d-flex h-100  text-center  variant="body2">
                   <Button fullWidth variant="outlined" startIcon={<FcGoogle />} style={{ textTransform: "none", fontSize: "12px", color: "black", borderRadius: "20px" }}> Inicia sesión con google </Button> 
                   </Typography>
 

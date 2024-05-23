@@ -12,28 +12,30 @@ import Sales from './pages/sales/sales';
 import NavBarLogin from './components/common/NavBarLogin/navBarLogin';
 import Profile from './pages/profile/profile';
 import ReadingClub from './pages/readingClub/readingClub';
+import Marketplace from './pages/marketplace/marketplace';
 
 
 const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const navigate = useNavigate();
   const isAuthenticated = localStorage.getItem('access_token') != null; 
-  console.log(localStorage.getItem('access_token'))
-  console.log(isAuthenticated);
+
+  // Depurar estado de autenticación
+  console.log("Token en localStorage: ", localStorage.getItem('access_token'));
+  console.log("Usuario autenticado: ", isAuthenticated);
 
   useEffect(() => {
     if (!isAuthenticated) {
+      console.log("Error de ingreso");
       navigate('/login');
-      console.log("hola1");
     }
   }, [isAuthenticated, navigate]);
 
   if (!isAuthenticated) {
-    console.log("hola2");
-    return null;
-    
+    console.log("Error de ingreso");
+    return null; 
   }
 
-  console.log("hola3");
+  console.log("Bienvenido a Matchbook");
   return <>{children}</>;
 };
 
@@ -54,6 +56,7 @@ function App() {
         <Route path="/home2" element={<ProtectedRoute><HomePageLogin /></ProtectedRoute>} />
         <Route path="/sales" element={<ProtectedRoute><Sales /></ProtectedRoute>} />
         <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
+        <Route path="/marketplace" element={<Marketplace />} />
 
         {/* Ruta para la página NotFound */}
         <Route path="*" element={<NotFoundPage />} />

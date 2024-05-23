@@ -13,6 +13,7 @@ import NavBarLogin from "../../components/common/NavBarLogin/navBarLogin";
 import { UserContext } from "../UserContext";
 import { Navigate, useNavigate } from "react-router-dom";
 import { Console } from "console";
+import Footer from "../../components/common/Footer/footer";
 
 interface Author {
     id_author: string;
@@ -265,7 +266,6 @@ const Sales: React.FC = () => {
 
     {/*-----------------------------------------------------------------------------*/}
     {/* Publicación */}
-     
     
     const handleSubmitPublication = async (event: React.FormEvent) => {
         event.preventDefault();
@@ -277,17 +277,17 @@ const Sales: React.FC = () => {
 
             if (photo_showcase) {
                 formData.append('images', photo_showcase);
-              }
-              if (photo_cover) {
+            }
+            if (photo_cover) {
                 formData.append('images', photo_cover);
-              }
-              if (photo_first_page) {
+            }
+            if (photo_first_page) {
                 formData.append('images', photo_first_page);
-              }
-              if (photo_back_cover) {
+            }
+            if (photo_back_cover) {
                 formData.append('images', photo_back_cover);
-              }
-              const userString = localStorage.getItem("user");
+            }
+            const userString = localStorage.getItem("user");
 
             if (userString !== null) {
                 const user = JSON.parse(userString);
@@ -302,12 +302,13 @@ const Sales: React.FC = () => {
     try {
         const response = await axios.post('http://localhost:3001/publications/upload', formData, {
             headers: {
-              'Content-Type': 'multipart/form-data',
+            'Content-Type': 'multipart/form-data',
             },
-          });
-      
-          console.log(response.data);
-            navigate('/')
+        });
+    
+        console.log(response.data);
+        
+        navigate('/home2')
     
     }catch (error) {
         console.error('Hubo un error al registrar el libro:', error);
@@ -383,413 +384,412 @@ const Sales: React.FC = () => {
                                                     </>
                                                 )}
 
-                                                {/* --Paso 2--*/}
-                                                {step === 2 && (
-                                                    <>
-                                                    <div style={{marginTop:"10px", marginLeft:"50px", marginRight:"50px"}}>
-                                                        <Typography gutterBottom variant="h4" style={{fontFamily:"SF Pro Display Bold", color:"#1eaeff"}} >
-                                                            Paso 2
-                                                        </Typography>
-                                                        <Typography variant="body2" color="text.secondary">
-                                                            Completa la información del libro
-                                                        </Typography>
-                                                        <br />
+                                        {/* --Paso 2--*/}
+                                        {step === 2 && (
+                                            <>
+                                                <div style={{marginTop:"10px", marginLeft:"50px", marginRight:"50px"}}>
+                                                    <Typography gutterBottom variant="h4" style={{fontFamily:"SF Pro Display Bold", color:"#1eaeff"}} >
+                                                        Paso 2
+                                                    </Typography>
+                                                    <Typography variant="body2" color="text.secondary">
+                                                        Completa la información del libro
+                                                    </Typography>
+                                                    <br />
 
-                                        <div >
-                                            <Grid container spacing={2} alignItems="center" >
-                                                {/* Autor */}
-                                                <Grid item xs={6}>
-                                                    <h6 style={{fontFamily:"SF Pro Display Bold"}}>Autor</h6>
-                                                    <TextField fullWidth 
-                                                        style={{ color: "black", borderRadius: 20 }}
-                                                        id="author"
-                                                        className="mb-3 formulario"
-                                                        placeholder="Autor/a de la obra"
-                                                        type="text"
-                                                        value={author_name}
-                                                        onChange={e => setAuthorName(e.target.value)}
-                                                        InputLabelProps={{
-                                                            sx: { fontSize: "16px"} 
-                                                        }}
-                                                        
-                                                        sx={{ borderRadius: 20 }}
-                                                    />
-                                                </Grid>
-                                                {/* Categoría */}
-                                                <Grid item xs={6}>
-                                                    <h6 style={{fontFamily:"SF Pro Display Bold"}}>Categoría</h6>
-                                                    <FormControl fullWidth>
-                                                        <InputLabel style={{ fontSize: "16px"}} id="demo-simple-select-standard-label" ></InputLabel>
-                                                        <Select 
-                                                            labelId="category-label"
-                                                            id="category"
-                                                            sx={{ width: '100%', color: "black", borderRadius:"15px"}}
-                                                            onChange={handleCategoryChange}
-                                                            value={selectedCategory.toString()}
-                                                            placeholder="Selecciona"
-                                                            displayEmpty
-                                                        >
-                                                        <MenuItem value="" disabled sx={{ color: "black" }}>Selecciona una categoría</MenuItem> 
-                                                        {category.map(category => (
-                                                        <MenuItem value={category.id_category} key={category.id_category}  sx={{ color: "black" }}>{category.name_category}</MenuItem>
-                                                        ))}
-                                                        </Select>
-                                                    </FormControl>
-                                                </Grid>
-                                            </Grid>
-                                            <Grid container spacing={2} alignItems="center">
-                                                {/* Editorial */}
-                                                <Grid item xs={6}>
-                                                    <h6 style={{fontFamily:"SF Pro Display Bold"}}>Editorial</h6>
-                                                    <TextField fullWidth 
-                                                        style={{ color: "black"}}
-                                                        id="publisher"
-                                                        className="mb-3 formulario"
-                                                        placeholder="Editorial"
-                                                        type="text"
-                                                        value={publisher_name}
-                                                        onChange={e => setPublisherName(e.target.value)}
-                                                        InputLabelProps={{
-                                                            sx: { fontSize: "16px" } 
-                                                        }}
-                                                    />
-                                                </Grid>
-                                                {/* Año */}
-                                                <Grid item xs={6}>
-                                                    <h6 style={{fontFamily:"SF Pro Display Bold"}}>Año</h6>
-                                                    <TextField fullWidth 
-                                                        style={{ color: "black" }}
-                                                        id="year"
-                                                        className="mb-3 formulario"
-                                                        placeholder="Año"
-                                                        type="year"
-                                                        value={year_book}
-                                                        onChange={e => setYearBook (Number(e.target.value))}
-                                                        InputLabelProps={{
-                                                            sx: { fontSize: "16px" } 
-                                                        }}
-                                                        InputProps={{
-                                                            inputProps: { 
-                                                                min: 0, 
-                                                                style: { 
-                                                                    MozAppearance: 'textfield',
-                                                                    appearance: 'textfield'
-                                                                }
-                                                            }
-                                                        }}
-                                                    />
-                                                </Grid>
-                                            </Grid>
-                                            <Grid container spacing={2}  >
-                                                {/* Precio de venta */}
-                                                <Grid item xs={6}>
-                                                    <h6 style={{fontFamily:"SF Pro Display Bold"}}>Precio de venta</h6>
-                                                    <TextField fullWidth 
-                                                        style={{ color: "black" }}
-                                                        id="cost"
-                                                        className="mb-3 formulario"
-                                                        placeholder="Precio"
-                                                        type="numeric"
-                                                        value={cost_book}
-                                                        onChange={e => setCostBook(Number(e.target.value))}
-                                                        InputLabelProps={{
-                                                            sx: { fontSize: "16px" } 
-                                                        }}
-                                                        variant="outlined"
-                                                        sx={{ borderRadius: 20 }}
-                                                    />
-                                                </Grid>
-                                                {/* Estado del libro */}
-                                                <Grid item xs={6}>
-                                                    <FormControl fullWidth>
-                                                        <h6 style={{fontFamily:"SF Pro Display Bold"}}>Estado del libro</h6>
-                                                        <Select fullWidth 
-                                                            style={{ color: "black" }}
-                                                            id="status"
-                                                            className="mb-3 formulario"
-                                                            onChange={handleStatusChange}
-                                                            value={selectedStatus}
-                                                            labelId="status-label"
-                                                            sx={{ borderRadius:"15px"}}
-                                                            displayEmpty                                       
-                                                        >
-                                                            <MenuItem value="">Selecciona una opción</MenuItem>
-                                                            <MenuItem value="Nuevo">Nuevo</MenuItem>
-                                                            <MenuItem value="Usado: Como nuevo">Usado: Como nuevo</MenuItem>
-                                                            <MenuItem value="Usado: Con algo de desgaste">Usado: Con algo de desgaste</MenuItem>
-                                                            <MenuItem value="Usado: Con mucho desgaste">Usado: Con mucho desgaste</MenuItem>
-                                                            <MenuItem value="Usado:  En mal estado">Usado:  En mal estado</MenuItem>
-
-                                                                        </Select>
-                                                                    </FormControl>
-                                                                </Grid>
+                                                    <div >
+                                                        <Grid container spacing={2} alignItems="center" >
+                                                            {/* Autor */}
+                                                            <Grid item xs={6}>
+                                                                <h6 style={{fontFamily:"SF Pro Display Bold"}}>Autor</h6>
+                                                                <TextField fullWidth 
+                                                                    style={{ color: "black", borderRadius: 20 }}
+                                                                    id="author"
+                                                                    className="mb-3 formulario"
+                                                                    placeholder="Autor/a de la obra"
+                                                                    type="text"
+                                                                    value={author_name}
+                                                                    onChange={e => setAuthorName(e.target.value)}
+                                                                    InputLabelProps={{
+                                                                        sx: { fontSize: "16px"} 
+                                                                    }}
+                                                                    
+                                                                    sx={{ borderRadius: 20 }}
+                                                                />
                                                             </Grid>
-                                                            <Grid container spacing={2} >
-                                                                {/* Formato */}
-                                                                <Grid item xs={6}>
-                                                                    <FormControl>
-                                                                        <FormLabel id="format" style={{color: "#000000", fontFamily:"SF Pro Display Bold"}} >Formato</FormLabel>
-                                                                        <RadioGroup
-                                                                            row
-                                                                            aria-labelledby="format"
-                                                                            name="format"
-                                                                            value={format_book}
-                                                                            onChange={(event) => setFormatBook(event.target.value)}
-                                                                        >
-                                                                            <FormControlLabel value="dura" control={<Radio />} label="Tapa Dura" />
-                                                                            <FormControlLabel value="blanda" control={<Radio />} label="Tapa Blanda" />
-                                                                        </RadioGroup>
-                                                                    </FormControl>
-                                                                    <br />
-                                                                    <br />
-                                                                    <h6>¿Cuál es la comisión por vender?</h6>
-                                                                    <p>Matchbook descontará un 10% del total de cada venta realizada. 
-                                                                    Este descuento se realiza al momento de asignar el saldo de una transacción.</p>
+                                                            {/* Categoría */}
+                                                            <Grid item xs={6}>
+                                                                <h6 style={{fontFamily:"SF Pro Display Bold"}}>Categoría</h6>
+                                                                <FormControl fullWidth>
+                                                                    <InputLabel style={{ fontSize: "16px"}} id="demo-simple-select-standard-label" ></InputLabel>
+                                                                    <Select 
+                                                                        labelId="category-label"
+                                                                        id="category"
+                                                                        sx={{ width: '100%', color: "black", borderRadius:"15px"}}
+                                                                        onChange={handleCategoryChange}
+                                                                        value={selectedCategory.toString()}
+                                                                        placeholder="Selecciona"
+                                                                        displayEmpty
+                                                                    >
+                                                                    <MenuItem value="" disabled sx={{ color: "black" }}>Selecciona una categoría</MenuItem> 
+                                                                    {category.map(category => (
+                                                                    <MenuItem value={category.id_category} key={category.id_category}  sx={{ color: "black" }}>{category.name_category}</MenuItem>
+                                                                    ))}
+                                                                    </Select>
+                                                                </FormControl>
+                                                            </Grid>
+                                                        </Grid>
+                                                        <Grid container spacing={2} alignItems="center">
+                                                            {/* Editorial */}
+                                                            <Grid item xs={6}>
+                                                                <h6 style={{fontFamily:"SF Pro Display Bold"}}>Editorial</h6>
+                                                                <TextField fullWidth 
+                                                                    style={{ color: "black"}}
+                                                                    id="publisher"
+                                                                    className="mb-3 formulario"
+                                                                    placeholder="Editorial"
+                                                                    type="text"
+                                                                    value={publisher_name}
+                                                                    onChange={e => setPublisherName(e.target.value)}
+                                                                    InputLabelProps={{
+                                                                        sx: { fontSize: "16px" } 
+                                                                    }}
+                                                                />
+                                                            </Grid>
+                                                            {/* Año */}
+                                                            <Grid item xs={6}>
+                                                                <h6 style={{fontFamily:"SF Pro Display Bold"}}>Año</h6>
+                                                                <TextField fullWidth 
+                                                                    style={{ color: "black" }}
+                                                                    id="year"
+                                                                    className="mb-3 formulario"
+                                                                    placeholder="Año"
+                                                                    type="year"
+                                                                    value={year_book}
+                                                                    onChange={e => setYearBook (Number(e.target.value))}
+                                                                    InputLabelProps={{
+                                                                        sx: { fontSize: "16px" } 
+                                                                    }}
+                                                                    InputProps={{
+                                                                        inputProps: { 
+                                                                            min: 0, 
+                                                                            style: { 
+                                                                                MozAppearance: 'textfield',
+                                                                                appearance: 'textfield'
+                                                                            }
+                                                                        }
+                                                                    }}
+                                                                />
+                                                            </Grid>
+                                                        </Grid>
+                                                        <Grid container spacing={2}  >
+                                                            {/* Precio de venta */}
+                                                            <Grid item xs={6}>
+                                                                <h6 style={{fontFamily:"SF Pro Display Bold"}}>Precio de venta</h6>
+                                                                <TextField fullWidth 
+                                                                    style={{ color: "black" }}
+                                                                    id="cost"
+                                                                    className="mb-3 formulario"
+                                                                    placeholder="Precio"
+                                                                    type="numeric"
+                                                                    value={cost_book}
+                                                                    onChange={e => setCostBook(Number(e.target.value))}
+                                                                    InputLabelProps={{
+                                                                        sx: { fontSize: "16px" } 
+                                                                    }}
+                                                                    variant="outlined"
+                                                                    sx={{ borderRadius: 20 }}
+                                                                />
+                                                            </Grid>
+                                                            {/* Estado del libro */}
+                                                            <Grid item xs={6}>
+                                                                <FormControl fullWidth>
+                                                                    <h6 style={{fontFamily:"SF Pro Display Bold"}}>Estado del libro</h6>
+                                                                    <Select fullWidth 
+                                                                        style={{ color: "black" }}
+                                                                        id="status"
+                                                                        className="mb-3 formulario"
+                                                                        onChange={handleStatusChange}
+                                                                        value={selectedStatus}
+                                                                        labelId="status-label"
+                                                                        sx={{ borderRadius:"15px"}}
+                                                                        displayEmpty                                       
+                                                                    >
+                                                                        <MenuItem value="">Selecciona una opción</MenuItem>
+                                                                        <MenuItem value="Nuevo">Nuevo</MenuItem>
+                                                                        <MenuItem value="Usado: Como nuevo">Usado: Como nuevo</MenuItem>
+                                                                        <MenuItem value="Usado: Con algo de desgaste">Usado: Con algo de desgaste</MenuItem>
+                                                                        <MenuItem value="Usado: Con mucho desgaste">Usado: Con mucho desgaste</MenuItem>
+                                                                        <MenuItem value="Usado:  En mal estado">Usado:  En mal estado</MenuItem>
+                                                                        </Select>
+                                                                </FormControl>
+                                                            </Grid>
+                                                        </Grid>
+                                                        <Grid container spacing={2} >
+                                                            {/* Formato */}
+                                                            <Grid item xs={6}>
+                                                                <FormControl>
+                                                                    <FormLabel id="format" style={{color: "#000000", fontFamily:"SF Pro Display Bold"}} >Formato</FormLabel>
+                                                                    <RadioGroup
+                                                                        row
+                                                                        aria-labelledby="format"
+                                                                        name="format"
+                                                                        value={format_book}
+                                                                        onChange={(event) => setFormatBook(event.target.value)}
+                                                                    >
+                                                                        <FormControlLabel value="dura" control={<Radio />} label="Tapa Dura" />
+                                                                        <FormControlLabel value="blanda" control={<Radio />} label="Tapa Blanda" />
+                                                                    </RadioGroup>
+                                                                </FormControl>
+                                                                <br />
+                                                                <br />
+                                                                <h6>¿Cuál es la comisión por vender?</h6>
+                                                                <p>Matchbook descontará un 10% del total de cada venta realizada. 
+                                                                Este descuento se realiza al momento de asignar el saldo de una transacción.</p>
 
-                                                    <br />
-                                                    <h6>¿Cómo recibo mi dinero?</h6>
-                                                    <p>Puedes solicitar tu dinero en "Mis ventas" una vez que tus libros sean recibidos por el comprador.</p>
-                                                </Grid>
-                                                {/* Num ejemplares */}
-                                                <Grid item xs={6} alignItems="flex-start">
-                                                    <FormGroup>
-                                                        <FormControlLabel
-                                                            control={<Checkbox checked={isChecked} onChange={handleCheckboxChange} />}
-                                                            label="Deseo publicar más de un ejemplar"
-                                                        />
-                                                        {isChecked && (
-                                                            <TextField 
-                                                                fullWidth 
-                                                                id="stock"
-                                                                label="Número de Libros"
-                                                                type="number"
-                                                                value={stock_book}
-                                                                onChange={(event) => setStockBook(Number(event.target.value))}
-                                                            />
-                                                        )}
-                                                    </FormGroup>
-                                                    <br />
-                                                    <h6 style={{color: "#000000", fontFamily:"SF Pro Display Bold"}}>Información Adicional</h6>
+                                                                <br />
+                                                                <h6>¿Cómo recibo mi dinero?</h6>
+                                                                <p>Puedes solicitar tu dinero en "Mis ventas" una vez que tus libros sean recibidos por el comprador.</p>
+                                                            </Grid>
+                                                            {/* Num ejemplares */}
+                                                            <Grid item xs={6} alignItems="flex-start">
+                                                                <FormGroup>
+                                                                    <FormControlLabel
+                                                                        control={<Checkbox checked={isChecked} onChange={handleCheckboxChange} />}
+                                                                        label="Deseo publicar más de un ejemplar"
+                                                                    />
+                                                                    {isChecked && (
+                                                                        <TextField 
+                                                                            fullWidth 
+                                                                            id="stock"
+                                                                            label="Número de Libros"
+                                                                            type="number"
+                                                                            value={stock_book}
+                                                                            onChange={(event) => setStockBook(Number(event.target.value))}
+                                                                        />
+                                                                    )}
+                                                                </FormGroup>
+                                                                <br />
+                                                                <h6 style={{color: "#000000", fontFamily:"SF Pro Display Bold"}}>Información Adicional</h6>
 
-                                                    <textarea style={{borderRadius:"10px", height: "180px"}} value={description_book} onChange={handleDescriptionChange} name="postContent" rows={4} cols={65} />                                                    
-                                                </Grid>
-                                            </Grid>
-                                        </div>
-                                        </div>
-                                    </>
+                                                                <textarea style={{borderRadius:"10px", height: "180px"}} value={description_book} onChange={handleDescriptionChange} name="postContent" rows={4} cols={65} />                                                    
+                                                            </Grid>
+                                                        </Grid>
+                                                    </div>
+                                                </div>
+                                            </>
 
-                                )}
-                                {/* --Paso 3--*/}
-                                {step === 3 && (
-                                    <>
-                                        <Typography gutterBottom variant="h4" style={{fontFamily:"SF Pro Display Bold", color:"#1eaeff"}} >
-                                            Paso 3
-                                        </Typography>
-                                        <Typography variant="body2" color="text.secondary">
-                                            Añade 3 fotografías iluminadas de tu libro
-                                        </Typography>
-                                        
-                                        <br />
-                                        <br />
-                                        <div style={{backgroundColor:"#002E5D"}}>
-                                            <Grid container spacing={4} justifyContent="center" style={{padding: "20px", alignContent:"center", textAlign: "center"}}>
+                                        )}
+                                        {/* --Paso 3--*/}
+                                        {step === 3 && (
+                                            <>
+                                                <Typography gutterBottom variant="h4" style={{fontFamily:"SF Pro Display Bold", color:"#1eaeff"}} >
+                                                    Paso 3
+                                                </Typography>
+                                                <Typography variant="body2" color="text.secondary">
+                                                    Añade 3 fotografías iluminadas de tu libro
+                                                </Typography>
                                                 
-                                                {/* Portada de Vitrina */}
-                                                <Card style={{ margin: "10px", alignContent: "center", height:"255px", width: "175px", borderRadius: "20px", textAlign: "center", position: 'relative'}} sx={{ maxWidth: 345, padding: "10px"}}>
-                                                    <CardContent style={{padding:"0px", position: "relative"}}>
-                                                        <input
-                                                            accept="image/*"
-                                                            style={{ display: 'none' }}
-                                                            id="image-showcase"
-                                                            type="file"
-                                                            onChange={handleImageChange}
-                                                        />
-                                                        <label htmlFor="image-showcase">
-                                                            {!imageShowcase && (
-                                                                <Button component="span">
-                                                                    <AddIcon />
-                                                                </Button>
-                                                            )}
-                                                        </label>
-                                                        {imageShowcase ? (
-                                                            <>
-                                                            <img src={imageShowcase} alt="Portada Real" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
-                                                            <Button 
-                                                                style={{ position: 'absolute', top: -7, right: -20}} 
-                                                                onClick={() => setImageShowcase(null)}
-                                                            >
-                                                                <DeleteIcon style={{color:"black", borderBlockColor:"white"}} />
-                                                            </Button>
-                                                            </>
-                                                        ) : (
-                                                            <Typography variant="body2" color="text.secondary">
-                                                                Portada de Vitrina (opcional)
-                                                            </Typography>
-                                                        )}
-                                                    </CardContent>
-                                                </Card>
-
-                                                                {/* Portada Real */}
-                                                                <Card style={{ margin: "10px", alignContent: "center", height:"255px", width: "175px", borderRadius: "20px", textAlign: "center", position: 'relative'}} sx={{ maxWidth: 345, padding: "10px"}}>
-                                                                    <CardContent style={{padding:"0px", position: "relative"}}>
-                                                                        <input
-                                                                            accept="image/*"
-                                                                            style={{ display: 'none' }}
-                                                                            id="image-cover"
-                                                                            type="file"
-                                                                            onChange={handleImageChangeCover} 
-                                                                        />
-                                                                        <label htmlFor="image-cover">
-                                                                            {!imageCover && (
-                                                                                <Button component="span">
-                                                                                    <AddIcon />
-                                                                                </Button>
-                                                                            )}
-                                                                        </label>
-                                                                        {imageCover ? (
-                                                                            <>
-                                                                            <img src={imageCover} alt="Portada Real" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
-                                                                            <Button 
-                                                                                style={{ position: 'absolute', top: -7, right: -20}} 
-                                                                                onClick={() => setImageCover(null)}
-                                                                            >
-                                                                                <DeleteIcon style={{color:"black", borderBlockColor:"white"}} />
+                                                <br />
+                                                <br />
+                                                <div style={{backgroundColor:"#002E5D"}}>
+                                                    <Grid container spacing={4} justifyContent="center" style={{padding: "20px", alignContent:"center", textAlign: "center"}}>
+                                                        
+                                                        {/* Portada de Vitrina */}
+                                                        <Card style={{ margin: "10px", alignContent: "center", height:"255px", width: "175px", borderRadius: "20px", textAlign: "center", position: 'relative'}} sx={{ maxWidth: 345, padding: "10px"}}>
+                                                            <CardContent style={{padding:"0px", position: "relative"}}>
+                                                                <input
+                                                                    accept="image/*"
+                                                                    style={{ display: 'none' }}
+                                                                    id="image-showcase"
+                                                                    type="file"
+                                                                    onChange={handleImageChange}
+                                                                />
+                                                                <label htmlFor="image-showcase">
+                                                                    {!imageShowcase && (
+                                                                        <Button component="span">
+                                                                            <AddIcon />
+                                                                        </Button>
+                                                                    )}
+                                                                </label>
+                                                                {imageShowcase ? (
+                                                                    <>
+                                                                    <img src={imageShowcase} alt="Portada Real" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                                                                    <Button 
+                                                                        style={{ position: 'absolute', top: -7, right: -20}} 
+                                                                        onClick={() => setImageShowcase(null)}
+                                                                    >
+                                                                        <DeleteIcon style={{color:"black", borderBlockColor:"white"}} />
+                                                                    </Button>
+                                                                    </>
+                                                                ) : (
+                                                                    <Typography variant="body2" color="text.secondary">
+                                                                        Portada de Vitrina (opcional)
+                                                                    </Typography>
+                                                                )}
+                                                            </CardContent>
+                                                        </Card>
+                                                            {/* Portada Real */}
+                                                            <Card style={{ margin: "10px", alignContent: "center", height:"255px", width: "175px", borderRadius: "20px", textAlign: "center", position: 'relative'}} sx={{ maxWidth: 345, padding: "10px"}}>
+                                                                <CardContent style={{padding:"0px", position: "relative"}}>
+                                                                    <input
+                                                                        accept="image/*"
+                                                                        style={{ display: 'none' }}
+                                                                        id="image-cover"
+                                                                        type="file"
+                                                                        onChange={handleImageChangeCover} 
+                                                                    />
+                                                                    <label htmlFor="image-cover">
+                                                                        {!imageCover && (
+                                                                            <Button component="span">
+                                                                                <AddIcon />
                                                                             </Button>
-                                                                            </>
-                                                                        ) : (
-                                                                            <Typography variant="body2" color="text.secondary">
-                                                                                Portada Real (Fotografía)
-                                                                            </Typography>
                                                                         )}
-                                                                    </CardContent>
-                                                                </Card>
+                                                                    </label>
+                                                                    {imageCover ? (
+                                                                        <>
+                                                                        <img src={imageCover} alt="Portada Real" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                                                                        <Button 
+                                                                            style={{ position: 'absolute', top: -7, right: -20}} 
+                                                                            onClick={() => setImageCover(null)}
+                                                                        >
+                                                                            <DeleteIcon style={{color:"black", borderBlockColor:"white"}} />
+                                                                        </Button>
+                                                                        </>
+                                                                    ) : (
+                                                                        <Typography variant="body2" color="text.secondary">
+                                                                            Portada Real (Fotografía)
+                                                                        </Typography>
+                                                                    )}
+                                                                </CardContent>
+                                                            </Card>
 
-                                                                {/* Portada Página (Fotografía) */}
-                                                                <Card style={{ margin: "10px", alignContent: "center", height:"255px", width: "175px", borderRadius: "20px", textAlign: "center", position: 'relative'}} sx={{ maxWidth: 345, padding: "10px"}}>
-                                                                    <CardContent style={{padding:"0px", position: "relative"}}>
-                                                                        <input
-                                                                            accept="image/*"
-                                                                            style={{ display: 'none' }}
-                                                                            id="image-first"
-                                                                            type="file"
-                                                                            onChange={handleImageChangeFirst} 
-                                                                        />
-                                                                        <label htmlFor="image-first">
-                                                                            {!imageFirst && (
-                                                                                <Button component="span">
-                                                                                    <AddIcon />
-                                                                                </Button>
-                                                                            )}
-                                                                        </label>
-                                                                        {imageFirst ? (
-                                                                            <>
-                                                                            <img src={imageFirst} alt="Portada Pagina" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
-                                                                            <Button 
-                                                                                style={{ position: 'absolute', top: -7, right: -20}} 
-                                                                                onClick={() => setImageFirst(null)}
-                                                                            >
-                                                                                <DeleteIcon style={{color:"black", borderBlockColor:"white"}} />
+                                                            {/* Portada Página (Fotografía) */}
+                                                            <Card style={{ margin: "10px", alignContent: "center", height:"255px", width: "175px", borderRadius: "20px", textAlign: "center", position: 'relative'}} sx={{ maxWidth: 345, padding: "10px"}}>
+                                                                <CardContent style={{padding:"0px", position: "relative"}}>
+                                                                    <input
+                                                                        accept="image/*"
+                                                                        style={{ display: 'none' }}
+                                                                        id="image-first"
+                                                                        type="file"
+                                                                        onChange={handleImageChangeFirst} 
+                                                                    />
+                                                                    <label htmlFor="image-first">
+                                                                        {!imageFirst && (
+                                                                            <Button component="span">
+                                                                                <AddIcon />
                                                                             </Button>
-                                                                            </>
-                                                                        ) : (
-                                                                            <Typography variant="body2" color="text.secondary">
-                                                                                Portada Página (Fotografía)
-                                                                            </Typography>
                                                                         )}
-                                                                    </CardContent>
-                                                                </Card>
+                                                                    </label>
+                                                                    {imageFirst ? (
+                                                                        <>
+                                                                        <img src={imageFirst} alt="Portada Pagina" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                                                                        <Button 
+                                                                            style={{ position: 'absolute', top: -7, right: -20}} 
+                                                                            onClick={() => setImageFirst(null)}
+                                                                        >
+                                                                            <DeleteIcon style={{color:"black", borderBlockColor:"white"}} />
+                                                                        </Button>
+                                                                        </>
+                                                                    ) : (
+                                                                        <Typography variant="body2" color="text.secondary">
+                                                                            Portada Página (Fotografía)
+                                                                        </Typography>
+                                                                    )}
+                                                                </CardContent>
+                                                            </Card>
 
-                                                                {/* Contraportada (Fotografía) */}
-                                                                <Card style={{ margin: "10px", alignContent: "center", height:"255px", width: "175px", borderRadius: "20px", textAlign: "center", position: 'relative'}} sx={{ maxWidth: 345, padding: "10px"}}>
-                                                                    <CardContent style={{padding:"0px", position: "relative"}}>
-                                                                        <input
-                                                                            accept="image/*"
-                                                                            style={{ display: 'none' }}
-                                                                            id="image-back"
-                                                                            type="file"
-                                                                            onChange={handleImageChangeBack} 
-                                                                        />
-                                                                        <label htmlFor="image-back">
-                                                                            {!imageBack && (
-                                                                                <Button component="span">
-                                                                                    <AddIcon />
-                                                                                </Button>
-                                                                            )}
-                                                                        </label>
-                                                                        {imageBack ? (
-                                                                            <>
-                                                                            <img src={imageBack} alt="Contraportada" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
-                                                                            <Button 
-                                                                                style={{ position: 'absolute', top: -7, right: -20}} 
-                                                                                onClick={() => setImageBack(null)}
-                                                                            >
-                                                                                <DeleteIcon style={{color:"black", borderBlockColor:"white"}} />
+                                                            {/* Contraportada (Fotografía) */}
+                                                            <Card style={{ margin: "10px", alignContent: "center", height:"255px", width: "175px", borderRadius: "20px", textAlign: "center", position: 'relative'}} sx={{ maxWidth: 345, padding: "10px"}}>
+                                                                <CardContent style={{padding:"0px", position: "relative"}}>
+                                                                    <input
+                                                                        accept="image/*"
+                                                                        style={{ display: 'none' }}
+                                                                        id="image-back"
+                                                                        type="file"
+                                                                        onChange={handleImageChangeBack} 
+                                                                    />
+                                                                    <label htmlFor="image-back">
+                                                                        {!imageBack && (
+                                                                            <Button component="span">
+                                                                                <AddIcon />
                                                                             </Button>
-                                                                            </>
-                                                                        ) : (
-                                                                            <Typography variant="body2" color="text.secondary">
-                                                                                Contraportada (Fotografía)
-                                                                            </Typography>
                                                                         )}
-                                                                    </CardContent>
-                                                                </Card>
+                                                                    </label>
+                                                                    {imageBack ? (
+                                                                        <>
+                                                                        <img src={imageBack} alt="Contraportada" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                                                                        <Button 
+                                                                            style={{ position: 'absolute', top: -7, right: -20}} 
+                                                                            onClick={() => setImageBack(null)}
+                                                                        >
+                                                                            <DeleteIcon style={{color:"black", borderBlockColor:"white"}} />
+                                                                        </Button>
+                                                                        </>
+                                                                    ) : (
+                                                                        <Typography variant="body2" color="text.secondary">
+                                                                            Contraportada (Fotografía)
+                                                                        </Typography>
+                                                                    )}
+                                                                </CardContent>
+                                                            </Card>
 
-                                            </Grid>
+                                                    </Grid>
+                                                </div>
+                                            </>
+                                        )}            
+                                    </CardContent>
+                                </CardActionArea>
+                                <CardActions style={{ justifyContent: 'space-between', marginRight:"50%", marginLeft:"60%" }}>
+                                    {step > 1 && (
+                                        <div style={{justifyContent: "flex-end"}}>
+                                        <Button onClick={handlePrevious} style={{ backgroundColor:"#1eaeff", color: "#ffffff", borderRadius:"30px", textTransform: "none", marginRight:"30px", width:"130px", height:"50px", fontWeight:"bold"}} >
+                                            Anterior
+                                        </Button>
                                         </div>
-                                    </>
-                                )}            
-                        </CardContent>
-                    </CardActionArea>
-                    <CardActions style={{ justifyContent: 'space-between', marginRight:"50%", marginLeft:"60%" }}>
-                    {step > 1 && (
-                        <div style={{justifyContent: "flex-end"}}>
-                        <Button onClick={handlePrevious} style={{ backgroundColor:"#1eaeff", color: "#ffffff", borderRadius:"30px", textTransform: "none", marginRight:"30px", width:"130px", height:"50px", fontWeight:"bold"}} >
-                            Anterior
-                        </Button>
-                        </div>
-                    )}
-                    {step === 1 ? (
-                        <div style={{justifyContent: "flex-start"}}>
-                        <Button onClick={handleNext} style={{ backgroundColor:"#1eaeff", color: "#ffffff", borderRadius:"30px", textTransform: "none", marginRight:"30px", width:"130px", height:"50px", fontWeight:"bold"}} >
-                            Siguiente
-                        </Button>
-                        </div>
-                    ) : step === 2 ? (
-                        <div style={{justifyContent: "flex-start"}}>
-                        <Button onClick={add_book}  style={{ backgroundColor:"#1eaeff", color: "#ffffff", borderRadius:"30px", textTransform: "none", marginRight:"30px", width:"130px", height:"50px", fontWeight:"bold"}} >
-                            Siguiente
-                        </Button>
-                        <ToastContainer 
-                        position="top-right"
-                        autoClose={5000}
-                        hideProgressBar={false}
-                        newestOnTop={false}
-                        closeOnClick
-                        rtl={false}
-                        pauseOnFocusLoss
-                        draggable
-                        pauseOnHover
-                        />
-                        </div>
-                    ) : (
-                        <div style={{ display: 'flex', justifyContent: 'flex-start' }}>
-                        <Button onClick={handleAddAnother} style={{ backgroundColor:"#1eaeff", color: "#ffffff", borderRadius:"30px", textTransform: "none",  width:"130px", height:"50px", fontWeight:"bold"}} >
-                            Agregar otro
-                        </Button>
-                        <Button onClick={handleSubmitPublication} style={{ backgroundColor:"#1eaeff", color: "#ffffff", borderRadius:"30px", textTransform: "none",  width:"130px", height:"50px", fontWeight:"bold"}} >
-                            Completado
-                        </Button>
-                        </div>
-                    )}
-                    </CardActions>
-                    <CardContent style={{backgroundColor:"#002E5D"}}>
-                    </CardContent>
-                </Card> 
-            </Box>
-        </div>
-        </ThemeProvider>
-    </NoSsr>
-    </>
+                                    )}
+                                    {step === 1 ? (
+                                        <div style={{justifyContent: "flex-start"}}>
+                                        <Button onClick={handleNext} style={{ backgroundColor:"#1eaeff", color: "#ffffff", borderRadius:"30px", textTransform: "none", marginRight:"30px", width:"130px", height:"50px", fontWeight:"bold"}} >
+                                            Siguiente
+                                        </Button>
+                                        </div>
+                                    ) : step === 2 ? (
+                                        <div style={{justifyContent: "flex-start"}}>
+                                        <Button onClick={add_book}  style={{ backgroundColor:"#1eaeff", color: "#ffffff", borderRadius:"30px", textTransform: "none", marginRight:"30px", width:"130px", height:"50px", fontWeight:"bold"}} >
+                                            Siguiente
+                                        </Button>
+                                        <ToastContainer 
+                                        position="top-right"
+                                        autoClose={5000}
+                                        hideProgressBar={false}
+                                        newestOnTop={false}
+                                        closeOnClick
+                                        rtl={false}
+                                        pauseOnFocusLoss
+                                        draggable
+                                        pauseOnHover
+                                        />
+                                        </div>
+                                    ) : (
+                                        <div style={{ display: 'flex', justifyContent: 'flex-start' }}>
+                                        <Button onClick={handleAddAnother} style={{ backgroundColor:"#1eaeff", color: "#ffffff", borderRadius:"30px", textTransform: "none",  width:"130px", height:"50px", fontWeight:"bold"}} >
+                                            Agregar otro
+                                        </Button>
+                                        <Button onClick={handleSubmitPublication} style={{ backgroundColor:"#1eaeff", color: "#ffffff", borderRadius:"30px", textTransform: "none",  width:"130px", height:"50px", fontWeight:"bold"}} >
+                                            Completado
+                                        </Button>
+                                        </div>
+                                    )}
+                                </CardActions>
+                                    <CardContent style={{backgroundColor:"#002E5D"}}>
+                                </CardContent>
+                            </Card> 
+                        </Box>
+                    </div>
+                </ThemeProvider>
+            </NoSsr>
+            <Footer />
+        </>
     );
 }
 export default Sales;

@@ -1,5 +1,6 @@
 
 import React, { useEffect, useState } from "react";
+
 import {
     Box,
     Button,
@@ -19,7 +20,8 @@ import { CgDanger } from "react-icons/cg";
 import "../../App.css";
 import axios from 'axios';
 import logo from "../../assents/img/logoMatch.png";
-import { useNavigate } from 'react-router-dom'; //cambio
+import { useNavigate } from 'react-router-dom'; 
+
 
 interface Region  {
     id_region: number;
@@ -49,6 +51,7 @@ const RegisterPage: React.FC = () => {
         setTerms(event.target.checked);
     };
 
+    {/* Cargar Todas Las Regiones */}
     useEffect(() => {
         axios.get('http://localhost:3001/region')
             .then(response => {
@@ -57,12 +60,12 @@ const RegisterPage: React.FC = () => {
             });
     }, []);
 
+    {/*------------------------------------------ */}
+    {/* Seleccion de la Region */}
     const handleRegionChange = (event: { target: { value: React.SetStateAction<number>; }; }) => {
         setSelectedRegion(event.target.value);
         const numberRegion = event.target.value;
-        console.log('numero de region: ' + numberRegion);
         console.log('region seleccionada: ' + event.target.value);
-        console.log('region : ' + selectedRegion);
         axios.get(`http://localhost:3001/cities/region/${numberRegion}`)
             .then(response => {
             setCities(response.data);
@@ -70,10 +73,16 @@ const RegisterPage: React.FC = () => {
         });
     };
     
+    {/*------------------------------------------ */}
+    {/* Seleccion de la Comuna */}
     const handleCityChange = (event: { target: { value: React.SetStateAction<number>; }; }) => {
         setIdCity(event.target.value);
     };
+
     
+
+    {/*------------------------------------------ */}
+    {/* Guardar Datos Registro */}
     const handleSubmit = async (event: React.FormEvent) => {
         event.preventDefault();
 
@@ -411,7 +420,7 @@ const RegisterPage: React.FC = () => {
 
                                             {/*-Select de Comuna-*/}
                                             <h6>Comuna</h6>
-                                            <FormControl className="formulario" fullWidth required>
+                                            <FormControl className="formulario" fullWidth>
                                                 <InputLabel style={{fontSize: "16px"}} id="demo-simple-select-standard-label"></InputLabel>
                                                 <Select
                                                     labelId="city-label"
@@ -454,7 +463,7 @@ const RegisterPage: React.FC = () => {
                                 <br />
                                 {/*-Boton Registrar-*/}
                                 <Typography d-flex justify-content-center h-100 align-items-center text-center text-align-center fontSize = "10px" variant="body2" >
-                                <Button type="submit" onClick={handleSubmit} fullWidth variant="contained"  style={{ textTransform: "none", fontSize: "15px", color: "#fff", backgroundColor: "#1976D2", borderRadius: "20px" }}> Registrarme </Button> 
+                                <Button type="submit" onClick={handleSubmit}  fullWidth variant="contained"  style={{ textTransform: "none", fontSize: "15px", color: "#fff", backgroundColor: "#1976D2", borderRadius: "20px" }}> Registrarme </Button> 
                                 </Typography>
                             </CardContent>
                         </Card>

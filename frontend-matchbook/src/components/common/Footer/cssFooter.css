@@ -4,7 +4,6 @@
 
     background-color: #1e1e1e;
     color:#ffff;
-    margin-top: 40px;
 }
 
 #logo {
@@ -48,10 +47,10 @@
 
 .inputEmail {
     height: '55px';
-    borderRadius: "30px";
-    borderColor: "#d8d5d5";
-    paddingLeft: "50px";
-    backgroundColor: "#404040";
+    border-radius: "30px";
+    border-color: "#d8d5d5";
+    padding-left: "50px";
+    background-color: "#404040";
     color: "#d8d5d5";
     width: "400px";
 }
