@@ -39,4 +39,12 @@ export class PublicationService {
   async remove(id: string): Promise<void> {
     await this.publicationRepository.delete(id);
   }
+
+  findAllWithBooks(): Promise<Publication[]> {
+    return this.publicationRepository.find({ relations: ['book'] })
+      .catch(error => {
+        console.error('Error fetching publications with books:', error);
+        throw error;
+      });
+  }
 }

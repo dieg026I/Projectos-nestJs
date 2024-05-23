@@ -14,8 +14,11 @@ export class Publication {
   @JoinColumn({ name: 'user_rut_user' })
   user_rut_user: number;
   
-  @ManyToOne(() => Book, (book) => book.publications)
+  @ManyToOne(() => Book, (book) => book.publication)
   @JoinColumn({ name: 'book_id_book' })
+  book: Book;
+
+  @Column()
   book_id_book: string;
 
   @Column()

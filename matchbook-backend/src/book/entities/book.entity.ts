@@ -39,8 +39,8 @@ export class Book {
   @JoinColumn({ name: 'publisher_id_publisher' })
   publisher_id_publisher: Publisher;
 
-  @OneToMany(() => Publication, publication => publication.book_id_book)
-  publications: Publication[]
+  @OneToMany(() => Publication, publication => publication.book)
+  publication: Publication[]
 
   @ManyToMany(() => Category, (category) => category.books)
   categories: Category[];

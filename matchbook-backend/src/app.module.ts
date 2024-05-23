@@ -35,15 +35,15 @@ import { Category } from './category/entities/category.entity';
     synchronize: false, // Solo para entornos de desarrollo
     autoLoadEntities: false,
   }),RegionModule,CommuneModule, UsersModule, AuthModule,
-     JwtModule.register({
-     secret: 'secretKey', 
-     signOptions: { expiresIn: '60m' }
+    JwtModule.register({
+    secret: 'secretKey', 
+    signOptions: { expiresIn: '60m' }
   }),
-     BookModule,
-     AuthorModule,
-     PublisherModule,
-     PublicationModule,
-     CategoryModule ],
+    BookModule,
+    AuthorModule,
+    PublisherModule,
+    PublicationModule,
+    CategoryModule ],
   controllers: [AppController],
   providers: [AppService],
 })

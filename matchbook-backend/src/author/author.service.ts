@@ -19,8 +19,8 @@ export class AuthorService {
     return this.authorRepository.find();
   }
 
-  findOne(name_author: string): Promise <Author> {
-    return this.authorRepository.findOne( { where: {name_author} } );
+  findOne(id_author: string): Promise <Author> {
+    return this.authorRepository.findOne( { where: {id_author} } );
   }
 
   update(id: string, author: Author) {

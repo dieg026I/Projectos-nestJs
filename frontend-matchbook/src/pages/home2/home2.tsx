@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Box, Breadcrumbs, Button, Card, CardActions, CardContent, CardMedia, Grid, Link, Typography } from "@mui/material";
+import { Box, Breadcrumbs, Button, Card, CardActions, CardContent, CardMedia, Grid, Link, Pagination, Stack, Typography } from "@mui/material";
 import NavBarLogin from "../../components/common/NavBarLogin/navBarLogin";
 import Footer from "../../components/common/Footer/footer";
 import image1 from "../../assents/img/car1.png";
@@ -25,7 +25,7 @@ interface Publication {
     id_publication: string;
     date_publication: Date;
     user_rut_user: number;
-    book_id_book: string;
+    book: Book;
     photo_showcase: string;
     photo_cover: string;
     photo_first_page: string;
@@ -38,7 +38,7 @@ interface Book {
     format_book: string;
     author_id_author: string;
     author_name: string;
-    publisher_name: string;
+    publisher_name: string; 
     publisher_id_publisher: string;
     cost_book: number;
     category: string;
@@ -60,49 +60,33 @@ function handleClick(event: React.MouseEvent<HTMLDivElement, MouseEvent>) {
 }
 
     export const HomePageLogin: React.FC<HomeProps> = ({}: HomeProps) => {
-    ;
-    const [booksAndPublications, setBooksAndPublications] = useState<BookAndPublication[]>([]);
-    const [refreshData, setRefreshData] = useState(false); // Nuevo estado para forzar la actualización de los datos
     
-    {/* Libro y Publicación */}
-    const fetchBooksAndPublications = async () => {
-        // Obtén todas las publicaciones
-        const responsePublications = await axios.get('http://localhost:3001/publications');
-        const publications: Publication[] = responsePublications.data;
-    
-        // Para cada publicación, obtén su libro correspondiente
-        const booksAndPublications = await Promise.all(publications.map(async (publication) => {
-            const responseBook = await axios.get(`http://localhost:3001/book/${publication.book_id_book}`);
-            const book: Book = responseBook.data;
-
-              // Obtén el autor del libro
-        const responseAuthor = await axios.get(`http://localhost:3001/author/${book.author_id_author}`);
-        const author = responseAuthor.data;
-
-        // Agrega el nombre del autor al libro
-        book.author_name = author.name_author;
-
-        const responsePublisher = await axios.get(`http://localhost:3001/publisher/${book.publisher_id_publisher}`);
-        const publisher = responsePublisher.data;
-
-        // Agrega el nombre del editor al libro
-        book.publisher_name = publisher.name_publisher;
-    
-            // Devuelve el libro y su publicación correspondiente
-            return { book, publication };
-        }));
-    
-        return booksAndPublications;
+    const [page, setPage] = useState(1);
+    const handleChange = (event: React.ChangeEvent<unknown>, value: number) => {
+        setPage(value);
     };
-    
-    
+
+
+    {/*-----------------------------------------------------------------------------*/}
+    {/* Mostrar Publicacion */}
+    const [publications, setPublications] = React.useState<Publication[]>([]);
 
     useEffect(() => {
-        fetchBooksAndPublications().then((data: BookAndPublication[]) => {
-            setBooksAndPublications(data);
-        });
-    }, [refreshData]); // Agrega refreshData como una dependencia del useEffect
+        const fetchPublications = async () => {
+        try {
+            const response = await axios.get('http://localhost:3001/publications/publication');
+            const publicationResponse = response.data;
+            setPublications(response.data);
+            console.log(JSON.stringify(response.data, null, 2))
+        } catch (error) {
+        console.error('Error fetching publications:', error);
+        }
+    };
 
+    console.log('fetchPublication' + fetchPublications)
+    fetchPublications();
+    }, []);
+    
 
     {/*-----------------------------------------------------------------------------*/}
     {/* Flechas Carrousel */}
@@ -261,126 +245,67 @@ function handleClick(event: React.MouseEvent<HTMLDivElement, MouseEvent>) {
                     <h5 style={{ fontWeight: "600", fontFamily: "Roboto Bold"}}> NOVEDADES</h5>
                     <h2 style={{ fontWeight: "bold", fontFamily: "Roboto Bold" }} >Lo más nuevo que tenemos para ti</h2>
                     <br />
-                
-                    <Carousel  showThumbs={false}
-                    renderArrowPrev={(onClickHandler, hasPrev, label) => 
-                        hasPrev && (
-                            <button type="button" onClick={onClickHandler} title={label} style={{...arrowStyles, left: 15}}>
-                                &#10094;
-                            </button>
-                        )
-                    }
-                    renderArrowNext={(onClickHandler, hasNext, label) => 
-                        hasNext && (
-                            <button type="button" onClick={onClickHandler} title={label} style={{...arrowStyles, right: 15}}>
-                                &#10095;
-                            </button>
-                        )
-                    }>
-                        <div>
-                            <Grid container spacing={4} justifyContent="center" style={{padding: "20px"}}>
-                                {booksAndPublications.map(({ book, publication }) => (
-                                    <Card key={book.id_book} style={{ margin: "10px", width: "230px", borderRadius: "20px", textAlign: "left", position: 'relative', padding:"22px"}} sx={{ maxWidth: 345, padding: "10px"}}>
-                                        {/* Imagen libros */}
-                                        <CardMedia
-                                            sx={{ height: 140, position: 'relative' }}
-                                        >
-                                            <img 
-                                            src={publication.photo_showcase}
-                                            alt="Imagen del libro" 
-                                            style={{ 
-                                                height: '140px', 
-                                                width: 'auto', 
-                                                maxWidth: '100%', 
-                                                display: 'block', 
-                                                marginLeft: 'auto', 
-                                                marginRight: 'auto' 
-                                            }}
-                                        />
-                                        <FaHeart style={{ position: 'absolute', top: '10px', right: '10px', color: '#f05d16' }} />
-                                        </CardMedia>
-                                            
-                                        <CardContent style={{padding: "5px", paddingTop: "15px"}}>
-                                            {/* Titulo Libro */}
-                                            <Typography gutterBottom variant="h5" component="div" style={{fontSize: "17px",  paddingTop: "5px", fontFamily: "SF Pro Display Medium"}}>
-                                            {book.name_book} 
-                                            </Typography>
-
-                                            {/* Autor Libro */}
-                                            <Typography variant="body2" color="text.secondary" style={{ fontFamily: "SF Pro Display Regular"}}>
-                                            {book.author_name} 
-                                            </Typography>
-
-                                            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' , fontSize: "14px" }}>
-                                            
-                                                {/* Precio Libro */}
-                                                <Typography gutterBottom variant="h5" component="div" style={{fontSize: "20px", fontWeight: "bold", paddingTop: "5px"}}>
-                                                    ${book.cost_book}
-                                                </Typography>
-
-                                                {/* Ubicación Libro */}
-                                                <Box sx={{ display: 'flex', fontSize: "13px" }}>
-                                                    <PlaceIcon style={{ color:"#00a9e0", alignItems: 'center' }} />
-                                                    <span>Viña del Mar</span>
-                                                </Box>
-                                            </Box>
-                                        </CardContent>
-                                        <CardActions>
-                                            <Button fullWidth href="/" variant="contained"  style={{ textTransform: "none", backgroundColor: 'white', color: '#f05d16', borderRadius: '30px', borderBlockColor: "black", fontWeight: "bold", fontSize:"15px" }}>
-                                                Agregar al Carro
-                                            </Button>
-                                        </CardActions>
-                                    </Card>
-                                ))}
-                            </Grid>
-                        </div>
-                        <div>
-                            <Card style={{ margin: "30px", width: "230px", borderRadius: "20px", textAlign: "left"}} sx={{ maxWidth: 345, padding: "10px"}}>
-                                
-                            <CardMedia
-                                    sx={{ height: 140, position: 'relative' }}
-                                >
-                                    <img 
-                                    src={libro} 
-                                    alt="green iguana" 
-                                    style={{ 
-                                        height: '140px', 
-                                        width: 'auto', 
-                                        maxWidth: '100%', 
-                                        display: 'block', 
-                                        marginLeft: 'auto', 
-                                        marginRight: 'auto' 
-                                    }}
-                                />
+                        <Grid container spacing={4} justifyContent="center" style={{padding: "20px"}}>
+                        {Array.isArray(publications) && publications.slice((page - 1) * 5, page * 5).map((publication) => (
+                                <Card key={publication.id_publication} style={{ margin: "10px", width: "230px", borderRadius: "20px", textAlign: "left", position: 'relative', padding:"22px"}} sx={{ maxWidth: 345, padding: "10px"}}>
+                                    {/* Imagen libros */}
+                                    <CardMedia
+                                        sx={{ height: 140, position: 'relative' }}
+                                    >
+                                        <img 
+                                        src={publication.photo_showcase}
+                                        alt="Imagen del libro" 
+                                        style={{ 
+                                            height: '140px', 
+                                            width: 'auto', 
+                                            maxWidth: '100%', 
+                                            display: 'block', 
+                                            marginLeft: 'auto', 
+                                            marginRight: 'auto' 
+                                        }}
+                                    />
                                     <FaHeart style={{ position: 'absolute', top: '10px', right: '10px', color: '#f05d16' }} />
-                                </CardMedia>
-                                <CardContent style={{padding: "5px", paddingTop: "15px"}}>
-                                    <Typography gutterBottom variant="h5" component="div" style={{fontSize: "15px", fontWeight: "bold", paddingTop: "5px"}}>
-                                    Cómo Ganar Amigos e Influir en las Personas
-                                    </Typography>
-                                    <Typography variant="body2" color="text.secondary">
-                                    Dale Carnegie
-                                    </Typography>
-                                    <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                                    <Typography gutterBottom variant="h5" component="div" style={{fontSize: "25px", fontWeight: "bold", paddingTop: "5px"}}>
-                                        $6.990
-                                    </Typography>
-                                    <Box sx={{ display: 'flex', fontSize: "13px" }}>
-                                        <PlaceIcon style={{ color:"#00a9e0", alignItems: 'center' }} />
-                                        <span>Viña del Mar</span>
-                                    </Box>
-                                    </Box>
-                                </CardContent>
-                                <CardActions>
-                                    <Button fullWidth href="/" variant="contained"  style={{ textTransform: "none", backgroundColor: 'white', color: '#f05d16', borderRadius: '30px', borderBlockColor: "black", fontWeight: "bold", fontSize:"15px" }}>
-                                        Agregar al Carro
-                                    </Button>
-                                </CardActions>
-                            </Card>
-                        </div>
-                        
-                    </Carousel>
+                                    </CardMedia>
+                                        
+                                    <CardContent style={{padding: "5px", paddingTop: "15px"}}>
+                                        {/* Titulo Libro */}
+                                        <Typography gutterBottom variant="h5" component="div" style={{fontSize: "17px",  paddingTop: "5px", fontFamily: "SF Pro Display Medium"}}>
+                                        {publication.book.name_book} 
+                                        </Typography>
 
+                                        {/* Autor Libro */}
+                                        <Typography variant="body2" color="text.secondary" style={{ fontFamily: "SF Pro Display Regular"}}>
+                                        {publication.book.author_name} 
+                                        </Typography>
+
+                                        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' , fontSize: "14px" }}>
+                                        
+                                            {/* Precio Libro */}
+                                            <Typography gutterBottom variant="h5" component="div" style={{fontSize: "20px", fontWeight: "bold", paddingTop: "5px"}}>
+                                                ${publication.book.cost_book}
+                                            </Typography>
+
+                                            {/* Ubicación Libro */}
+                                            <Box sx={{ display: 'flex', fontSize: "13px" }}>
+                                                <PlaceIcon style={{ color:"#00a9e0", alignItems: 'center' }} />
+                                                <span>Viña del Mar</span>
+                                            </Box>
+                                        </Box>
+                                    </CardContent>
+                                    <CardActions>
+                                        <Button fullWidth href="/" variant="contained"  style={{ textTransform: "none", backgroundColor: 'white', color: '#f05d16', borderRadius: '30px', borderBlockColor: "black", fontWeight: "bold", fontSize:"15px" }}>
+                                            Agregar al Carro
+                                        </Button>
+                                    </CardActions>
+                                </Card>
+                            ))}
+
+                        </Grid>
+                        <Grid container justifyContent="center" alignItems="center" style={{padding: "20px"}}>
+                            <Stack spacing={2}>
+                                <Pagination count={Math.ceil(publications.length / 5)} page={page} onChange={handleChange} />
+                            </Stack>
+                        </Grid>
                 </Card>
 
                 <br />

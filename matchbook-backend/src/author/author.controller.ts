@@ -16,9 +16,9 @@ export class AuthorController {
     return this.authorService.findAll();
   }
 
-  @Get(':name_author')
-  findOne(@Param('name_author') name_author: string) {
-    return this.authorService.findOne(name_author);
+  @Get(':id_author')
+  findOne(@Param('id_author') id_author: string) {
+    return this.authorService.findOne(id_author);
   }
 
   @Put(':id')
