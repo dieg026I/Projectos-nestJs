@@ -38,6 +38,22 @@ interface Book {
     description_book: string;
 }
 
+{/*-----------------------------------------------------------------------------*/}
+{/* Sugerencia */}
+const SuggestionsBox = ({ suggestions, onSelect }: { suggestions: { title: string; authors: string[] }[], onSelect: (selectedTitle: string) => void }) => {
+    return (
+        <div style={{ position: 'absolute', top: '74%', left: '255px', width: '35%', background: 'white', boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)', maxHeight: '200px', overflowY: 'auto' , zIndex: 1000 }}>
+            {suggestions.map((book, index) => (
+                <div key={index} onClick={() => onSelect(book.title)} style={{ padding: '10px', borderBottom: '1px solid #ccc' }}>
+                    <strong>{book.title}</strong> by {book.authors.join(', ')}
+                </div>
+            ))}
+        </div>
+    );
+};
+
+
+
 const Sales: React.FC = () => {
 
     {/* Book */}
@@ -64,6 +80,11 @@ const Sales: React.FC = () => {
     const [photo_back_cover, setPhotoBackCover] = React.useState<File | null>(null);
     const [book, setBook] = React.useState<Book>();
     const navigate = useNavigate();
+
+    {/* Sugerencia */}
+    const [suggestions, setSuggestions] = useState<{ title: string; authors: string[] }[]>([]);
+
+    
     {/*-----------------------------------------------------------------------------*/}
     {/* Eliminar Animaciones */}
     const theme = createTheme({
@@ -76,14 +97,14 @@ const Sales: React.FC = () => {
         MuiCardActionArea: {
             styleOverrides: {
             focusHighlight: {
-                opacity: '0 !important', // Esto elimina el efecto de oscurecimiento al pasar el mouse
+                opacity: '0 !important', 
             },
             root: {
                 '&:active': {
-                backgroundColor: '#ffffff !important', // Esto establece el color de fondo a blanco cuando se hace clic
+                backgroundColor: '#ffffff !important', 
                 },
                 '&:focus': {
-                backgroundColor: '#ffffff !important', // Esto establece el color de fondo a blanco cuando el elemento está enfocado
+                backgroundColor: '#ffffff !important', 
                 },
             },
             },
@@ -92,10 +113,10 @@ const Sales: React.FC = () => {
             styleOverrides: {
             root: {
                 '&:active': {
-                backgroundColor: '#ffffff !important', // Esto establece el color de fondo a blanco cuando se hace clic en el TextField
+                backgroundColor: '#ffffff !important',
                 },
                 '&:focus': {
-                backgroundColor: '#ffffff !important', // Esto establece el color de fondo a blanco cuando el TextField está enfocado
+                backgroundColor: '#ffffff !important', 
                 },
             },
             },
@@ -103,6 +124,32 @@ const Sales: React.FC = () => {
         },
     });
     
+
+
+    {/*-----------------------------------------------------------------------------*/}
+    {/* Título */}
+
+    const handleTitleChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+        const searchTerm = e.target.value;
+        try {
+            const response = await axios.get(
+                `https://www.googleapis.com/books/v1/volumes?q=${searchTerm}&key=AIzaSyDJrjXWiZuxrAOhRE4GB1Xltcdy0dhsPsM`
+            );
+            const books = response.data.items.map((item: any) => ({
+                title: item.volumeInfo.title,
+                authors: item.volumeInfo.authors || [], // Si no hay autores, establecemos un arreglo vacío
+            }));
+            setSuggestions(books);
+        } catch (error) {
+            console.error('Error al buscar libros:', error);
+        }
+    };
+    
+
+    const handleSuggestionSelect = (selectedTitle: string) => {
+        setNameBook(selectedTitle);
+        setSuggestions([]); 
+    };
 
     {/*-----------------------------------------------------------------------------*/}
     {/* Step and Scroll */}
@@ -339,50 +386,61 @@ const Sales: React.FC = () => {
                                 
                                 <Card  sx={{ marginTop:"90px", borderRadius:"20px",width:"1100px", maxWidth: "1400px", maxHeight:"100%" }} ref={contentRef} style={contentStyle} >
                                 
+                                    {suggestions.length > 0 && (
+                                        <SuggestionsBox suggestions={suggestions} onSelect={handleSuggestionSelect} />
+                                    )}
                                     <CardActionArea disableRipple>
                                         <CardContent style={{backgroundColor:"#002E5D", alignContent:"center"}}>
                                             <div style={{textAlign: "center", alignContent:"center", color:"#ffff", fontFamily: "SF Pro Display Medium", paddingTop:"10px"}} >
                                                 <h3>Indica tu libro ({step}/3)</h3>
                                             </div>
                                         </CardContent>
+                                        
                                         <CardContent  >
-                                                {step === 1 && (
-                                                    <>
-                                                    {/* --Paso 1--*/}
-                                                    <CardContent style={{margin:"15px"}}>
-                                                        {step === 1 && (
-                                                            <>
-                                                                <Grid container justifyContent="space-between">
-                                                                    <Typography gutterBottom variant="h4" style={{fontFamily:"SF Pro Display Bold", color:"#1eaeff"}} >
-                                                                        Paso 1
-                                                                    </Typography>
-                                                                    <Typography variant="body2"  style={{fontFamily:"SF Pro Display Bold", color:"#002E5D"}}>
-                                                                        ¡Recuerda que solo puedes vender libros originales!
-                                                                    </Typography>
-                                                                </Grid>
-                                                                <Typography variant="body2" color="text.secondary">
-                                                                    Detalla la información del libro
+                                            {step === 1 && (
+                                                <>
+                                                {/* --Paso 1--*/}
+                                                <CardContent style={{margin:"15px"}}>
+                                                    {step === 1 && (
+                                                        <>
+                                                            <Grid container justifyContent="space-between">
+                                                                <Typography gutterBottom variant="h4" style={{fontFamily:"SF Pro Display Bold", color:"#1eaeff"}} >
+                                                                    Paso 1
                                                                 </Typography>
-                                                                <Typography variant="body2" color="red">
-                                                                    (*) campos obligatorios
+                                                                <Typography variant="body2"  style={{fontFamily:"SF Pro Display Bold", color:"#002E5D"}}>
+                                                                    ¡Recuerda que solo puedes vender libros originales!
                                                                 </Typography>
-                                                            </>
-                                                        )}
-                                                    </CardContent>
-                                                    <CardBody style={{marginLeft:"30px", }}>
-                                                        <h6 style={{fontFamily:"SF Pro Display Bold"}}>Título</h6>
-                                                        <FormControl style={{ width:"50%" }}>
-                                                            <InputLabel style={{ fontSize: "16px"}} ></InputLabel>
-                                                            < TextField
-                                                                id="name"
-                                                                value={name_book}
-                                                                onChange={e => setNameBook(e.target.value)}
-                                                                sx={{ width: '100%', color: "black", height:"45px", borderRadius:"10px" }}
-                                                            />
-                                                        </FormControl>
-                                                    </CardBody>
-                                                    </>
-                                                )}
+                                                            </Grid>
+                                                            <Typography variant="body2" color="text.secondary">
+                                                                Detalla la información del libro
+                                                            </Typography>
+                                                            <Typography variant="body2" color="red">
+                                                                (*) campos obligatorios
+                                                            </Typography>
+                                                        </>
+                                                    )}
+                                                </CardContent>
+                                                <CardBody style={{marginLeft:"30px", }}>
+                                                    <h6 style={{fontFamily:"SF Pro Display Bold"}}>Título</h6>
+                                                    <FormControl style={{ width:"50%" }}>
+                                                        <InputLabel style={{ fontSize: "16px"}} ></InputLabel>
+                                                        < TextField
+                                                            id="name"
+                                                            value={name_book}
+                                                            onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                                                                setNameBook(e.target.value);
+                                                                handleTitleChange(e);
+                                                            }}
+                                                            sx={{ width: '100%', color: "black", height: "45px", borderRadius: "10px" }}
+                                                        />
+                                                    </FormControl>
+                                                </CardBody>
+                                                
+                                            
+                                                
+                                                </>
+                                                
+                                            )}
 
                                         {/* --Paso 2--*/}
                                         {step === 2 && (
