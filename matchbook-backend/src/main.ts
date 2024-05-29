@@ -21,7 +21,7 @@ async function bootstrap() {
     origin: 'http://localhost:3000'
   }));
 
-  app.use('/images', express.static(join(__dirname, '..', 'images')));
+  app.use('/images', express.static(join(__dirname, '..','..', 'images')));
 
   await app.listen(3001);
 }
