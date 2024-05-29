@@ -50,7 +50,7 @@ interface Book {
 
 interface BookAndPublication {
     book: Book;
-    publication: Publication;
+    publications: Publication;
 }
 
 {/*-----------------------------------------------------------------------------*/}

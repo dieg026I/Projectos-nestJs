@@ -3,6 +3,7 @@ import { PublicationService } from './publication.service';
 import { Publication } from './entities/publication.entity';
 import { FilesInterceptor } from '@nestjs/platform-express';
 import { multerConfig } from 'src/config/multer.config';
+
 @Controller('publications')
 export class PublicationController {
   constructor(private readonly publicationService: PublicationService) {}
