@@ -253,7 +253,7 @@ function handleClick(event: React.MouseEvent<HTMLDivElement, MouseEvent>) {
                                         sx={{ height: 140, position: 'relative' }}
                                     >
                                         <img 
-                                        src={publication.photo_showcase}
+                                        src={`http://localhost:3001${publication.photo_showcase}`}
                                         alt="Imagen del libro" 
                                         style={{ 
                                             height: '140px', 
