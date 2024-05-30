@@ -435,11 +435,7 @@ const Sales: React.FC = () => {
                                                         />
                                                     </FormControl>
                                                 </CardBody>
-                                                
-                                            
-                                                
-                                                </>
-                                                
+                                                </> 
                                             )}
 
                                         {/* --Paso 2--*/}
@@ -839,8 +835,7 @@ const Sales: React.FC = () => {
                                         </div>
                                     )}
                                 </CardActions>
-                                    <CardContent style={{backgroundColor:"#002E5D"}}>
-                                </CardContent>
+                                    <CardContent style={{backgroundColor:"#002E5D"}}></CardContent>
                             </Card> 
                         </Box>
                     </div>

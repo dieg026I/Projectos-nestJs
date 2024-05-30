@@ -9,7 +9,7 @@ export default function Profile() {
     return (
         <>
             <NavBarLogin />
-            <Box className="imgProfile">
+            <Box className="fondoVenta">
                 <Grid container spacing={2} justifyContent="center">
                     <Grid item xs={12} sm={10} md={5} lg={3}>
                         <Card sx={{ borderRadius:"20px", padding: "20px", height:"440px", textAlign:"center", marginRight:"20px" }}>
@@ -38,11 +38,17 @@ export default function Profile() {
                         </Card>
                     </Grid>
                     <Grid item xs={12} sm={10} md={7} lg={6}>
-                        <Card sx={{ height:"440px", borderRadius:"20px", padding: "20px", display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
+                        <Box sx={{ position: 'relative', width: '100%', marginBottom: '24px', textAlign:"center"}}>
+                            <Box sx={{ position: 'absolute', top: '-16px', right:'20px', backgroundColor:'#f44336', color:'#fff', borderRadius:'20px 20px 0 0', zIndex: 'tooltip', width:"200px", height:"40px", display: 'flex', justifyContent: 'center', alignItems: 'center'  }}>
+                            <Typography variant="body2" style={{ padding:'6px 16px', fontSize:"18px" }}>Mi Librería</Typography>
+                            </Box>
+                        </Box>
+                        <Card sx={{ height:"415px", borderRadius:"20px", padding: "20px", display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
                             <Typography style={{paddingBottom:"15px"}} variant="body1">Aun no tienes publicaciones activas. Crea la primera aquí:</Typography>
-                            <Button variant="contained" style={{ backgroundColor: "#f05d16", color: "#ffffff" }}>Vender</Button>
+                            <Button variant="contained" href="/sales" style={{ backgroundColor: "#f05d16", color:"#ffffff" }}>Vender</Button>
                         </Card>
                     </Grid>
+
                 </Grid>
             </Box>
             <Footer />

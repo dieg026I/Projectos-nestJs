@@ -198,6 +198,9 @@ export const NavBarLogin: React.FC<{}> = () => {
                                 <Box className="space" >
                                     {isMobile ? (
                                         <>
+                                            <Badge badgeContent={1} color="primary">  
+                                                <LuShoppingCart style={{width: "30px", height:"30px"}} href="/cart" color="inherit" />
+                                            </Badge>
                                             <IconButton href="/sales" color="inherit"  >
                                                 <LuDollarSign style={{ width: "35px", height:"35px"}} />
                                             </IconButton>
@@ -205,9 +208,6 @@ export const NavBarLogin: React.FC<{}> = () => {
                                                 <Avatar style={{backgroundColor: "#f05d16"}} src="/broken-image.jpg"  />
                                                 <div>{username}</div> 
                                             </div>
-                                            <Badge badgeContent={1} color="primary">  
-                                                <LuShoppingCart style={{width: "30px", height:"30px"}} href="/cart" color="inherit" />
-                                            </Badge>
 
                                         </>
                                     ) : (
@@ -265,6 +265,7 @@ export const NavBarLogin: React.FC<{}> = () => {
                                 style={{ 
                                 textTransform: "none", 
                                 backgroundColor: bgColorProfile, 
+                                height:"40px",
                                 color: textColorProfile,  
                                 borderRadius: '30px', 
                                 border: '2px solid borderColor',
@@ -276,18 +277,87 @@ export const NavBarLogin: React.FC<{}> = () => {
                                 onMouseOver={handleMouseOverProfile}
                                 onMouseOut={handleMouseOutProfile}
                             >
-                                Ir a mi perfil
+                                Mi Perfil
                             </Button>
+
+                            <Button fullWidth
+                                href="/profile" 
+                                variant="contained"  
+                                style={{ 
+                                textTransform: "none", 
+                                backgroundColor: "#ffffff", 
+                                height:"40px",
+                                color: "#f05d16",  
+                                borderRadius: '30px', 
+                                border: '2px solid borderColor',
+                                boxShadow: '0px 3px 6px rgba(0, 0, 0, 0.36)',
+                                fontSize:"15px", 
+                                marginBottom: "20px" ,
+                                fontFamily: "SF Pro Display Bold",
+                                }}
+                                
+                            >
+                                Mis Datos
+                            </Button>
+
+                            {/* Línea horizontal */}
+                            <hr style={{ margin: "10px 0", opacity: 0.2 }} />
+
+                            <Button fullWidth
+                                href="/bookManagement" 
+                                variant="contained"  
+                                style={{ 
+                                textTransform: "none", 
+                                backgroundColor: "#ffffff", 
+                                height:"40px",
+                                color: "#f05d16",  
+                                borderRadius: '30px', 
+                                border: '2px solid borderColor',
+                                boxShadow: '0px 3px 6px rgba(0, 0, 0, 0.36)',
+                                fontSize:"15px", 
+                                marginBottom: "20px" ,
+                                marginTop: "20px" ,
+                                fontFamily: "SF Pro Display Bold",
+                                }}
+                                
+                            >
+                                Gestión de Libros
+                            </Button>
+
+                            <Button fullWidth
+                                href="/wallet" 
+                                variant="contained"  
+                                style={{ 
+                                textTransform: "none", 
+                                backgroundColor: "#ffffff", 
+                                height:"40px",
+                                color: "#f05d16",  
+                                borderRadius: '30px', 
+                                border: '2px solid borderColor',
+                                boxShadow: '0px 3px 6px rgba(0, 0, 0, 0.36)',
+                                fontSize:"15px", 
+                                marginBottom: "20px" ,
+                                fontFamily: "SF Pro Display Bold",
+                                }}
+                                
+                            >
+                                Saldo
+                            </Button>
+
+                            
+
+
+
                         </DialogContent>
                     </div>
 
                     {/* Línea horizontal */}
-                    <hr style={{ margin: "10px 0", opacity: 0.5 }} />
+                    <hr style={{ margin: "10px 0", opacity: "0.2" }} />
 
                     <div style={{alignItems:"flex-start", display: "flex", flexDirection: "column", paddingRight:"8px"}}>
                         <DialogActions style={{paddingLeft:"26px"}}>   
                             <ul style={{listStyleType:"none", padding: "0px", fontSize: "13px", marginBottom:"2px", fontFamily: "SF Pro Display Medium",}}>
-                                <li style={{marginBottom:"8px"}}>Ajustes de mi cuenta</li> 
+                                <li style={{marginBottom:"8px"}}>Configuración</li> 
                                 <li>Ayuda</li>   
                             </ul>        
                         </DialogActions>
@@ -295,7 +365,7 @@ export const NavBarLogin: React.FC<{}> = () => {
 
 
                     {/* Línea horizontal */}
-                    <hr style={{ margin: "10px 0", opacity: 0.5 }} />
+                    <hr style={{ margin: "10px 0", opacity: 0.2 }} />
 
                     <div style={{justifyContent:"center", textAlign: "center", display: "flex"}}>
                     <DialogActions>
