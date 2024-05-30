@@ -34,6 +34,11 @@ export class PublicationService {
 
   findOne(id_publication: string): Promise<Publication> {
     return this.publicationRepository.findOne({where : {id_publication}});
+
+  }
+
+  FindWhithBook(): Promise<Publication[]>{
+    return this.publicationRepository.find({ relations: ['book'] })
   }
 
   async remove(id: string): Promise<void> {

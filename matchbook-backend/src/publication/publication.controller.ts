@@ -21,7 +21,10 @@ export class PublicationController {
   findAll(): Promise<Publication[]> {
     return this.publicationService.findAll();
   }
-
+  @Get('publication')
+  findAllPublicationsAndBook(): Promise<Publication[]> {
+    return this.publicationService.FindWhithBook();
+  }        
   @Get(':id')
   findOne(@Param('id') id: string): Promise<Publication> {
     return this.publicationService.findOne(id);

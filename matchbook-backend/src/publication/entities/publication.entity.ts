@@ -12,10 +12,16 @@ export class Publication {
 
   @ManyToOne(() => Users, (user) => user.publications)
   @JoinColumn({ name: 'user_rut_user' })
+  user: Users;
+  
+  @Column()
   user_rut_user: number;
   
   @ManyToOne(() => Book, (book) => book.publications)
   @JoinColumn({ name: 'book_id_book' })
+  book: Book;
+
+  @Column()
   book_id_book: string;
 
   @Column()
