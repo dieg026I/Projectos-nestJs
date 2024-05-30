@@ -17,7 +17,7 @@ export class Publication {
   @Column()
   user_rut_user: number;
   
-  @ManyToOne(() => Book, (book) => book.publication)
+  @ManyToOne(() => Book, (book) => book.publications)
   @JoinColumn({ name: 'book_id_book' })
   book: Book;
 
