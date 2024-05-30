@@ -28,12 +28,10 @@ import {
 } from "@mui/material"; 
 
 import { PiPencilSimpleBold } from "react-icons/pi";
-import {  FaRegUserCircle, FaSearch, FaShoppingCart, FaSignOutAlt, FaUser } from "react-icons/fa"; 
+import { LuShoppingCart, LuSearch, LuMenu, LuDollarSign, LuLogOut } from "react-icons/lu";
 import  Logo from "../../../assents/img/logoMatch.png";
-import MenuIcon from '@mui/icons-material/Menu';
 import { deepOrange } from '@mui/material/colors';
 import axios from 'axios';
-import { RiMoneyDollarCircleLine } from "react-icons/ri";
 
 export const NavBarLogin: React.FC<{}> = () => {
     const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = useState<null | HTMLElement>(null);
@@ -107,6 +105,7 @@ export const NavBarLogin: React.FC<{}> = () => {
             transformOrigin={{ vertical: 'top', horizontal: 'right' }}
             open={Boolean(mobileMoreAnchorEl)}
             onClose={() => setMobileMoreAnchorEl(null)}
+            style={{justifyContent:"left"}}
         >
             <MenuItem>
                 <Link underline="hover" href="/readingClub">Club de Lectura</Link>
@@ -122,11 +121,10 @@ export const NavBarLogin: React.FC<{}> = () => {
     const logout = () => {
         // Elimina el token del almacenamiento local
         localStorage.removeItem('access_token');
-      
+
         // Redirige al usuario a la página de inicio de sesión
         navigate('/login');
     };
-      
 
 
     
@@ -145,21 +143,20 @@ export const NavBarLogin: React.FC<{}> = () => {
                             <Grid item xs={2} sm={2} md={2} lg={2}>
                                 {isMobile ? (
                                     <Link href="/home2" underline="none">
-                                        <Box display="flex" alignItems="center" justifyContent="center" textAlign="center">
+                                        <Box display="flex" alignItems="center" justifyContent="left" textAlign="center">
                                             <img src={Logo} alt="Logo Matchbook" width="40" height="40"  /> 
                                         </Box>
                                     </Link>
                                 
                                 ) : (
                                     <Link href="/home2" underline="none">
-                                        <Box display="flex" alignItems="center" justifyContent="center" textAlign="center">
+                                        <Box display="flex" alignItems="center" justifyContent="left" textAlign="center">
                                             <img src={Logo} alt="Logo Matchbook" width="40" height="40"  /> 
                                             <Typography className="" variant="h1" component="h1"  style={{ fontWeight: 550, color:  "white", fontSize: "25px", marginLeft: "10px"}}>
                                                 Matchbook
                                             </Typography>
                                         </Box>
                                     </Link>
-                                    
                                 )}
                             </Grid>
 
@@ -169,9 +166,11 @@ export const NavBarLogin: React.FC<{}> = () => {
                                         edge="start"
                                         color="inherit"
                                         aria-label="open drawer"
+                                        
                                         onClick={handleMobileMenuOpen}
+                                        
                                     >
-                                        <MenuIcon style={{ width: "30px", height:"30px"}}  />
+                                        <LuMenu style={{ width: "30px", height:"30px"}}  />
                                     </IconButton>
                                     {renderMobileMenu}
                                 </>
@@ -186,12 +185,12 @@ export const NavBarLogin: React.FC<{}> = () => {
                             <Grid  item xs={4} sm={4} md={4} lg={4}>
                                 {isMobile ? (
                                     <IconButton color="inherit">
-                                        <FaSearch style={{ width: "30px", height:"30px"}}  />
+                                        <LuSearch style={{ width: "30px", height:"30px"}}  />
                                     </IconButton>
                                 ) : (
                                     <div className="searchHome" >
                                         <input className="search" placeholder="Buscar" />
-                                        <FaSearch id="search-icon" />
+                                        <LuSearch id="search-icon" />
                                     </div>
                                 )}
                             </Grid>
@@ -199,30 +198,31 @@ export const NavBarLogin: React.FC<{}> = () => {
                                 <Box className="space" >
                                     {isMobile ? (
                                         <>
+                                            <Badge badgeContent={1} color="primary">  
+                                                <LuShoppingCart style={{width: "30px", height:"30px"}} href="/cart" color="inherit" />
+                                            </Badge>
                                             <IconButton href="/sales" color="inherit"  >
-                                                <RiMoneyDollarCircleLine style={{ width: "48px", height:"48px"}} />
+                                                <LuDollarSign style={{ width: "35px", height:"35px"}} />
                                             </IconButton>
                                             <div onClick={handleOpen}>
                                                 <Avatar style={{backgroundColor: "#f05d16"}} src="/broken-image.jpg"  />
                                                 <div>{username}</div> 
                                             </div>
-                                            <Badge badgeContent={1} color="primary">  
-                                                <FaShoppingCart style={{width: "60px", height: "22px"}} href="/cart" color="inherit" />
-                                            </Badge>
 
                                         </>
                                     ) : (
                                         <>
-                                            <Button style={{ backgroundColor: '#f05d16' , textTransform: "none", color: "#ffff", fontSize: "16px", marginLeft: "25px" }} href="/sales">Vender</Button>
+
+                                            <Badge badgeContent={1} color="primary">
+                                                <LuShoppingCart style={{width: "30px", height:"30px", marginLeft:"40px"}} href="/cart" color="inherit" />
+                                            </Badge>
+
+                                            <Button style={{ backgroundColor: '#f05d16' , textTransform: "none", color: "#ffff", fontSize: "16px", marginLeft: "10px", borderRadius:"20px", width:"90px", padding:"6px" }} href="/sales">Vender</Button>
+
                                             <div onClick={handleOpen}>
                                                 <Avatar style={{backgroundColor: "#f05d16"}} src="/broken-image.jpg"  />
                                                 <div>{username}</div> 
                                             </div>
-                                            
-
-                                            <Badge badgeContent={1} color="primary">
-                                                <FaShoppingCart style={{width: "60px", height: "22px"}} href="/cart" color="inherit" />
-                                            </Badge>
                                         </>
                                     )}
                                 </Box>
@@ -265,6 +265,7 @@ export const NavBarLogin: React.FC<{}> = () => {
                                 style={{ 
                                 textTransform: "none", 
                                 backgroundColor: bgColorProfile, 
+                                height:"40px",
                                 color: textColorProfile,  
                                 borderRadius: '30px', 
                                 border: '2px solid borderColor',
@@ -276,18 +277,87 @@ export const NavBarLogin: React.FC<{}> = () => {
                                 onMouseOver={handleMouseOverProfile}
                                 onMouseOut={handleMouseOutProfile}
                             >
-                                Ir a mi perfil
+                                Mi Perfil
                             </Button>
+
+                            <Button fullWidth
+                                href="/profile" 
+                                variant="contained"  
+                                style={{ 
+                                textTransform: "none", 
+                                backgroundColor: "#ffffff", 
+                                height:"40px",
+                                color: "#f05d16",  
+                                borderRadius: '30px', 
+                                border: '2px solid borderColor',
+                                boxShadow: '0px 3px 6px rgba(0, 0, 0, 0.36)',
+                                fontSize:"15px", 
+                                marginBottom: "20px" ,
+                                fontFamily: "SF Pro Display Bold",
+                                }}
+                                
+                            >
+                                Mis Datos
+                            </Button>
+
+                            {/* Línea horizontal */}
+                            <hr style={{ margin: "10px 0", opacity: 0.2 }} />
+
+                            <Button fullWidth
+                                href="/bookManagement" 
+                                variant="contained"  
+                                style={{ 
+                                textTransform: "none", 
+                                backgroundColor: "#ffffff", 
+                                height:"40px",
+                                color: "#f05d16",  
+                                borderRadius: '30px', 
+                                border: '2px solid borderColor',
+                                boxShadow: '0px 3px 6px rgba(0, 0, 0, 0.36)',
+                                fontSize:"15px", 
+                                marginBottom: "20px" ,
+                                marginTop: "20px" ,
+                                fontFamily: "SF Pro Display Bold",
+                                }}
+                                
+                            >
+                                Gestión de Libros
+                            </Button>
+
+                            <Button fullWidth
+                                href="/wallet" 
+                                variant="contained"  
+                                style={{ 
+                                textTransform: "none", 
+                                backgroundColor: "#ffffff", 
+                                height:"40px",
+                                color: "#f05d16",  
+                                borderRadius: '30px', 
+                                border: '2px solid borderColor',
+                                boxShadow: '0px 3px 6px rgba(0, 0, 0, 0.36)',
+                                fontSize:"15px", 
+                                marginBottom: "20px" ,
+                                fontFamily: "SF Pro Display Bold",
+                                }}
+                                
+                            >
+                                Saldo
+                            </Button>
+
+                            
+
+
+
                         </DialogContent>
                     </div>
 
                     {/* Línea horizontal */}
-                    <hr style={{ margin: "10px 0", opacity: 0.5 }} />
+                    <hr style={{ margin: "10px 0", opacity: "0.2" }} />
 
                     <div style={{alignItems:"flex-start", display: "flex", flexDirection: "column", paddingRight:"8px"}}>
                         <DialogActions style={{paddingLeft:"26px"}}>   
                             <ul style={{listStyleType:"none", padding: "0px", fontSize: "13px", marginBottom:"2px", fontFamily: "SF Pro Display Medium",}}>
-                                <li style={{marginBottom:"8px"}}>Ajustes de mi cuenta</li> 
+                                <li style={{marginBottom:"8px"}}>Configuración</li> 
                                 <li>Ayuda</li>   
                             </ul>        
                         </DialogActions>
@@ -295,11 +365,11 @@ export const NavBarLogin: React.FC<{}> = () => {
 
 
                     {/* Línea horizontal */}
-                    <hr style={{ margin: "10px 0", opacity: 0.5 }} />
+                    <hr style={{ margin: "10px 0", opacity: 0.2 }} />
 
                     <div style={{justifyContent:"center", textAlign: "center", display: "flex"}}>
                     <DialogActions>
-                        <Button onClick={logout} startIcon={<FaSignOutAlt />}>Salir</Button> {/* Botón de Salir con un icono al lado izquierdo */}
+                        <Button onClick={logout} startIcon={<LuLogOut />}>Salir</Button> {/* Botón de Salir con un icono al lado izquierdo */}
                     </DialogActions>
                     </div>
 

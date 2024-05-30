@@ -83,7 +83,6 @@
   justify-content: center;
   align-items: center;
   height: 100vh;
-  
 }
 
 /* - NavBar -  */
@@ -108,6 +107,57 @@
   align-items: center;
   height: 90vh;
   
+}
+
+/* Estilos base para dispositivos móviles */
+.gestion .fondoVenta {
+  position: 'relative';
+  width: '100%'; /* Ajusta el ancho al 100% para dispositivos móviles */
+}
+
+/* Estilos para el card */
+.gestion .fondoVenta .card {
+  margin-top: '90px';
+  border-radius: '20px';
+  width: '100%'; /* Ajusta el ancho al 100% para dispositivos móviles */
+  max-width: '1100px'; /* Máximo ancho del card */
+  height: 'auto'; /* Altura automática */
+  display: 'flex';
+  flex-direction: 'column';
+}
+
+/* Media queries para pantallas más grandes */
+@media (min-width: 600px) {
+  .gestion .fondoVenta .card {
+    width: '80%'; /* Ajusta el ancho al 80% para pantallas medianas */
+  }
+}
+
+@media (min-width: 900px) {
+  .gestion .fondoVenta .card {
+    width: '70%'; /* Ajusta el ancho al 70% para pantallas grandes */
+  }
+}
+
+/* Estilos para las pestañas */
+.gestion .fondoVenta .box {
+  /* Asumiendo que 'box' es la clase para las pestañas */
+  position: 'absolute';
+  bottom: '100%'; /* Posiciona las pestañas encima del card */
+  width: 'calc(100% / 3)'; /* Divide el ancho disponible entre el número de pestañas */
+}
+
+/* Media queries para ajustar las pestañas en pantallas más grandes */
+@media (min-width: 600px) {
+  .gestion .fondoVenta .box {
+    width: 'calc(100% / 4)';
+  }
+}
+
+@media (min-width: 900px) {
+  .gestion .fondoVenta .box {
+    width: 'calc(100% / 5)';
+  }
 }
 
 
@@ -135,6 +185,11 @@
 }
 
 
+/* SF Pro Text*/
+@font-face {
+  font-family: 'SF Pro Text Bold';
+  src: url('../../frontend-matchbook/src/assents/font/SF-Pro-Text/SF-Pro-Text-Bold.otf') format('opentype');
+}
 
 
 

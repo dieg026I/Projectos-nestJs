@@ -16,9 +16,9 @@ export class PublisherController {
     return this.publisherService.findAll();
   }
 
-  @Get(':name_publisher')
-  findOne(@Param('name_publisher') name_publisher: string) {
-    return this.publisherService.findOneForName(name_publisher);
+  @Get(':id_publisher')
+  findOne(@Param('id_publisher') id_publisher: string) {
+    return this.publisherService.findOneForName(id_publisher);
   }
 
   @Put(':id')
