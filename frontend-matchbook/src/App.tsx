@@ -13,6 +13,9 @@ import NavBarLogin from './components/common/NavBarLogin/navBarLogin';
 import Profile from './pages/profile/profile';
 import ReadingClub from './pages/readingClub/readingClub';
 import Marketplace from './pages/marketplace/marketplace';
+import BookManagement from './pages/bookManagement/bookManagement';
+import Wallet from './pages/wallet/wallet';
+
 
 
 const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
@@ -57,6 +60,8 @@ function App() {
         <Route path="/sales" element={<ProtectedRoute><Sales /></ProtectedRoute>} />
         <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
         <Route path="/marketplace" element={<Marketplace />} />
+        <Route path="/bookManagement" element={<ProtectedRoute><BookManagement /></ProtectedRoute>} />
+        <Route path="/wallet" element={<ProtectedRoute><Wallet /></ProtectedRoute>} />
 
         {/* Ruta para la página NotFound */}
         <Route path="*" element={<NotFoundPage />} />
