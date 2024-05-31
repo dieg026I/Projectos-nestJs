@@ -2,7 +2,7 @@ import SideMenu from "../../components/sideMenu/sideMenu";
 import { Box } from '@mui/system';
 import img from '../../assents/img/logoMatch.png'
 
-const Transactions: React.FC = () => {
+const ReadingClubAdmin: React.FC = () => {
     return (
         <Box display="flex">
             <SideMenu />
@@ -17,4 +17,4 @@ const Transactions: React.FC = () => {
     );
 };
 
-export default Transactions;
+export default ReadingClubAdmin;
