@@ -34,8 +34,8 @@ interface User {
   email_user: string,
   password_users: string,
   city_id: number,
-
 }
+
 const LoginPage: React.FC = () => {
 
   const [email_user, setEmail] = React.useState('');
@@ -164,7 +164,7 @@ const LoginPage: React.FC = () => {
                       }}
                       value={password_user}
                       onChange={e => setPassword(e.target.value)}
-                      />
+                  />
 
                   <Typography fontSize = "10px" variant="body2">
                     <p style={{color: "#3f3f3fb3"}} > Distingue mayusculas y minusculas  <Button  style={{ textTransform: "none", fontSize: "12px", float: "right" }} size="small">¿Olvidaste tu contraseña?</Button></p> 

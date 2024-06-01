@@ -17,9 +17,21 @@ async function bootstrap() {
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('documentation', app, document);
-  app.use(cors({
-    origin: 'http://localhost:3002'&&'http://localhost:4000'
-  }));
+
+  // Configuración de CORS
+  app.enableCors({
+    origin: (origin, callback) => {
+      const allowedOrigins = ['http://localhost:3002', 'http://localhost:4000'];
+      // Permitir solicitudes sin 'origin' (como aplicaciones móviles o `curl` requests)
+      if (!origin) return callback(null, true);
+      if (allowedOrigins.indexOf(origin) === -1) {
+        const msg = 'La política de CORS para este sitio no permite el acceso desde el origen especificado.';
+        return callback(new Error(msg), false);
+      }
+      return callback(null, true);
+    }
+  });
+
   await app.listen(3001);
 }
 bootstrap();

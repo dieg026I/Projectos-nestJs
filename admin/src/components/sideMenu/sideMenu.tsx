@@ -7,15 +7,25 @@ import { RiBookMarkedLine } from "react-icons/ri";
 import { RiFileUserLine } from "react-icons/ri";
 import { RiBookOpenLine } from "react-icons/ri";
 import { useLocation } from 'react-router';
+import { useNavigate } from 'react-router';
 
 
 export const SideMenu: React.FC<{}> = () => {
 
     const theme = useTheme();
     const location = useLocation();
+    const navigate = useNavigate();
     
     const isSelected = (path: string) => location.pathname === path;
     
+    const logout = () => {
+        // Elimina el token del almacenamiento local
+        localStorage.removeItem('access_token');
+
+        navigate('/loginAdmin');
+    };
+
+
     return (
         <>
             <Drawer variant='permanent'>
@@ -36,13 +46,12 @@ export const SideMenu: React.FC<{}> = () => {
                         <List component="nav">
                         {/* Transacciones */}
 
-                        <br />
                         <div className="listItemButtonContainer">
                             <ListItemButton
-                                href='/transactions'
-                                selected={isSelected('/transactions')}
-                                className={isSelected('/transactions') ? 'listItemButtonSelected' : ''}
-                                style={{ backgroundColor: isSelected('/transactions') ? '#00A9E0' : 'inherit', position: 'relative' }}
+                                href='/'
+                                selected={isSelected('/')}
+                                className={isSelected('/') ? 'listItemButtonSelected' : ''}
+                                style={{ backgroundColor: isSelected('/') ? '#00A9E0' : 'inherit', position: 'relative' }}
                             >
                                 <ListItemIcon style={{ width: '2.5rem', fontSize: '2.2rem', color: "#ffffff" }}>
                                     <RiMoneyDollarCircleLine />
@@ -50,26 +59,9 @@ export const SideMenu: React.FC<{}> = () => {
                                 <ListItemText primary="Transacciones" />
                             </ListItemButton>
                         </div>
-                        <br />
-
-                        {/* Perfil */}
-                        <div className="listItemButtonContainer">
-                            <ListItemButton
-                            href='/profileAdmin'
-                            selected={isSelected('/profileAdmin')}
-                            className={isSelected('/profileAdmin') ? 'listItemButtonSelected' : ''}
-                            style={{ backgroundColor: isSelected('/profileAdmin') ? '#00A9E0' : 'inherit' }}
-                            >
-                                <ListItemIcon style={{ width: '2.5rem', fontSize: '2rem', color: "#ffffff" }}>
-                                    <RiAccountCircleLine />
-                                </ListItemIcon>
-                                <ListItemText primary="Perfil" />
-                            </ListItemButton>
-                        </div>
-
-                        <br />
+                                        
                         {/* Libros */}
-                        <div className="listItemButtonContainer">
+                        <div className="listItemButtonContainer" style={{paddingTop:"10px"}}>
                             <ListItemButton
                             href='/bookAdmin'
                             selected={isSelected('/bookAdmin')}
@@ -83,9 +75,9 @@ export const SideMenu: React.FC<{}> = () => {
                             </ListItemButton>
                         </div>
 
-                        <br />
+                        
                         {/* Usuarios */}
-                        <div className="listItemButtonContainer">
+                        <div className="listItemButtonContainer" style={{paddingTop:"10px"}}>
                             <ListItemButton
                             href='/userAdmin'
                             selected={isSelected('/userAdmin')}
@@ -99,9 +91,9 @@ export const SideMenu: React.FC<{}> = () => {
                             </ListItemButton>
                         </div>
 
-                        <br />
+                        
                         {/* Club de lectura */}
-                        <div className="listItemButtonContainer">
+                        <div className="listItemButtonContainer" style={{paddingTop:"10px"}}>
                             <ListItemButton
                             href='/readingClubAdmin'
                             selected={isSelected('/readingClubAdmin')}
@@ -114,10 +106,10 @@ export const SideMenu: React.FC<{}> = () => {
                                 <ListItemText primary="Club de lectura" />
                             </ListItemButton>
                         </div>
-
-                        <br />                        
-                        <ListItemButton style={{ justifyContent:"center"}}>
-                            <Button style={{textTransform: "none", color:"#ffffff", backgroundColor:"#FF7F41", width:"300px"}}>Cerrar Sesión</Button>
+                    
+                        <br />
+                        <ListItemButton style={{ justifyContent:"center", paddingBottom:"15px", marginTop:"30px"}}>
+                            <Button onClick={logout} style={{textTransform: "none", color:"#ffffff", backgroundColor:"#FF7F41", width:"300px"}}>Cerrar Sesión</Button>
                         </ListItemButton>
 
                         </List>
