@@ -1,6 +1,7 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { join } from 'path';
 
 
 const express = require('express');
@@ -17,9 +18,11 @@ async function bootstrap() {
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('documentation', app, document);
+  
   app.use(cors({
-    origin: 'http://localhost:3000'&&'http://localhost:4000'
+    origin: 'http://localhost:3002'
   }));
+  app.use('/images', express.static(join(__dirname, '..','..', 'images')));
   await app.listen(3001);
 }
 bootstrap();

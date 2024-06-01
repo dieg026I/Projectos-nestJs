@@ -18,10 +18,12 @@ export class PublicationService {
     publication.user_rut_user= rut_user;
     publication.book_id_book = id_book;
     publication.date_publication = new Date();
-    publication.photo_showcase = files[0].path;
-    publication.photo_cover = files[1].path;
-    publication.photo_first_page = files[2].path;
-    publication.photo_back_cover = files[3].path;
+    
+    // Guarda solo el nombre del archivo en la base de datos
+    publication.photo_showcase = files[0].filename;
+    publication.photo_cover = files[1].filename;
+    publication.photo_first_page = files[2].filename;
+    publication.photo_back_cover = files[3].filename;
     
     await this.publicationRepository.save(publication);
     return publication;
@@ -35,10 +37,6 @@ export class PublicationService {
   findOne(id_publication: string): Promise<Publication> {
     return this.publicationRepository.findOne({where : {id_publication}});
 
-  }
-
-  FindWhithBook(): Promise<Publication[]>{
-    return this.publicationRepository.find({ relations: ['book'] })
   }
 
   async remove(id: string): Promise<void> {
