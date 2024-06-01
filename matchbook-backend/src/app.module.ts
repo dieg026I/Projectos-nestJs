@@ -21,6 +21,9 @@ import { PublicationModule } from './publication/publication.module';
 import { CategoryModule } from './category/category.module';
 import { Publication } from './publication/entities/publication.entity';
 import { Category } from './category/entities/category.entity';
+import { BuyModule } from './buy/buy.module';
+import { StatusSendModule } from './status_send/status_send.module';
+import { ShipmentTypeModule } from './shipment_type/shipment_type.module';
 
 @Module({
   imports: [
@@ -43,7 +46,10 @@ import { Category } from './category/entities/category.entity';
     AuthorModule,
     PublisherModule,
     PublicationModule,
-    CategoryModule ],
+    CategoryModule,
+    BuyModule,
+    StatusSendModule,
+    ShipmentTypeModule ],
   controllers: [AppController],
   providers: [AppService],
 })

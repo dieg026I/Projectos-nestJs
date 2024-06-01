@@ -18,7 +18,7 @@ export class BookService {
     return this.bookRepository.find();
   }
 
-  findOnebyName(id_book: string): Promise<Book> {
+  findOnebyid(id_book: string): Promise<Book> {
     return this.bookRepository.findOne({ where: { id_book } });
   }
 
