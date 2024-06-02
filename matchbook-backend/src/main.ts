@@ -32,7 +32,7 @@ async function bootstrap() {
       return callback(null, true);
     }
   });
-
+  app.use('/images', express.static(join(__dirname, '..','..', 'images')));
   await app.listen(3001);
 }
 bootstrap();
