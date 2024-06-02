@@ -343,11 +343,6 @@ export const NavBarLogin: React.FC<{}> = () => {
                             >
                                 Saldo
                             </Button>
-
-                            
-
-
-
                         </DialogContent>
                     </div>
 
