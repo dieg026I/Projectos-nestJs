@@ -1,0 +1,95 @@
+
+
+.footer {
+
+    background-color: #1e1e1e;
+    color:#ffff;
+}
+
+#logo {
+    width: 30px;
+    height: 30px;
+}
+
+.logo-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+
+.logo-container span {
+    font-weight: 500;
+    cursor: pointer;
+}
+
+.footerText {
+    list-style-type: none;
+    font-family: 'SF Pro Display Regular' ;
+    font-size: 14px;
+    text-align: left;
+}
+
+.footerTitle {
+    font-family: 'SF Pro Display Bold' ;
+    font-size: 14px;
+    text-align: left;
+    margin-left: 30px;
+}
+
+.footerLogos {
+    color: #ffff;
+    justify-content: left;
+    margin-right:  96px;
+    display: flex;
+    flex-direction: row;
+}
+
+.inputEmail {
+    height: '55px';
+    border-radius: "30px";
+    border-color: "#d8d5d5";
+    padding-left: "50px";
+    background-color: "#404040";
+    color: "#d8d5d5";
+    width: "400px";
+}
+
+.icon {
+    width: "25px";
+    height: "25px";
+}
+
+/* Cuando la pantalla tiene 900px o menos de ancho */
+@media (max-width: 900px) {
+    .inputEmail {
+        width: "80%";
+    }
+
+    .icon {
+        width: "35px";
+        height: "35px";
+        margin-right:  0px;
+        
+    }
+
+}
+
+/* Cuando la pantalla tiene 600px o menos de ancho */
+@media (max-width: 600px) {
+    .footerLogos {
+        flex-direction: column;
+        align-items: center; /* Centra los logos verticalmente */
+    }
+
+    .inputEmail {
+        width: "100%";
+    }
+
+    .icon {
+        width: "35px";
+        height: "35px";
+        margin-right:  0px;
+        
+    }
+}

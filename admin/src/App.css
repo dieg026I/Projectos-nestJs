@@ -1,0 +1,99 @@
+
+
+.fondo {
+  background-image: url("./assents/img/wallpaperRegister.jpg") ;
+
+  background-size: cover;
+  background-position: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+
+    /* Fondo oscuro */
+    background-color: rgba(0, 0, 0, 0.5); 
+    background-blend-mode: darken;
+    background-size: 100% auto;
+  
+    .css-1p6z1ep-MuiFormLabel-root-MuiInputLabel-root.Mui-focused {
+      color: #000000;
+    }
+}
+
+/* Estilos personalizados para el botón */
+.boton-personalizado {
+  max-width: 200px;
+  width: 100%;
+  height: 50px;
+  font-size: 30px;
+  /* Centrar texto verticalmente */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Estilos para cambiar el color de los bordes de los inputs */
+/* Estilos para cambiar el color del borde de los inputs de Ant Design */
+.ant-input,
+.ant-input-password {
+  border-color: #686868; /* Esto aplicará un borde negro a ambos campos */
+}
+
+
+/* Si necesitas aplicar estilos a los labels */
+.ant-form-item-label > label {
+  color: #686868; /* Cambia #tuColorDeseado por el código de color que prefieras */
+}
+
+.listItemButtonContainer {
+  position: relative;
+  overflow: hidden; /* Oculta el contenido que se desborde del contenedor */
+}
+
+.listItemButtonSelected::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  right: -10px; /* Posiciona la flecha fuera del contenedor */
+  border-width: 10px 10px; /* Crea un cuadrado */
+  border-style: solid;
+  border-color: transparent transparent #2C2C2C #2C2C2C; /* El color de la flecha en el borde izquierdo */
+  transform: translateY(-50%) rotate(45deg); /* Rota el cuadrado para formar una flecha */
+  background-color: #00A9E0; /* Color de fondo del ListItemButton seleccionado */
+  z-index: 1;
+}
+
+/* Font*/
+
+@font-face {
+  font-family: 'SF Pro Display Bold';
+  src: url('../../admin/src/assents/font/SF-Pro-Display/SFPRODISPLAYBOLD.OTF') format('opentype');
+}
+
+@font-face {
+  font-family: 'SF Pro Display Medium';
+  src: url('../../admin/src/assents/font/SF-Pro-Display/SFPRODISPLAYMEDIUM.OTF') format('opentype');
+}
+
+@font-face {
+  font-family: 'SF Pro Display Regular';
+  src: url('../../admin/src/assents/font/SF-Pro-Display/SFPRODISPLAYREGULAR.OTF') format('opentype');
+}
+
+@font-face {
+  font-family: 'SF Pro Display Semibold';
+  src: url('../../admin/src/assents/font/SF-Pro-Display/SFPRODISPLAYSEMIBOLD.OTF') format('opentype');
+}
+
+/* Roboto*/
+@font-face {
+  font-family: 'Roboto Bold';
+  src: url('../../admin/src/assents/font/Roboto/Roboto-Bold.ttf') format('opentype');
+}
+
+
+/* SF Pro Text*/
+@font-face {
+  font-family: 'SF Pro Text Bold';
+  src: url('../../admin/src/assents/font/SF-Pro-Text/SF-Pro-Text-Bold.otf') format('opentype');
+}

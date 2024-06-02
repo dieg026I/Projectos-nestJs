@@ -1,5 +1,6 @@
 
 import React, { useEffect, useState } from "react";
+
 import {
     Box,
     Button,
@@ -19,6 +20,8 @@ import { CgDanger } from "react-icons/cg";
 import "../../App.css";
 import axios from 'axios';
 import logo from "../../assents/img/logoMatch.png";
+import { useNavigate } from 'react-router-dom'; 
+
 
 interface Region  {
     id_region: number;
@@ -28,6 +31,7 @@ interface Cities {
     id_city: number;
     name: string;
 }
+
 const RegisterPage: React.FC = () => {
     const [name_user, setName] = React.useState('');
     const [lastname_user, setLastname] = React.useState('');
@@ -42,11 +46,12 @@ const RegisterPage: React.FC = () => {
     const [cities, setCities] = React.useState<Cities[]>([]);
     const [id_city, setIdCity] = useState(0);
     const [terms, setTerms] = React.useState(false);
-
+    const navigate = useNavigate();
     const handleTermsChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setTerms(event.target.checked);
     };
 
+    {/* Cargar Todas Las Regiones */}
     useEffect(() => {
         axios.get('http://localhost:3001/region')
             .then(response => {
@@ -55,12 +60,12 @@ const RegisterPage: React.FC = () => {
             });
     }, []);
 
+    {/*------------------------------------------ */}
+    {/* Seleccion de la Region */}
     const handleRegionChange = (event: { target: { value: React.SetStateAction<number>; }; }) => {
         setSelectedRegion(event.target.value);
         const numberRegion = event.target.value;
-        console.log('numero de region: ' + numberRegion);
         console.log('region seleccionada: ' + event.target.value);
-        console.log('region : ' + selectedRegion);
         axios.get(`http://localhost:3001/cities/region/${numberRegion}`)
             .then(response => {
             setCities(response.data);
@@ -68,10 +73,16 @@ const RegisterPage: React.FC = () => {
         });
     };
     
+    {/*------------------------------------------ */}
+    {/* Seleccion de la Comuna */}
     const handleCityChange = (event: { target: { value: React.SetStateAction<number>; }; }) => {
         setIdCity(event.target.value);
     };
+
     
+
+    {/*------------------------------------------ */}
+    {/* Guardar Datos Registro */}
     const handleSubmit = async (event: React.FormEvent) => {
         event.preventDefault();
 
@@ -139,6 +150,36 @@ const RegisterPage: React.FC = () => {
             return;
         }
 
+        // Validación de longitud mínima
+        if (password_users.length < 8) {
+            alert('La contraseña debe tener al menos 8 caracteres.');
+            return;
+        }
+
+        // Validación de mayúsculas
+        if (!/[A-Z]/.test(password_users)) {
+            alert('La contraseña debe contener al menos una letra mayúscula.');
+            return;
+        }
+
+        // Validación de minúsculas
+        if (!/[a-z]/.test(password_users)) {
+            alert('La contraseña debe contener al menos una letra minúscula.');
+            return;
+        }
+
+        // Validación de números
+        if (!/[0-9]/.test(password_users)) {
+            alert('La contraseña debe contener al menos un número.');
+            return;
+        }
+
+        // Validación de espacios
+        if (/\s/.test(password_users)) {
+            alert('La contraseña no debe contener espacios.');
+            return;
+        }
+
         //  -Repetir Contraseña-
         if (password_users !== repeatPassword_user) {
             alert('Las contraseñas no coinciden.');
@@ -166,6 +207,7 @@ const RegisterPage: React.FC = () => {
         
             const response = await axios.post('http://localhost:3001/users', user);
             console.log(response.data);
+            navigate('/login');
         } catch (error) {
             console.error('Hubo un error al registrarse:', error);
         }
@@ -192,7 +234,7 @@ const RegisterPage: React.FC = () => {
                     {/* -- Register -- */}
                     <Grid className="centrado" item xs={12} sm={12} md={6} lg={4} justifyContent="center" alignItems="center" style={{display: "flex"}}>
                         
-                        <Card style={{justifyContent: "center", alignItems: "center", borderRadius: "20px",  overflowY: "auto"}} sx={{ maxHeight: { xs: 565, md: 675, sm: 680, lg: 610}, maxWidth: { xs: 365, md: 420, sm: 450, lg: 500}  }} >
+                        <Card style={{justifyContent: "center", alignItems: "center", borderRadius: "20px",  overflowY: "auto", paddingRight: "20px", paddingLeft: "20px", paddingTop: "18px" }} sx={{ maxHeight: { xs: 565, md: 675, sm: 680, lg: 610}, maxWidth: { xs: 365, md: 420, sm: 450, lg: 500}  }} >
                             <CardContent>
                                 {/*-Titulo Registro-*/}
                                 <Typography  variant="h5" component="div" fontWeight="bold" sx={{ marginBottom: '10px'}}>
@@ -205,18 +247,13 @@ const RegisterPage: React.FC = () => {
 
                                 {/*-Formulario Registro-*/}
                                 
-                                    {/* Línea horizontal */}
-                                    <hr style={{ margin: "10px 0", opacity: 0.1  }} />
-
-                                    {/*-Formulario Registro-*/}
-
                                     {/*-Nombre-*/}
+                                    <h6>Nombre</h6>
                                     <TextField fullWidth 
                                         style={{ color: "black" }}
-                                        label="Nombre"
                                         id="name"
                                         className="mb-3 formulario"
-                                        variant="outlined" 
+                                        placeholder="Ingrese su Nombre"
                                         type="text"
                                         value={name_user}
                                         onChange={e => setName(e.target.value)}
@@ -226,12 +263,12 @@ const RegisterPage: React.FC = () => {
                                     />
 
                                     {/*-Apellido-*/}
+                                    <h6>Apellido</h6>
                                     <TextField fullWidth 
                                         style={{ color: "black" }}
-                                        label="Primer Apellido"
                                         id="lastname"
                                         className="mb-3 formulario"
-                                        variant="outlined" 
+                                        placeholder="Ingrese su Apellido"
                                         type="text"
                                         value={lastname_user}
                                         onChange={e => setLastname(e.target.value)}
@@ -245,13 +282,13 @@ const RegisterPage: React.FC = () => {
                                         <Grid item xs={6}>
 
                                             {/*-Rut o Pasaporte-*/}
+                                            <h6>Rut o Pasaporte</h6>
                                             <TextField fullWidth 
                                                 style={{ color: "black" }}
-                                                label="Rut o Pasaporte"
                                                 id="rut"
                                                 className="mb-3 formulario"
-                                                variant="outlined" 
-                                                type="number"
+                                                placeholder="Ingrese su Rut"
+                                                type="numeric"
                                                 value={rut_user === null ? '' : rut_user}
 
                                                 onChange={e => setRut(Number(e.target.value))}
@@ -268,12 +305,12 @@ const RegisterPage: React.FC = () => {
                                             
                                         <Grid item xs={4}>
                                             {/*-dv-rut-*/}
+                                            <h6>Dv</h6>
                                             <TextField  
                                                 style={{ color: "black" }}
-                                                label="Dv"
                                                 id="dv"
                                                 className="mb-3 formulario"
-                                                variant="outlined" 
+                                                placeholder="Dv"
                                                 type="text"
                                                 value={dv_user}
                                                 onChange={e => setDv(e.target.value)}
@@ -292,12 +329,12 @@ const RegisterPage: React.FC = () => {
                                         </Grid>
                                         <Grid item xs={10}>
                                             {/*-Telefono-*/}
+                                            <h6>Teléfono</h6>
                                             <TextField fullWidth 
                                                 style={{ color: "black" }}
-                                                label="Numéro Teléfono"
                                                 id="phone"
                                                 className="mb-3 formulario"
-                                                variant="outlined" 
+                                                placeholder="Ingrese su Teléfono"
                                                 type="tel"
                                                 value={phone_user}
                                                 onChange={e => setPhone(Number(e.target.value))}
@@ -309,12 +346,12 @@ const RegisterPage: React.FC = () => {
                                     </Grid>
 
                                     {/*-Correo electrónico-*/}
+                                    <h6>Correo electrónico</h6>
                                     <TextField fullWidth 
                                         style={{ color: "black" }}
-                                        label="Correo electrónico"
                                         id="email"
                                         className="mb-3 formulario"
-                                        variant="outlined" 
+                                        placeholder="Ingrese su Correo Electrónico"
                                         type="email"
                                         value={email_user}
                                         onChange={e => setEmail(e.target.value)}
@@ -324,13 +361,13 @@ const RegisterPage: React.FC = () => {
                                     />
 
                                     {/*-Contraseña-*/}
+                                    <h6>Contraseña</h6>
                                     <TextField fullWidth
                                         style={{ color: "black" }}
-                                        label="Contraseña"
                                         type="password"
                                         className="mb-3"
                                         id="password" 
-                                        variant="outlined"
+                                        placeholder="Ingrese su Contraseña"
                                         value={password_users}
                                         onChange={e => setPassword(e.target.value)}
                                         InputLabelProps={{
@@ -338,14 +375,16 @@ const RegisterPage: React.FC = () => {
                                         }}
                                     />
 
+                                    <h6>Repetir contraseña</h6>
                                     <TextField
                                         style={{ color: "black" }}
                                         fullWidth
-                                        label="Repetir Contraseña"
+                                        
                                         type="password"
                                         className="mb-3"
                                         id="repeatPassword"
                                         variant="outlined"
+                                        placeholder="Repetir Contraseña"
                                         value={repeatPassword_user}
                                         onChange={e => setRepeatPassword(e.target.value)}
                                         InputLabelProps={{
@@ -356,18 +395,19 @@ const RegisterPage: React.FC = () => {
                                     {/*-Select de Región-*/}
                                     <Grid container spacing={2} style={{alignItems: "center", justifyContent: "center", justifyItems: "center"}} >
                                         <Grid item xs={6}>
-                                            <FormControl fullWidth required>
-                                                <InputLabel style={{ fontSize: "16px"}} variant="outlined" id="demo-simple-select-standard-label" >Región</InputLabel>
+                                            {/*-Select de Region-*/}
+                                            <h6>Región</h6>
+                                            <FormControl fullWidth>
+                                                <InputLabel style={{ fontSize: "16px"}} id="demo-simple-select-standard-label" ></InputLabel>
                                                 <Select 
                                                     labelId="region-label"
                                                     id="region"
-                                                    label="Región"
                                                     sx={{ width: '100%', color: "black" }}
                                                     onChange={(event) => handleRegionChange({
                                                         target: {
-                                                          value: Number(event.target.value),
+                                                        value: Number(event.target.value),
                                                         },
-                                                      })}
+                                                    })}
                                                     value = {selectedRegion}
                                                 >
                                                 {region.map(region => (
@@ -379,8 +419,9 @@ const RegisterPage: React.FC = () => {
                                         <Grid item xs={6}>
 
                                             {/*-Select de Comuna-*/}
-                                            <FormControl className="formulario" fullWidth required>
-                                                <InputLabel style={{fontSize: "16px"}} variant="outlined" id="demo-simple-select-standard-label">Comuna</InputLabel>
+                                            <h6>Comuna</h6>
+                                            <FormControl className="formulario" fullWidth>
+                                                <InputLabel style={{fontSize: "16px"}} id="demo-simple-select-standard-label"></InputLabel>
                                                 <Select
                                                     labelId="city-label"
                                                     id="city"
@@ -389,9 +430,9 @@ const RegisterPage: React.FC = () => {
                                                     sx={{ width: '100%', color: "black" }}
                                                     onChange={(event) => handleCityChange({
                                                         target: {
-                                                          value: Number(event.target.value),
+                                                        value: Number(event.target.value),
                                                         },
-                                                      })}
+                                                    })}
                                                 >   
                                                     {cities.map((city: Cities) => (
                                                     <MenuItem key={city.id_city} value={city.id_city}>{city.name}</MenuItem>
@@ -422,7 +463,7 @@ const RegisterPage: React.FC = () => {
                                 <br />
                                 {/*-Boton Registrar-*/}
                                 <Typography d-flex justify-content-center h-100 align-items-center text-center text-align-center fontSize = "10px" variant="body2" >
-                                <Button type="submit" onClick={handleSubmit} fullWidth variant="contained"  style={{ textTransform: "none", fontSize: "15px", color: "#fff", backgroundColor: "#1976D2", borderRadius: "20px" }}> Régistrarme </Button> 
+                                <Button type="submit" onClick={handleSubmit}  fullWidth variant="contained"  style={{ textTransform: "none", fontSize: "15px", color: "#fff", backgroundColor: "#1976D2", borderRadius: "20px" }}> Registrarme </Button> 
                                 </Typography>
                             </CardContent>
                         </Card>
