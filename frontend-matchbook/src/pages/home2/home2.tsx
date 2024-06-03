@@ -26,6 +26,7 @@ interface Publication {
     date_publication: Date;
     user_rut_user: number;
     book: Book;
+    cost_book: number;
     photo_showcase: string;
     photo_cover: string;
     photo_first_page: string;
@@ -36,11 +37,8 @@ interface Book {
     id_book: string;
     name_book: string;
     format_book: string;
-    author_id_author: string;
-    author_name: string;
-    publisher_name: string; 
-    publisher_id_publisher: string;
-    cost_book: number;
+    author: Author; 
+    publisher: Publisher;
     category: string;
     year_book: number;
     status_book: string;
@@ -48,11 +46,15 @@ interface Book {
     description_book: string;
 }
 
-interface BookAndPublication {
-    book: Book;
-    publication: Publication;
+interface Author {
+    id_author: string;
+    name_author: string;
 }
 
+interface Publisher {
+    id_publisher: string;
+    name_publisher: string;
+}
 {/*-----------------------------------------------------------------------------*/}
 {/* Breadcrumbs*/}
 function handleClick(event: React.MouseEvent<HTMLDivElement, MouseEvent>) {
@@ -275,14 +277,14 @@ function handleClick(event: React.MouseEvent<HTMLDivElement, MouseEvent>) {
 
                                         {/* Autor Libro */}
                                         <Typography variant="body2" color="text.secondary" style={{ fontFamily: "SF Pro Display Regular"}}>
-                                        {publication.book.author_name} 
+                                        {publication.book.author.name_author} 
                                         </Typography>
 
                                         <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' , fontSize: "14px" }}>
                                         
                                             {/* Precio Libro */}
                                             <Typography gutterBottom variant="h5" component="div" style={{fontSize: "20px", fontWeight: "bold", paddingTop: "5px"}}>
-                                                ${publication.book.cost_book}
+                                                ${publication.cost_book}
                                             </Typography>
 
                                             {/* Ubicación Libro */}

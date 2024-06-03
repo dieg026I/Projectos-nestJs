@@ -12,12 +12,13 @@ export class PublicationService {
     private publicationRepository: Repository<Publication>,
   ) {}
 
-  async createPublication(files: Express.Multer.File[], id_publication: string, rut_user: number, id_book: string): Promise<Publication> {
+  async createPublication(files: Express.Multer.File[], id_publication: string, rut_user: string, cost_book: string, id_book: string): Promise<Publication> {
     const publication = new Publication();
     publication.id_publication = id_publication;
-    publication.user_rut_user= rut_user;
+    publication.user_rut_user= Number(rut_user);
     publication.book_id_book = id_book;
     publication.date_publication = new Date();
+    publication.cost_book = Number(cost_book);
     
     // Guarda solo el nombre del archivo en la base de datos
     publication.photo_showcase = files[0].filename;
@@ -44,7 +45,7 @@ export class PublicationService {
   }
 
   findAllWithBooks(): Promise<Publication[]> {
-    return this.publicationRepository.find({ relations: ['book'] })
+    return this.publicationRepository.find({ relations: ['book', 'book.author', 'book.publisher'] })
       .catch(error => {
         console.error('Error fetching publications with books:', error);
         throw error;

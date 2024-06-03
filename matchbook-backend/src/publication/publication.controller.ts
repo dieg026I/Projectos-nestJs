@@ -10,8 +10,8 @@ export class PublicationController {
   @Post('upload')
   @UseInterceptors(FilesInterceptor('images', 4, multerConfig))
   async uploadFiles(@UploadedFiles() files, @Body() body) {
-    const { id_publication, rut_user, id_book } = body;
-    const publication = await this.publicationService.createPublication(files, id_publication, rut_user, id_book);
+    const { id_publication, cost_book, rut_user, id_book } = body;
+    const publication = await this.publicationService.createPublication(files, id_publication, cost_book, rut_user, id_book);
     return publication;
   }
   

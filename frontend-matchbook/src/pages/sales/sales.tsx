@@ -30,7 +30,6 @@ interface Book {
     format_book: string;
     author_name: string;
     publisher_name: string;
-    cost_book: number;
     category: string;
     year_book: number;
     status_book: string;
@@ -261,7 +260,7 @@ const Sales: React.FC = () => {
         event.preventDefault();
     
         try {
-            // Primero, guarda el autor y obtén su ID
+            // guarda el autor y obtén su ID
             let id_author = uuidv4();
             const responseAuthor = await axios.post('http://localhost:3001/author', {
             id_author: id_author,    
@@ -269,7 +268,7 @@ const Sales: React.FC = () => {
             });
             console.log(responseAuthor.data)
             const author_id = responseAuthor.data.id_author
-            // Luego, guarda la editorial y obtén su ID
+            //guarda la editorial y obtén su ID
             let id_publisher = uuidv4();
             const responsePublisher = await axios.post('http://localhost:3001/publisher', {
                 id_publisher: id_publisher,    
@@ -280,14 +279,13 @@ const Sales: React.FC = () => {
             const bookId = `${name_book}-${author_name.length}-${publisher_name.slice(0, 3)}`.toLowerCase();
 
     
-            // Finalmente, guarda el libro con los IDs del autor y la editorial
+            //guarda el libro con los IDs del autor y la editorial
             const responseBook = await axios.post('http://localhost:3001/book', {
                 id_book: bookId,
                 name_book: name_book,
                 format_book: format_book,
                 author_id_author: author_id,
                 publisher_id_publisher: publisher_id,
-                cost_book: cost_book,
                 year_book: year_book,
                 status_book: selectedStatus,
                 stock_book: stock_book,
@@ -339,7 +337,11 @@ const Sales: React.FC = () => {
             if (userString !== null) {
                 const user = JSON.parse(userString);
                 formData.append('rut_user', JSON.stringify(user.rut_user));
-            }           
+            }     
+            
+            
+            formData.append('cost_book', cost_book.toString());
+            
 
             formData.append('id_publication', id_publication);
             

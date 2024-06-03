@@ -39,7 +39,7 @@ interface User {
 const LoginPage: React.FC = () => {
 
   const [email_user, setEmail] = React.useState('');
-  const [password_user, setPassword] = React.useState('');
+  const [password_users, setPassword] = React.useState('');
   const navigate = useNavigate();
   const [user, setUser] = useState<User | null>(null);
 
@@ -68,7 +68,7 @@ const LoginPage: React.FC = () => {
     try {
       const response = await axios.post('http://localhost:3001/auth/validate', {
         email_user : email_user,
-        password_users : password_user
+        password_users : password_users
       });
 
       if (response.status === 201 && response.data.access_token ){

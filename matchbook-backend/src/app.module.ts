@@ -24,6 +24,9 @@ import { Category } from './category/entities/category.entity';
 import { BuyModule } from './buy/buy.module';
 import { StatusSendModule } from './status_send/status_send.module';
 import { ShipmentTypeModule } from './shipment_type/shipment_type.module';
+import { StatusSend } from './status_send/entities/status_send.entity';
+import { ShipmentType } from './shipment_type/entities/shipment_type.entity';
+import { Buy } from './buy/entities/buy.entity';
 
 @Module({
   imports: [
@@ -34,7 +37,7 @@ import { ShipmentTypeModule } from './shipment_type/shipment_type.module';
     username: 'postgres',
     password: '95809580Dd',
     database: 'Matchbook_BD',
-    entities: [Users, Cities, Region, Book, Author, Publisher, Publication, Category],
+    entities: [Users, Cities, Region, Book, Author, Publisher, Publication, Category, Buy , StatusSend, ShipmentType],
     synchronize: false, // Solo para entornos de desarrollo
     autoLoadEntities: false,
   }),RegionModule,CommuneModule, UsersModule, AuthModule,

@@ -13,31 +13,33 @@ export class Book {
   name_book: string;
 
   @Column()
-  cost_book: number;
-
-  @Column()
   year_book: number;
 
   @Column()
   description_book: string;
 
   @Column()
-  status_book : string
+  status_book : string;
 
   @Column()  
-  stock_book : number
+  stock_book : number;
 
   @Column()
-  format_book: string
+  format_book: string;
   
-  @ManyToOne(() => Author, (author) => author.id_author)
+  @ManyToOne(() => Author, (author) => author.books)
   @JoinColumn({ name: 'author_id_author' })
-  author_id_author: Author;
+  author: Author;
   
+  @Column()
+  author_id_author: string;
 
   @ManyToOne(() => Publisher, publisher => publisher.books)
   @JoinColumn({ name: 'publisher_id_publisher' })
-  publisher_id_publisher: Publisher;
+  publisher: Publisher;
+
+  @Column()
+  publisher_id_publisher: string;
 
   @OneToMany(() => Publication, publication => publication.book)
   publications: Publication[]

@@ -9,6 +9,6 @@ export class Publisher {
   @Column()
   name_publisher: string;
 
-  @OneToMany(() => Book, book => book.publisher_id_publisher)
+  @OneToMany(() => Book, book => book.publisher)
   books: Book[];
 }
