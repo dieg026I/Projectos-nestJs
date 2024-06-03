@@ -33,7 +33,7 @@ export class Users {
   @JoinColumn({ name: 'city_id' })
   city_id: number;
 
-  @OneToMany(() => Publication, publication => publication.user)
+  @OneToMany(() => Publication, publication => publication.user_rut_user)
   publications: Publication[];
 
 
