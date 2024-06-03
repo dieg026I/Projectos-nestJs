@@ -12,10 +12,10 @@ export class PublicationService {
     private publicationRepository: Repository<Publication>,
   ) {}
 
-  async createPublication(files: Express.Multer.File[], id_publication: string, rut_user: string, cost_book: string, id_book: string): Promise<Publication> {
+  async createPublication(files: Express.Multer.File[], id_publication: string, rut_user: number, cost_book: string, id_book: string): Promise<Publication> {
     const publication = new Publication();
     publication.id_publication = id_publication;
-    publication.user_rut_user= Number(rut_user);
+    publication.user_rut_user= rut_user;
     publication.book_id_book = id_book;
     publication.date_publication = new Date();
     publication.cost_book = Number(cost_book);
