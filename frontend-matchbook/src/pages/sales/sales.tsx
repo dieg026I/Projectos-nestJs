@@ -19,7 +19,10 @@ interface Author {
     id_author: string;
     name_author: string;
 }
-
+interface Publisher {
+    id_publisher: string;
+    name_publisher: string;
+}
 interface Category {
     id_category: string;
     name_category: string;
@@ -28,8 +31,8 @@ interface Book {
     id_book: string;
     name_book: string;
     format_book: string;
-    author_name: string;
-    publisher_name: string;
+    author:Author;
+    publisher: Publisher;
     category: string;
     year_book: number;
     status_book: string;
@@ -261,31 +264,29 @@ const Sales: React.FC = () => {
     
         try {
             // guarda el autor y obtén su ID
-            let id_author = uuidv4();
+            const id_author = uuidv4();
             const responseAuthor = await axios.post('http://localhost:3001/author', {
             id_author: id_author,    
             name_author: author_name,
             });
             console.log(responseAuthor.data)
-            const author_id = responseAuthor.data.id_author
+            
             //guarda la editorial y obtén su ID
             let id_publisher = uuidv4();
             const responsePublisher = await axios.post('http://localhost:3001/publisher', {
                 id_publisher: id_publisher,    
                 name_publisher: publisher_name  
             });
-            console.log(responsePublisher.data)
-            const publisher_id = responsePublisher.data.id_publisher;
-            const bookId = `${name_book}-${author_name.length}-${publisher_name.slice(0, 3)}`.toLowerCase();
 
-    
-            //guarda el libro con los IDs del autor y la editorial
+            console.log(responsePublisher.data)
+          const bookId = `${name_book}-${author_name.length}-${publisher_name.slice(0, 3)}`.toLowerCase();
+            //guarda el libro con los IDs del autor y la ediorial
             const responseBook = await axios.post('http://localhost:3001/book', {
                 id_book: bookId,
                 name_book: name_book,
                 format_book: format_book,
-                author_id_author: author_id,
-                publisher_id_publisher: publisher_id,
+                author_id_author: id_author,
+                publisher_id_publisher: id_publisher,
                 year_book: year_book,
                 status_book: selectedStatus,
                 stock_book: stock_book,
@@ -317,9 +318,6 @@ const Sales: React.FC = () => {
         
         const formData = new FormData();
 
-        const bookId = `${name_book}-${author_name.length}-${publisher_name.slice(0, 3)}`.toLowerCase()
-            const id_publication = uuidv4();
-
             if (photo_showcase) {
                 formData.append('images', photo_showcase);
             }
@@ -332,23 +330,22 @@ const Sales: React.FC = () => {
             if (photo_back_cover) {
                 formData.append('images', photo_back_cover);
             }
-            const userString = localStorage.getItem('user');
+            const id_publication = uuidv4();
+            formData.append('id_publication', id_publication);
+            
+            const userString = localStorage.getItem("user");
 
             if (userString !== null) {
                 const user = JSON.parse(userString);
                 formData.append('rut_user', JSON.stringify(user.rut_user));
-            }     
-            
-            
-            formData.append('cost_book', cost_book.toString());
-            
-
-            formData.append('id_publication', id_publication);
-            
-            if(bookId){
+            } 
+           
+            const bookId = `${name_book}-${author_name.length}-${publisher_name.slice(0, 3)}`.toLowerCase()
             formData.append('id_book', bookId);
-            }
 
+            if(cost_book){
+            formData.append('cost_book', cost_book.toString());
+            }
             console.log('formatData: ' + formData)
     try {
         const response = await axios.post('http://localhost:3001/publications/upload', formData, {

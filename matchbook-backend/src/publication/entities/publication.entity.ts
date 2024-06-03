@@ -12,18 +12,15 @@ export class Publication {
 
   @ManyToOne(() => Users, (user) => user.publications)
   @JoinColumn({ name: 'user_rut_user' })
+  users: Users;
+  
+  @Column()
   user_rut_user: number;
   
   @ManyToOne(() => Book, (book) => book.publications)
   @JoinColumn({ name: 'book_id_book' })
   book: Book;
-
-  @Column()
-  book_id_book: string;
-
-  @Column({name: 'cost_book'})
-  cost_book: number;
-
+  
   @Column()
   photo_showcase: string;
 
@@ -35,4 +32,7 @@ export class Publication {
 
   @Column()
   photo_back_cover: string;
+
+  @Column({name: 'cost_book'})
+  cost_book: number;
 }

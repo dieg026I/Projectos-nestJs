@@ -16,7 +16,7 @@ export class PublicationService {
     const publication = new Publication();
     publication.id_publication = id_publication;
     publication.user_rut_user= rut_user;
-    publication.book_id_book = id_book;
+    publication.book.id_book = id_book;
     publication.date_publication = new Date();
     publication.cost_book = Number(cost_book);
     
