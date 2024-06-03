@@ -332,7 +332,7 @@ const Sales: React.FC = () => {
             if (photo_back_cover) {
                 formData.append('images', photo_back_cover);
             }
-            const userString = localStorage.getItem("user");
+            const userString = localStorage.getItem('user');
 
             if (userString !== null) {
                 const user = JSON.parse(userString);
@@ -348,6 +348,8 @@ const Sales: React.FC = () => {
             if(bookId){
             formData.append('id_book', bookId);
             }
+
+            console.log('formatData: ' + formData)
     try {
         const response = await axios.post('http://localhost:3001/publications/upload', formData, {
             headers: {
