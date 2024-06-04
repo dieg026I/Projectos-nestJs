@@ -35,4 +35,7 @@ export class Publication {
 
   @Column()
   photo_back_cover: string;
+  
+  @Column()
+  cost_book: number;
 }
