@@ -11,12 +11,11 @@ export class PublicationService {
     @InjectRepository(Publication)
     private publicationRepository: Repository<Publication>,
   ) {}
-
   async createPublication(files: Express.Multer.File[], id_publication: string, rut_user: number, cost_book: string, id_book: string): Promise<Publication> {
     const publication = new Publication();
     publication.id_publication = id_publication;
     publication.user_rut_user= rut_user;
-    publication.book.id_book = id_book;
+    publication.book_id_book= id_book;
     publication.date_publication = new Date();
     publication.cost_book = Number(cost_book);
     
@@ -45,7 +44,7 @@ export class PublicationService {
   }
 
   findAllWithBooks(): Promise<Publication[]> {
-    return this.publicationRepository.find({ relations: ['book', 'book.author', 'book.publisher'] })
+    return this.publicationRepository.find({ relations: ['book_id_book', 'book.author', 'book.publisher'] })
       .catch(error => {
         console.error('Error fetching publications with books:', error);
         throw error;

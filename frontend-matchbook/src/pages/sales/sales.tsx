@@ -39,6 +39,16 @@ interface Book {
     stock_book: number;
     description_book: string;
 }
+interface User {
+    name_user: string,
+    lastname_user: string,
+    rut_user: number,
+    dv_user: string,
+    phone_user: number,
+    email_user: string,
+    password_users: string,
+    city_id: number,
+}
 
 {/*-----------------------------------------------------------------------------*/}
 {/* Sugerencia */}
@@ -72,7 +82,6 @@ const Sales: React.FC = () => {
     const [selectedStatus, setSelectedStatus] = useState('');
     const [stock_book, setStockBook] = React.useState(0);
     const [description_book, setDescriptionBook] = React.useState('');
-
     {/* Publicación */}
     const [id_publication, setIdPublication] = React.useState('');
     const [date_publication, setDatePublication] = React.useState('');
@@ -295,6 +304,7 @@ const Sales: React.FC = () => {
             });
     
             console.log(responseBook.data);
+            setBook(responseBook.data)
             handleNext();
         } catch (error) {
             console.error('Hubo un error al ingresar la publicación:', error);
@@ -333,15 +343,15 @@ const Sales: React.FC = () => {
             const id_publication = uuidv4();
             formData.append('id_publication', id_publication);
             
-            const userString = localStorage.getItem("user");
+            const userString = localStorage.getItem('user');
 
             if (userString !== null) {
-                const user = JSON.parse(userString);
-                formData.append('rut_user', JSON.stringify(user.rut_user));
+                const user: User = JSON.parse(userString);
+                let user_rut = user.rut_user;  
+                formData.append('rut_user', user_rut.toString());
             } 
-           
-            const bookId = `${name_book}-${author_name.length}-${publisher_name.slice(0, 3)}`.toLowerCase()
-            formData.append('id_book', bookId);
+            const bookId = `${name_book}-${author_name.length}-${publisher_name.slice(0, 3)}`.toLowerCase();
+            formData.append('id_book', bookId );
 
             if(cost_book){
             formData.append('cost_book', cost_book.toString());
