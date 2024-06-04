@@ -32,15 +32,21 @@ interface Publication {
     photo_back_cover: string;
     cost_book: number;
 }
-
+interface Author {
+    id_author: string;
+    name_author: string;
+}
+interface Publisher {
+    id_publisher: string;
+    name_publisher: string;
+}
 interface Book {
     id_book: string;
     name_book: string;
     format_book: string;
-    author_id_author: string;
-    author_name: string;
+    author_id_author: Author;
     publisher_name: string; 
-    publisher_id_publisher: string;
+    publisher_id_publisher: Publisher;
     category: string;
     year_book: number;
     status_book: string;
@@ -275,7 +281,7 @@ function handleClick(event: React.MouseEvent<HTMLDivElement, MouseEvent>) {
 
                                         {/* Autor Libro */}
                                         <Typography variant="body2" color="text.secondary" style={{ fontFamily: "SF Pro Display Regular"}}>
-                                        {publication.book.author_name} 
+                                        {publication.book.author_id_author.name_author} 
                                         </Typography>
 
                                         <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' , fontSize: "14px" }}>
