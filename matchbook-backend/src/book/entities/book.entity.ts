@@ -13,9 +13,6 @@ export class Book {
   name_book: string;
 
   @Column()
-  cost_book: number;
-
-  @Column()
   year_book: number;
 
   @Column()
