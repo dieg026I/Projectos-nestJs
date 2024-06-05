@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Module, NestModule, MiddlewareConsumer } from '@nestjs/common';
 import { PublicationService } from './publication.service';
 import { PublicationController } from './publication.controller';
 import { Publication } from './entities/publication.entity';
@@ -9,4 +9,5 @@ import { TypeOrmModule } from '@nestjs/typeorm';
   controllers: [PublicationController],
   providers: [PublicationService],
 })
-export class PublicationModule {}
+export class PublicationModule {} 
+

@@ -30,7 +30,6 @@ interface Book {
     format_book: string;
     author_name: string;
     publisher_name: string;
-    cost_book: number;
     category: string;
     year_book: number;
     status_book: string;
@@ -287,7 +286,6 @@ const Sales: React.FC = () => {
                 format_book: format_book,
                 author_id_author: author_id,
                 publisher_id_publisher: publisher_id,
-                cost_book: cost_book,
                 year_book: year_book,
                 status_book: selectedStatus,
                 stock_book: stock_book,
@@ -346,6 +344,8 @@ const Sales: React.FC = () => {
             if(bookId){
             formData.append('id_book', bookId);
             }
+
+            formData.append('cost_book', cost_book.toString());
     try {
         const response = await axios.post('http://localhost:3001/publications/upload', formData, {
             headers: {

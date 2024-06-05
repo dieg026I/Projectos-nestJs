@@ -1,6 +1,7 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { join } from 'path';
 
 
 const express = require('express');
@@ -31,7 +32,7 @@ async function bootstrap() {
       return callback(null, true);
     }
   });
-
+  app.use('/images', express.static(join(__dirname, '..','..', 'images')));
   await app.listen(3001);
 }
 bootstrap();

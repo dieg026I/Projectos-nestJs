@@ -10,8 +10,8 @@ export class PublicationController {
   @Post('upload')
   @UseInterceptors(FilesInterceptor('images', 4, multerConfig))
   async uploadFiles(@UploadedFiles() files, @Body() body) {
-    const { id_publication, rut_user, id_book } = body;
-    const publication = await this.publicationService.createPublication(files, id_publication, rut_user, id_book);
+    const { id_publication, rut_user, id_book, cost_book } = body;
+    const publication = await this.publicationService.createPublication(files, id_publication, rut_user, id_book, cost_book);
     return publication;
   }
   
@@ -24,7 +24,7 @@ export class PublicationController {
   findAll(): Promise<Publication[]> {
     return this.publicationService.findAll();
   }
-
+  
   @Get(':id')
   findOne(@Param('id') id: string): Promise<Publication> {
     return this.publicationService.findOne(id);

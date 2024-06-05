@@ -13,9 +13,6 @@ export class Book {
   name_book: string;
 
   @Column()
-  cost_book: number;
-
-  @Column()
   year_book: number;
 
   @Column()
@@ -40,7 +37,7 @@ export class Book {
   publisher_id_publisher: Publisher;
 
   @OneToMany(() => Publication, publication => publication.book)
-  publication: Publication[]
+  publications: Publication[]
 
   @ManyToMany(() => Category, (category) => category.books)
   categories: Category[];
