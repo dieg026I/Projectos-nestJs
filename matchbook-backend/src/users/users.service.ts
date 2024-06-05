@@ -22,6 +22,15 @@ export class UsersService {
   findOneEmail(email_user: string): Promise<Users> {
     return this.usersRepository.findOne({ where: { email_user } });
   }
+
+  findAllWithCity(): Promise<Users[]> {
+    return this.usersRepository.find({ relations: ['cities'] })
+      .catch(error => {
+        console.error('Error fetching publications with city:', error);
+        throw error;
+      });
+  }
+
   async remove(id: string): Promise<void> {
     await this.usersRepository.delete(id);
   }
@@ -35,4 +44,6 @@ export class UsersService {
   async update(id: string, user: Users): Promise<void> {
     await this.usersRepository.update(id, user);
   }
+
+
 }

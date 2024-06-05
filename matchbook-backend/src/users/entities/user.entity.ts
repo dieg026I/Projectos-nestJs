@@ -31,7 +31,7 @@ export class Users {
 
   @ManyToOne(() => Cities, (city) => city.users)
   @JoinColumn({ name: 'city_id' })
-  city_id: number;
+  cities: Cities;
 
   @OneToMany(() => Publication, publication => publication.user_rut_user)
   publications: Publication[];
