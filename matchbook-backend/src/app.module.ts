@@ -32,8 +32,8 @@ import { ShipmentTypeModule } from './shipment_type/shipment_type.module';
     host: 'localhost',
     port: 5432,
     username: 'postgres',
-    password: '95809580Dd',
-    database: 'Matchbook_BD',
+    password: '222648',
+    database: 'Matchbook_DB',
     entities: [Users, Cities, Region, Book, Author, Publisher, Publication, Category],
     synchronize: false, // Solo para entornos de desarrollo
     autoLoadEntities: false,

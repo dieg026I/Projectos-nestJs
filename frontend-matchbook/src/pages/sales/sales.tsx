@@ -19,7 +19,6 @@ interface Author {
     id_author: string;
     name_author: string;
 }
-
 interface Category {
     id_category: string;
     name_category: string;
