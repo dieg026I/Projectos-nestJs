@@ -132,6 +132,10 @@ function handleClick(event: React.MouseEvent<HTMLDivElement, MouseEvent>) {
     const handleLinkClick = (ref: React.RefObject<HTMLElement>) => {
         ref.current?.scrollIntoView({ behavior: 'smooth' });
     };
+
+    {/* Mostrar boton "agregar al carro y ver detalle" */}
+    const [activeCard, setActiveCard] = useState<string | null>(null);
+
     
 
     return (
@@ -253,57 +257,90 @@ function handleClick(event: React.MouseEvent<HTMLDivElement, MouseEvent>) {
                     <br />
                         <Grid container spacing={4} justifyContent="center" style={{padding: "20px"}}>
                         {Array.isArray(publications) && publications.slice((page - 1) * 5, page * 5).map((publication) => (
-                                <Card key={publication.id_publication} style={{ margin: "10px", width: "230px", borderRadius: "20px", textAlign: "left", position: 'relative', padding:"22px"}} sx={{ maxWidth: 345, padding: "10px"}}>
-                                    {/* Imagen libros */}
-                                    <CardMedia
-                                        sx={{ height: 140, position: 'relative' }}
-                                    >
-                                        <img 
+                                <Card 
+                                    key={publication.id_publication} 
+                                    style={{ margin: "10px", width: "230px", borderRadius: "20px", textAlign: "left", position: 'relative', padding:"22px"}} 
+                                    sx={{ maxWidth: 345, padding: "10px"}}
+                                    onMouseEnter={() => setActiveCard(publication.id_publication)}
+                                    onMouseLeave={() => setActiveCard(null)}
+                                >
+                                {/* Imagen libros */}
+                                <CardMedia
+                                    sx={{ height: 140, position: 'relative' }}
+                                >
+                                    <img 
                                         src={`http://localhost:3001/images/${publication.photo_showcase}`}
                                         alt="Imagen del libro" 
                                         style={{ 
-                                            height: '140px', 
+                                            height: '180px', 
                                             width: 'auto', 
                                             maxWidth: '100%', 
                                             display: 'block', 
                                             marginLeft: 'auto', 
-                                            marginRight: 'auto' 
+                                            marginRight: 'auto', 
                                         }}
                                     />
                                     <FaHeart style={{ position: 'absolute', top: '10px', right: '10px', color: '#f05d16' }} />
-                                    </CardMedia>
-                                        
-                                    <CardContent style={{padding: "5px", paddingTop: "15px"}}>
-                                        {/* Titulo Libro */}
-                                        <Typography gutterBottom variant="h5" component="div" style={{fontSize: "17px",  paddingTop: "5px", fontFamily: "SF Pro Display Medium"}}>
-                                        {publication.book.name_book} 
-                                        </Typography>
+                                </CardMedia>
+                                    
+                                <CardContent style={{padding: "5px", paddingTop: "15px", marginTop:"35px"}}>
+                                    {/* Titulo Libro */}
+                                    <Typography 
+                                        gutterBottom 
+                                        variant="h5" 
+                                        component="div" 
+                                        style={{
+                                            fontSize: "17px",  
+                                            paddingTop: "5px", 
+                                            fontFamily: "SF Pro Display Medium",
+                                            height: '3em',
+                                            overflow: 'hidden' 
+                                        }}
+                                    >
+                                        {publication.book.name_book.length > 30 ? `${publication.book.name_book.substring(0, 30)}...` : publication.book.name_book}
+                                    </Typography>
 
-                                        {/* Autor Libro */}
-                                        <Typography variant="body2" color="text.secondary" style={{ fontFamily: "SF Pro Display Regular"}}>
-                                        {publication.book.author_id_author.name_author} 
-                                        </Typography>
-
-                                        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' , fontSize: "14px" }}>
-                                        
-                                            {/* Precio Libro */}
-                                            <Typography gutterBottom variant="h5" component="div" style={{fontSize: "20px", fontWeight: "bold", paddingTop: "5px"}}>
-                                                ${publication.cost_book}
+                                    
+                                    {activeCard === publication.id_publication ? (
+                                        <div style={{ 
+                                            position: 'absolute', 
+                                            display: 'flex', 
+                                            flexDirection: 'column',
+                                            justifyContent: 'center',
+                                            width: '80%', // Añade esta línea
+                                        }}>
+                                            <Button type="button" style={{textTransform: "none", color:"#ffffff", backgroundColor:"#00a9e0", marginTop:"5px", textAlign: 'center', justifyContent:"center"}}>
+                                                Agregar al carro
+                                            </Button>
+                                            <Button type="button" style={{textTransform: "none", color:"#ffffff", backgroundColor:"#00a9e0", marginTop:"5px", textAlign: 'center', justifyContent:"center"}}>
+                                                Ir al Detalle
+                                            </Button>
+                                        </div>
+                                    ) : (
+                                        <>
+                                            {/* Autor Libro */}
+                                            <Typography variant="body2" color="text.secondary" style={{ fontFamily: "SF Pro Display Regular"}}>
+                                                {publication.book.author_id_author.name_author} 
                                             </Typography>
-
-                                            {/* Ubicación Libro */}
-                                            <Box sx={{ display: 'flex', fontSize: "13px" }}>
-                                                <PlaceIcon style={{ color:"#00a9e0", alignItems: 'center' }} />
-                                                <span>Viña del Mar</span>
+                                
+                                            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' , fontSize: "14px", marginTop:"15px" }}>
+                                            
+                                                {/* Precio Libro */}
+                                                <Typography gutterBottom variant="h5" component="div" style={{fontSize: "20px", fontWeight: "bold", paddingTop: "5px"}}>
+                                                    ${publication.cost_book}
+                                                </Typography>
+                        
+                                                {/* Ubicación Libro */}
+                                                <Box sx={{ display: 'flex', fontSize: "13px" }}>
+                                                    <PlaceIcon style={{ color:"#00a9e0", alignItems: 'center' }} />
+                                                    <span>Viña del Mar</span>
+                                                </Box>
                                             </Box>
-                                        </Box>
-                                    </CardContent>
-                                    <CardActions>
-                                        <Button fullWidth href="/" variant="contained"  style={{ textTransform: "none", backgroundColor: 'white', color: '#f05d16', borderRadius: '30px', borderBlockColor: "black", fontWeight: "bold", fontSize:"15px" }}>
-                                            Agregar al Carro
-                                        </Button>
-                                    </CardActions>
-                                </Card>
+                                        </>
+                                    )}
+                                </CardContent>
+                                
+                            </Card>
                             ))}
 
                         </Grid>
@@ -334,11 +371,7 @@ function handleClick(event: React.MouseEvent<HTMLDivElement, MouseEvent>) {
                 >
                     Revisa todos los libros
                 </Button>
-                
-                
             </div>
-
-
         </div>
         <Footer />
     </>

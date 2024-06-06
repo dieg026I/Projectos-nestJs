@@ -115,11 +115,16 @@ export default function Marketplace() {
 
                     {/* Segunda parte con espacio en blanco */}
                     <Grid className="text-center" item xs={12} sm={6} md={9} lg={9}>
-                        <Card style={{backgroundColor:"#000000", height:"587px", marginRight:"20px", marginBottom:"20px"}}> hola </Card>
+                        <Card style={{ height:"587px", marginRight:"20px", marginBottom:"20px", borderRadius:"20px"}}> 
+
+
+                            
+                        </Card>
                     </Grid>
                 </Grid>
 
             </div >
+            <br />
             <Footer/>
         </>
     );

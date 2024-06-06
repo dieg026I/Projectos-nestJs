@@ -40,7 +40,6 @@ function App() {
 
       <Routes>
         {/* Rutas para páginas existentes */}
-        {/*<Route path="/" element={<HomePage />} />*/}
         <Route path="/loginAdmin" element={<LoginAdmin />} />
         <Route path="/" element={<ProtectedRoute><Transactions /></ProtectedRoute>} />
         <Route path="/bookAdmin" element={<ProtectedRoute><BookAdmin /></ProtectedRoute>} />
