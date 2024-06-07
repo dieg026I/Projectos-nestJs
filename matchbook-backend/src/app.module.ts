@@ -24,6 +24,11 @@ import { Category } from './category/entities/category.entity';
 import { BuyModule } from './buy/buy.module';
 import { StatusSendModule } from './status_send/status_send.module';
 import { ShipmentTypeModule } from './shipment_type/shipment_type.module';
+import { ReadingClubModule } from './reading_club/reading_club.module';
+import { Buy } from './buy/entities/buy.entity';
+import { ShipmentType } from './shipment_type/entities/shipment_type.entity';
+import { StatusSend } from './status_send/entities/status_send.entity';
+import { ReadingClub } from './reading_club/entities/reading_club.entity';
 
 @Module({
   imports: [
@@ -34,8 +39,9 @@ import { ShipmentTypeModule } from './shipment_type/shipment_type.module';
     username: 'postgres',
     password: '95809580Dd',
     database: 'Matchbook_BD',
-    entities: [Users, Cities, Region, Book, Author, Publisher, Publication, Category],
-    synchronize: false, // Solo para entornos de desarrollo
+    entities: [Users, Cities, Region, Book, Author, Publisher,
+    Publication, Category, Buy, ShipmentType, StatusSend, ReadingClub ],
+    synchronize: true, // Solo para entornos de desarrollo
     autoLoadEntities: false,
   }),RegionModule,CommuneModule, UsersModule, AuthModule,
     JwtModule.register({
@@ -49,7 +55,8 @@ import { ShipmentTypeModule } from './shipment_type/shipment_type.module';
     CategoryModule,
     BuyModule,
     StatusSendModule,
-    ShipmentTypeModule ],
+    ShipmentTypeModule,
+    ReadingClubModule ],
   controllers: [AppController],
   providers: [AppService],
 })
