@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Box, Breadcrumbs, Button, Card, CardActions, CardContent, CardMedia, Grid, Link, Pagination, Stack, Typography } from "@mui/material";
+import PaginationItem from '@mui/material/PaginationItem';
 import NavBarLogin from "../../components/common/NavBarLogin/navBarLogin";
 import Footer from "../../components/common/Footer/footer";
 import image1 from "../../assents/img/car1.png";
@@ -16,6 +17,7 @@ import PlaceIcon from '@mui/icons-material/Place';
 import { FaHeart } from "react-icons/fa6";
 import "../../App.css";
 import axios from "axios";
+
 
 
 interface HomeProps {
@@ -136,8 +138,6 @@ function handleClick(event: React.MouseEvent<HTMLDivElement, MouseEvent>) {
     {/* Mostrar boton "agregar al carro y ver detalle" */}
     const [activeCard, setActiveCard] = useState<string | null>(null);
 
-    
-
     return (
     <>
         <NavBarLogin />
@@ -255,15 +255,16 @@ function handleClick(event: React.MouseEvent<HTMLDivElement, MouseEvent>) {
                     <h5 style={{ fontWeight: "600", fontFamily: "Roboto Bold"}}> NOVEDADES</h5>
                     <h2 style={{ fontWeight: "bold", fontFamily: "Roboto Bold" }} >Lo más nuevo que tenemos para ti</h2>
                     <br />
-                        <Grid container spacing={4} justifyContent="center" style={{padding: "20px"}}>
-                        {Array.isArray(publications) && publications.slice((page - 1) * 5, page * 5).map((publication) => (
-                                <Card 
-                                    key={publication.id_publication} 
-                                    style={{ margin: "10px", width: "230px", borderRadius: "20px", textAlign: "left", position: 'relative', padding:"22px"}} 
-                                    sx={{ maxWidth: 345, padding: "10px"}}
-                                    onMouseEnter={() => setActiveCard(publication.id_publication)}
-                                    onMouseLeave={() => setActiveCard(null)}
-                                >
+                    <Grid container spacing={4} justifyContent="center" style={{padding: "20px"}}>
+                    
+                        {Array.isArray(publications) && publications.slice(Math.max(publications.length - 10, 0)).reverse().slice((page - 1) * 5, page * 5).map((publication) => (
+                            <Card 
+                                key={publication.id_publication} 
+                                style={{ margin: "10px", width: "230px", borderRadius: "20px", textAlign: "left", position: 'relative', padding:"22px"}} 
+                                sx={{ maxWidth: 345, padding: "10px"}}
+                                onMouseEnter={() => setActiveCard(publication.id_publication)}
+                                onMouseLeave={() => setActiveCard(null)}
+                            >
                                 {/* Imagen libros */}
                                 <CardMedia
                                     sx={{ height: 140, position: 'relative' }}
@@ -282,7 +283,7 @@ function handleClick(event: React.MouseEvent<HTMLDivElement, MouseEvent>) {
                                     />
                                     <FaHeart style={{ position: 'absolute', top: '10px', right: '10px', color: '#f05d16' }} />
                                 </CardMedia>
-                                    
+                                
                                 <CardContent style={{padding: "5px", paddingTop: "15px", marginTop:"35px"}}>
                                     {/* Titulo Libro */}
                                     <Typography 
@@ -300,55 +301,72 @@ function handleClick(event: React.MouseEvent<HTMLDivElement, MouseEvent>) {
                                         {publication.book.name_book.length > 30 ? `${publication.book.name_book.substring(0, 30)}...` : publication.book.name_book}
                                     </Typography>
 
-                                    
-                                    {activeCard === publication.id_publication ? (
-                                        <div style={{ 
-                                            position: 'absolute', 
-                                            display: 'flex', 
-                                            flexDirection: 'column',
-                                            justifyContent: 'center',
-                                            width: '80%', // Añade esta línea
-                                        }}>
-                                            <Button type="button" style={{textTransform: "none", color:"#ffffff", backgroundColor:"#00a9e0", marginTop:"5px", textAlign: 'center', justifyContent:"center"}}>
-                                                Agregar al carro
-                                            </Button>
-                                            <Button type="button" style={{textTransform: "none", color:"#ffffff", backgroundColor:"#00a9e0", marginTop:"5px", textAlign: 'center', justifyContent:"center"}}>
-                                                Ir al Detalle
-                                            </Button>
-                                        </div>
-                                    ) : (
-                                        <>
-                                            {/* Autor Libro */}
-                                            <Typography variant="body2" color="text.secondary" style={{ fontFamily: "SF Pro Display Regular"}}>
-                                                {publication.book.author_id_author.name_author} 
-                                            </Typography>
-                                
-                                            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' , fontSize: "14px", marginTop:"15px" }}>
-                                            
-                                                {/* Precio Libro */}
-                                                <Typography gutterBottom variant="h5" component="div" style={{fontSize: "20px", fontWeight: "bold", paddingTop: "5px"}}>
-                                                    ${publication.cost_book}
+                                    <div style={{ height: '80px', overflow: 'hidden' }}>
+                                        {activeCard === publication.id_publication ? (
+                                            <div style={{ 
+                                                position: 'absolute', 
+                                                display: 'flex', 
+                                                flexDirection: 'column',
+                                                justifyContent: 'center',
+                                                width: '80%', // Añade esta línea
+                                            }}>
+                                                <Button type="button" style={{textTransform: "none", color:"#ffffff", backgroundColor:"#00a9e0", marginTop:"5px", textAlign: 'center', justifyContent:"center"}}>
+                                                    Agregar al carro
+                                                </Button>
+                                                <Button type="button" style={{textTransform: "none", color:"#ffffff", backgroundColor:"#00a9e0", marginTop:"5px", textAlign: 'center', justifyContent:"center"}}>
+                                                    Ir al Detalle
+                                                </Button>
+                                            </div>
+                                        ) : (
+                                            <>
+                                                {/* Autor Libro */}
+                                                <Typography variant="body2" color="text.secondary" style={{ fontFamily: "SF Pro Display Regular"}}>
+                                                    {publication.book.author_id_author.name_author} 
                                                 </Typography>
-                        
-                                                {/* Ubicación Libro */}
-                                                <Box sx={{ display: 'flex', fontSize: "13px" }}>
-                                                    <PlaceIcon style={{ color:"#00a9e0", alignItems: 'center' }} />
-                                                    <span>Viña del Mar</span>
+                                    
+                                                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' , fontSize: "14px", marginTop:"15px" }}>
+                                                
+                                                    {/* Precio Libro */}
+                                                    <Typography gutterBottom variant="h5" component="div" style={{fontSize: "20px", fontWeight: "bold", paddingTop: "5px"}}>
+                                                        ${publication.cost_book}
+                                                    </Typography>
+                            
+                                                    {/* Ubicación Libro */}
+                                                    <Box sx={{ display: 'flex', fontSize: "13px" }}>
+                                                        <PlaceIcon style={{ color:"#00a9e0", alignItems: 'center' }} />
+                                                        <span>Viña del Mar</span>
+                                                    </Box>
                                                 </Box>
-                                            </Box>
-                                        </>
-                                    )}
+                                            </>
+                                        )}
+                                    </div>
                                 </CardContent>
-                                
+                            
                             </Card>
-                            ))}
+                        ))}
+                    </Grid>
+                    <Grid container justifyContent="center" alignItems="center" style={{padding: "20px"}}>
+                    <Stack spacing={2}>
+                        <Pagination 
+                            count={Math.min(Math.ceil(publications.length / 5), 2)} 
+                            page={page} 
+                            onChange={handleChange}
+                            renderItem={(item) => (
+                                <PaginationItem
+                                    {...item}
+                                    sx={{
+                                        '&.Mui-selected': {
+                                            color: 'black',
+                                        },
+                                    }}
+                                >
+                                    • {/* Aquí puedes reemplazar el punto por el emoji que prefieras */}
+                                </PaginationItem>
+                            )}
+                        />
+                    </Stack>
+                    </Grid>
 
-                        </Grid>
-                        <Grid container justifyContent="center" alignItems="center" style={{padding: "20px"}}>
-                            <Stack spacing={2}>
-                                <Pagination count={Math.ceil(publications.length / 5)} page={page} onChange={handleChange} />
-                            </Stack>
-                        </Grid>
                 </Card>
 
                 <br />

@@ -4,6 +4,7 @@ import { Box, Button, Card, CardActionArea, CardActions, CardContent, Checkbox, 
 import { useState } from "react";
 import Divider from '@mui/material/Divider';
 import React from "react";
+import '../../App.css';
 
 interface ReadingClub {
     meeting_id: string;
@@ -20,6 +21,7 @@ interface ReadingClub {
 
 const ReadingClubAdmin: React.FC = () => {
 
+    const [activeTab, setActiveTab] = useState('Agregar');
     const [selectedMeetingImage, setSelectedMeetingImage] = useState<File | null>(null);
     const [selectedMeetingId, setSelectedMeetingId] = useState<string | null>(null);
     
@@ -89,68 +91,59 @@ const ReadingClubAdmin: React.FC = () => {
                     <h2>Administración de Club de Lectura</h2>
                 </div>
                 <br />
-                <div style={{  display: 'flex', justifyContent: 'center', width: '100%'  }}>
-                    
-                    <Card sx={{  width:"1150px", height:"550px", padding:"35px" }}>
-                        <Grid  container spacing={2} justifyContent="center" alignItems="flex-start" >
-                            <Grid item xs={12} sm={12} md={6} lg={6}>
-                                <Typography  sx={{ textAlign: 'center', my: 2, fontSize:"23px", fontFamily:"SF Pro Display Bold" }}>
-                                    Libro Actual
-                                </Typography>
-                                
-                                {/* Línea horizontal */}
-                                <hr style={{ margin: "10px 0", opacity: 0.1 }} />
 
-                                <div style={{paddingTop:"20px", paddingLeft:"10px", paddingRight:"20px"}}>
-                                    <div style={{ display: 'flex', alignItems: 'center' }}>
-                                        <label htmlFor="nombre-input" style={{ marginRight: '23px' }}>Imagen:</label>
-                                        <input type="file" id="imagen-input" name="imagen" onChange={handleImageChange} style={{ display: 'block' }} />
-                                        {selectedMeetingImage && <img src={URL.createObjectURL(selectedMeetingImage)} alt="Vista previa" style={{ maxWidth: '100%', maxHeight: '200px' }} />}
-                                    </div>
-                                    <br />
-                                    <div style={{ display: 'flex', alignItems: 'center' }}>
-                                        <label htmlFor="nombre-input" style={{ marginRight: '35px' }}>Titulo:</label>
-                                        <input type="text" id="titulo-input" name="meeting_Title" />
-                                    </div>
-                                    <br />
-                                    <div style={{ display: 'flex', alignItems: 'center' }}>
-                                        <label htmlFor="nombre-input" style={{ marginRight: '35px' }}>Autor:</label>
-                                        <input type="text" id="autor-input" name="meeting_Author" />
-                                    </div>
-                                    <br />
-                                    <div style={{ display: 'flex', alignItems: 'center' }}>
-                                        <label htmlFor="nombre-input" style={{ marginRight: '18px' }}>Editorial:</label>
-                                        <input type="text" id="editorial-input" name="meeting_Publisher" />
-                                    </div>
-                                    <br />
-                                    <div style={{ display: 'flex', alignItems: 'center' }}>
-                                        <label htmlFor="nombre-input" style={{ marginRight: '48px' }}>Año:</label>
-                                        <input type="number" id="ano-input" name="meeting_Year" />
-                                    </div>
-                                    <br />
-                                    <div style={{ display: 'flex', alignItems: 'center' }}>
-                                        <label htmlFor="nombre-input" style={{ marginRight: '9px' }}>Categoría:</label>
-                                        <input type="text" id="categoria-input" name="meeting_Category" />
-                                    </div>
-                                    <br />
-                                    <div style={{ display: 'flex',  flexDirection: 'column' }}>
-                                        <Typography component="label" htmlFor="descripcion-input" sx={{ my: 2 }}>
-                                            Descripción:
+                <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', width: '100%' }}>
+                    <Card  sx={{ width: '1150px', height: '550px', padding: '35px' }}>
+                        <Grid container spacing={2} justifyContent="center"  >
+                            <Grid item xs={12} sm={12} md={6} lg={6} className="myCard">
+                                <Card  onClick={() => setActiveTab('Agregar')} style={{ backgroundColor:"#d2efff", width:"350px"  }}>
+                                    <div>
+                                        <Typography sx={{ textAlign: 'center', my: 2, fontSize: '23px', fontFamily: 'SF Pro Display Bold' }}>
+                                            Agregar Publicación
                                         </Typography>
-                                        <textarea id="descripcion-input" name="meeting_Description" rows={4} />
                                     </div>
-                                </div>
-                            
+                                </Card>
+                                <hr style={{ margin: '10px 0', opacity: 0.1 }} />
                             </Grid>
-                            <Grid className="text-center" item xs={12} sm={12} md={6} lg={6}>
-                                <Typography  sx={{ textAlign: 'center', my: 2, fontSize:"23px", fontFamily:"SF Pro Display Bold" }}>
-                                    Reunion
+
+                            <Grid item xs={12} sm={12} md={6} lg={6} className="myCard">
+                                <Card onClick={() => setActiveTab('Ver')} style={{ backgroundColor:"#d2efff", width:"350px" }}>
+                                    <div>
+                                        <Typography sx={{ textAlign: 'center', my: 2, fontSize: '23px', fontFamily: 'SF Pro Display Bold' }}>
+                                            Ver Publicación
+                                        </Typography>
+                                    </div>
+                                </Card>
+                                <hr style={{ margin: '10px 0', opacity: 0.1 }} />
+                            </Grid>
+                        </Grid>
+
+
+                        {activeTab === 'Agregar' ? (
+                            <div style={{paddingLeft:"30px" , paddingTop:"20px"}}>
+                                <Typography  sx={{ textAlign: 'left', my: 2, fontSize:"20px", fontFamily:"SF Pro Display Bold" }}>
+                                    Agregar Libro
+                                </Typography>
+
+                                {/* Línea horizontal */}
+                                <hr style={{ margin: "10px 0", opacity: 0.1 }} />
+
+                                <div style={{ display: 'flex', alignItems: 'center', marginTop:"26px", marginBottom:"26px"  }}>
+                                    <label htmlFor="nombre-input" style={{ marginRight: '35px' }}>Titulo:</label>
+                                    <input type="text" id="titulo-input" name="meeting_Title" />
+                                </div>
+
+                                {/* Línea horizontal */}
+                                <hr style={{ margin: "10px 0", opacity: 0.1 }} />
+
+                                <Typography  sx={{ textAlign: 'left', my: 2, fontSize:"20px", fontFamily:"SF Pro Display Bold" }}>
+                                    Reunión
                                 </Typography>
 
                                 {/* Línea horizontal */}
                                 <hr style={{ margin: "10px 0", opacity: 0.1 }} />
                                 
-                                <div style={{paddingLeft:"50px" , paddingTop:"20px"}}>
+                                <div style={{ marginTop:"26px", marginBottom:"26px"}}>
                                     <div style={{ display: 'flex', alignItems: 'center' }}>
                                         <label htmlFor="nombre-input" style={{ marginRight: '35px' }}>Fecha:</label>
                                         <input type="date" id="fecha-input" name="meeting_Date" />
@@ -170,84 +163,79 @@ const ReadingClubAdmin: React.FC = () => {
                                     <div style={{ marginTop:"50px" , display: 'flex', justifyContent: 'center', alignItems: 'flex-end', height: '100%' }}>
                                         <Button type="submit" style={{textTransform: "none", color:"#ffffff", backgroundColor:"#FF7F41", width:"200px", borderRadius:"15px"}}>Subir</Button>
                                     </div>
-                                    
                                 </div>
-                            </Grid>
-                        </Grid>
-                    </Card>
-                </div>
-                <br />
-                <br />
-                <div style={{ justifyContent: 'center', alignItems: 'center', height: 'auto', backgroundColor:"#ffffff", margin:"20px", marginLeft:"30px", marginRight:"30px"   }}>
-                    
-                    <Card >
-                        <Grid  container spacing={2} columnSpacing={{ xs: 1, sm: 2, md: 3 }}  alignItems= "center" >
-                            <Grid className="text-center" item xs={12} sm={6} md={6} lg={6}>
-                                <input
-                                    type="search"
-                                    name="search"
-                                    placeholder="Buscar"
-                                    style={{margin:"20px", width: "500px", height:"35px", borderRadius:"20px", paddingLeft:"15px", borderColor:"#7A7A7A", color:"#7A7A7A"}}
-                                    
-                                /> {/*placeholder={value}*/}
-                            </Grid>
-                            <Grid className="text-center" item xs={12} sm={6} md={6} lg={6}>
-                            <Button
-                                onClick={() => selectedMeetingId && deleteReadingClub(selectedMeetingId)}
-                                variant="contained"
-                                style={{ /* ... */ }}
-                            >
-                                Eliminar
-                            </Button>
-                            </Grid>
-                        </Grid>
-                        <TableContainer component={Paper} style={{ padding: '0', height:"600px" }}>
-                        <Table>
-                            <TableHead>
-                                <TableRow style={{ backgroundColor: '#d2efff' }}>
-                                    <TableCell  align="center"></TableCell>
-                                    <TableCell style={{fontFamily:"SF Pro Display Semibold"}} align="center">Id Usuario</TableCell>
-                                    <TableCell style={{fontFamily:"SF Pro Display Semibold"}} align="center">Usuario</TableCell>
-                                    <TableCell style={{fontFamily:"SF Pro Display Semibold"}} align="center">Correo</TableCell>
-                                    <TableCell style={{fontFamily:"SF Pro Display Semibold"}} align="center">Nombre</TableCell>
-                                    <TableCell style={{fontFamily:"SF Pro Display Semibold"}} align="center">Apellido</TableCell>
-                                    <TableCell style={{fontFamily:"SF Pro Display Semibold"}} align="center">Rut</TableCell>
-                                    <TableCell style={{fontFamily:"SF Pro Display Semibold"}} align="center">Teléfono</TableCell>
-                                    <TableCell style={{fontFamily:"SF Pro Display Semibold"}} align="center">Comuna</TableCell>
-                                </TableRow>
-                            </TableHead>
-                            <TableBody>
-                                {readingClub.map((meeting) => (
-                                    <TableRow key={meeting.meeting_id}>
-                                    <Checkbox
-                                        checked={selectedMeetingId === meeting.meeting_id}
-                                        onChange={() => setSelectedMeetingId(meeting.meeting_id)}
-                                    />
-                                    <TableCell align="center">{meeting.meeting_id}</TableCell>   
+                            </div>
+                        ) : (
+                            <div>
+                                <Grid  container spacing={2} columnSpacing={{ xs: 1, sm: 2, md: 3 }}  alignItems= "center" >
+                                    <Grid className="text-center" item xs={12} sm={6} md={6} lg={6}>
+                                        <input
+                                            type="search"
+                                            name="search"
+                                            placeholder="Buscar"
+                                            style={{margin:"20px", width: "500px", height:"35px", borderRadius:"20px", paddingLeft:"15px", borderColor:"#7A7A7A", color:"#7A7A7A"}}
+                                            
+                                        /> {/*placeholder={value}*/}
+                                    </Grid>
+                                    <Grid className="text-center" item xs={12} sm={6} md={6} lg={6}>
+                                    <Button
+                                        onClick={() => selectedMeetingId && deleteReadingClub(selectedMeetingId)}
+                                        variant="contained"
+                                        style={{ /* ... */ }}
+                                    >
+                                        Eliminar
+                                    </Button>
+                                    </Grid>
+                                </Grid>
+                                <TableContainer component={Paper} style={{ padding: '0', height:"450px" }}>
+                                <Table>
+                                    <TableHead>
+                                        <TableRow style={{ backgroundColor: '#d2efff' }}>
+                                            <TableCell  align="center"></TableCell>
+                                            <TableCell style={{fontFamily:"SF Pro Display Semibold"}} align="center">Id Usuario</TableCell>
+                                            <TableCell style={{fontFamily:"SF Pro Display Semibold"}} align="center">Usuario</TableCell>
+                                            <TableCell style={{fontFamily:"SF Pro Display Semibold"}} align="center">Correo</TableCell>
+                                            <TableCell style={{fontFamily:"SF Pro Display Semibold"}} align="center">Nombre</TableCell>
+                                            <TableCell style={{fontFamily:"SF Pro Display Semibold"}} align="center">Apellido</TableCell>
+                                            <TableCell style={{fontFamily:"SF Pro Display Semibold"}} align="center">Rut</TableCell>
+                                            <TableCell style={{fontFamily:"SF Pro Display Semibold"}} align="center">Teléfono</TableCell>
+                                            <TableCell style={{fontFamily:"SF Pro Display Semibold"}} align="center">Comuna</TableCell>
+                                        </TableRow>
+                                    </TableHead>
+                                    <TableBody>
+                                        {readingClub.map((meeting) => (
+                                            <TableRow key={meeting.meeting_id}>
+                                            <Checkbox
+                                                checked={selectedMeetingId === meeting.meeting_id}
+                                                onChange={() => setSelectedMeetingId(meeting.meeting_id)}
+                                            />
+                                            <TableCell align="center">{meeting.meeting_id}</TableCell>   
 
-                                    <TableCell align="center">{meeting.meeting_Title}</TableCell>
-                                    
-                                    <TableCell align="center">{meeting.meeting_Author}</TableCell>
+                                            <TableCell align="center">{meeting.meeting_Title}</TableCell>
+                                            
+                                            <TableCell align="center">{meeting.meeting_Author}</TableCell>
 
-                                    <TableCell align="center">{meeting.meeting_Publisher}</TableCell>
+                                            <TableCell align="center">{meeting.meeting_Publisher}</TableCell>
 
-                                    <TableCell align="center">{meeting.meeting_Year}</TableCell>
+                                            <TableCell align="center">{meeting.meeting_Year}</TableCell>
 
-                                    <TableCell align="center">{meeting.meeting_Category}</TableCell>
+                                            <TableCell align="center">{meeting.meeting_Category}</TableCell>
 
-                                    <TableCell align="center">{meeting.meeting_Description}</TableCell>
+                                            <TableCell align="center">{meeting.meeting_Description}</TableCell>
 
-                                    <TableCell align="center">{new Date(meeting.meeting_Date).toLocaleDateString()}</TableCell>
+                                            <TableCell align="center">{new Date(meeting.meeting_Date).toLocaleDateString()}</TableCell>
 
-                                    <TableCell align="center">{meeting.meeting_Time}</TableCell>
+                                            <TableCell align="center">{meeting.meeting_Time}</TableCell>
 
-                                    <TableCell align="center">{meeting.meeting_Place}</TableCell>
+                                            <TableCell align="center">{meeting.meeting_Place}</TableCell>
 
-                                </TableRow>
-                                ))}
-                            </TableBody>
-                        </Table>
-                        </TableContainer>
+                                        </TableRow>
+                                        ))}
+                                    </TableBody>
+                                </Table>
+                                </TableContainer>
+                            </div>
+                        )}
                     </Card>
                 </div>
             </Box>
