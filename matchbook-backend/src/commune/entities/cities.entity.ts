@@ -13,7 +13,7 @@ export class Cities {
   @Column()
   name: string;
   
-  @OneToMany(() => Users, (user) => user.city_id)
+  @OneToMany(() => Users, (user) => user.cities)
   users: Users[];
 
   @ManyToOne(() => Region, (region) => region.cities)

@@ -12,7 +12,7 @@ export class Publication {
 
   @ManyToOne(() => Users, (user) => user.publications)
   @JoinColumn({ name: 'user_rut_user' })
-  user: Users;
+  users: Users;
   
   @Column()
   user_rut_user: number;
