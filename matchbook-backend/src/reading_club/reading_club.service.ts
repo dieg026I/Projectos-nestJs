@@ -2,16 +2,32 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { ReadingClub } from './entities/reading_club.entity';
-import { Book } from '../book/entities/book.entity';
+import { v4 as uuidv4 } from 'uuid';
+import * as fs from 'fs';
 
 @Injectable()
 export class ReadingClubService {
   constructor(
     @InjectRepository(ReadingClub)
     private readingClubRepository: Repository<ReadingClub>,
-    @InjectRepository(Book)
-    private bookRepository: Repository<Book>,
   ) {}
+
+  async saveImage(imageBuffer: Buffer, mimetype: string): Promise<string> {
+    const imageName = uuidv4(); // Genera un nombre único para la imagen
+    const path = `../../../images/${imageName}`;
+
+    // Guarda la imagen en el almacenamiento local
+    fs.writeFileSync(path, imageBuffer);
+      return imageName;
+  }
+  async updateImage(id_club: string, imageBuffer: Buffer, mimetype: string): Promise<ReadingClub> {
+    const imageName = await this.saveImage(imageBuffer, mimetype);
+
+    // Actualiza el nombre de la imagen en la base de datos
+    const readingClub = await this.readingClubRepository.findOne({where:{id_club}});
+    readingClub.image_club = imageName;
+    return this.readingClubRepository.save(readingClub);
+  }
 
   async findAll(): Promise<ReadingClub[]> {
     return this.readingClubRepository.find({ relations: ['books'] });

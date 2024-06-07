@@ -41,7 +41,7 @@ import { ReadingClub } from './reading_club/entities/reading_club.entity';
     database: 'Matchbook_BD',
     entities: [Users, Cities, Region, Book, Author, Publisher,
     Publication, Category, Buy, ShipmentType, StatusSend, ReadingClub ],
-    synchronize: true, // Solo para entornos de desarrollo
+    synchronize: false, // Solo para entornos de desarrollo
     autoLoadEntities: false,
   }),RegionModule,CommuneModule, UsersModule, AuthModule,
     JwtModule.register({
