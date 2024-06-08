@@ -1,11 +1,104 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import NavBarLogin from "../../components/common/NavBarLogin/navBarLogin";
 import Footer from "../../components/common/Footer/footer";
-import { Box, Grid, Card, Button, Avatar, Typography } from "@mui/material";
+import { Box, Grid, Card, Button, Avatar, Typography, Stack, Pagination, CardContent, PaginationItem, CardMedia } from "@mui/material";
 import { RiPencilFill } from "react-icons/ri";
 import "../../App.css";
+import axios from "axios";
+import PlaceIcon from '@mui/icons-material/Place';
+import { FaHeart } from "react-icons/fa6";
+
+
+interface User {
+    name_user: string,
+    lastname_user: string,
+    rut_user: number,
+    dv_user: string,
+    phone_user: number,
+    email_user: string,
+    password_users: string,
+    city_id: number,
+}
+
+interface Publication {
+    id_publication: string;
+    date_publication: Date;
+    user_rut_user: number;
+    book: Book;
+    user: User;
+    photo_showcase: string;
+    photo_cover: string;
+    photo_first_page: string;
+    photo_back_cover: string;
+    cost_book: number;
+}
+interface Author {
+    id_author: string;
+    name_author: string;
+}
+interface Publisher {
+    id_publisher: string;
+    name_publisher: string;
+}
+interface Book {
+    id_book: string;
+    name_book: string;
+    format_book: string;
+    author_id_author: Author;
+    publisher_name: string; 
+    publisher_id_publisher: Publisher;
+    category: string;
+    year_book: number;
+    status_book: string;
+    stock_book: number;
+    description_book: string;
+}
 
 export default function Profile() {
+
+    const [user, setUser] = useState(null);
+
+    {/* Mostrar Publicacion */}
+    const [publications, setPublications] = React.useState<Publication[]>([]);
+
+    {/* Paginas Publicaciones */}
+    const [page, setPage] = useState(1);
+
+    {/*-----------------------------------------------------------------------------*/}
+    {/* Paginas Publicaciones */}
+    const handleChange = (event: React.ChangeEvent<unknown>, value: number) => {
+        setPage(value);
+    };
+
+    useEffect(() => {
+        // Obtener la información del usuario almacenada localmente
+        const usuarioAlmacenado = JSON.parse(localStorage.getItem("user") || '{}');
+        setUser(usuarioAlmacenado);
+    }, []);
+    
+
+    useEffect(() => {
+        const fetchPublications = async () => {
+        try {
+            const response = await axios.get('http://localhost:3001/publications/publication');
+            const publicationResponse = response.data;
+            setPublications(response.data);
+            console.log(JSON.stringify(response.data, null, 2))
+        } catch (error) {
+        console.error('Error fetching publications:', error);
+        }
+    };
+
+    console.log('fetchPublication' + fetchPublications)
+    fetchPublications();
+    }, []);
+    
+    // En tu componente Profile, asegúrate de que los tipos coincidan al comparar los RUTs
+    const publicacionesUsuario = user ? publications.filter(pub => pub.user.rut_user === user) : [];
+
+    {/*-----------------------------------------------------------------------------*/}
+
+
     return (
         <>
             <NavBarLogin />
@@ -40,15 +133,117 @@ export default function Profile() {
                     <Grid item xs={12} sm={10} md={7} lg={6}>
                         <Box sx={{ position: 'relative', width: '100%', marginBottom: '24px', textAlign:"center"}}>
                             <Box sx={{ position: 'absolute', top: '-16px', right:'20px', backgroundColor:'#f44336', color:'#fff', borderRadius:'20px 20px 0 0', zIndex: 'tooltip', width:"200px", height:"40px", display: 'flex', justifyContent: 'center', alignItems: 'center'  }}>
-                            <Typography variant="body2" style={{ padding:'6px 16px', fontSize:"18px" }}>Mi Librería</Typography>
+                                <Typography variant="body2" style={{ padding:'6px 16px', fontSize:"18px" }}>Mi Librería</Typography>
                             </Box>
                         </Box>
-                        <Card sx={{ height:"415px", borderRadius:"20px", padding: "20px", display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
-                            <Typography style={{paddingBottom:"15px"}} variant="body1">Aun no tienes publicaciones activas. Crea la primera aquí:</Typography>
-                            <Button variant="contained" href="/sales" style={{ backgroundColor: "#f05d16", color:"#ffffff" }}>Vender</Button>
-                        </Card>
-                    </Grid>
+                        <div>
+                            {publicacionesUsuario.length > 0 ? (
+                                // Mostrar las publicaciones del usuario
+                                <Card className="us" elevation={0} style={{backgroundColor: "#f4f6f9"}} >
+                                
+                                    <Grid container spacing={4} justifyContent="center" style={{padding: "20px"}}>
+                                    
+                                        {Array.isArray(publications) && publications.slice(Math.max(publications.length - 10, 0)).reverse().slice((page - 1) * 5, page * 5).map((publication) => (
+                                            <Card 
+                                                key={publication.id_publication} 
+                                                style={{ margin: "10px", width: "230px", borderRadius: "20px", textAlign: "left", position: 'relative', padding:"22px"}} 
+                                                sx={{ maxWidth: 345, padding: "10px"}}
+                                            >
+                                                {/* Imagen libros */}
+                                                <CardMedia
+                                                    sx={{ height: 140, position: 'relative' }}
+                                                >
+                                                    <img 
+                                                        src={`http://localhost:3001/images/${publication.photo_showcase}`}
+                                                        alt="Imagen del libro" 
+                                                        style={{ 
+                                                            height: '180px', 
+                                                            width: 'auto', 
+                                                            maxWidth: '100%', 
+                                                            display: 'block', 
+                                                            marginLeft: 'auto', 
+                                                            marginRight: 'auto', 
+                                                        }}
+                                                    />
+                                                    <FaHeart style={{ position: 'absolute', top: '10px', right: '10px', color: '#f05d16' }} />
+                                                </CardMedia>
+                                                
+                                                <CardContent style={{padding: "5px", paddingTop: "15px", marginTop:"35px"}}>
+                                                    {/* Titulo Libro */}
+                                                    <Typography 
+                                                        gutterBottom 
+                                                        variant="h5" 
+                                                        component="div" 
+                                                        style={{
+                                                            fontSize: "17px",  
+                                                            paddingTop: "5px", 
+                                                            fontFamily: "SF Pro Display Medium",
+                                                            height: '3em',
+                                                            overflow: 'hidden' 
+                                                        }}
+                                                    >
+                                                        {publication.book.name_book.length > 30 ? `${publication.book.name_book.substring(0, 30)}...` : publication.book.name_book}
+                                                    </Typography>
 
+                                                    <div style={{ height: '80px', overflow: 'hidden' }}>
+                                                                {/* Autor Libro */}
+                                                                <Typography variant="body2" color="text.secondary" style={{ fontFamily: "SF Pro Display Regular"}}>
+                                                                    {publication.book.author_id_author.name_author} 
+                                                                </Typography>
+                                                    
+                                                                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' , fontSize: "14px", marginTop:"15px" }}>
+                                                                
+                                                                    {/* Precio Libro */}
+                                                                    <Typography gutterBottom variant="h5" component="div" style={{fontSize: "20px", fontWeight: "bold", paddingTop: "5px"}}>
+                                                                        ${publication.cost_book}
+                                                                    </Typography>
+                                            
+                                                                    {/* Ubicación Libro */}
+                                                                    <Box sx={{ display: 'flex', fontSize: "13px" }}>
+                                                                        <PlaceIcon style={{ color:"#00a9e0", alignItems: 'center' }} />
+                                                                        <span>Viña del Mar</span>
+                                                                    </Box>
+                                                                </Box>
+                                                    </div>
+                                                </CardContent>
+                                            </Card>
+                                        ))}
+                                    </Grid>
+                                    <Grid container justifyContent="center" alignItems="center" style={{padding: "20px"}}>
+                                        <Stack spacing={2}>
+                                            <Pagination 
+                                                count={Math.min(Math.ceil(publications.length / 5), 2)} 
+                                                page={page} 
+                                                onChange={handleChange}
+                                                renderItem={(item) => (
+                                                    <PaginationItem
+                                                        {...item}
+                                                        sx={{
+                                                            '&.Mui-selected': {
+                                                                color: 'black',
+                                                            },
+                                                        }}
+                                                    >
+                                                        •
+                                                    </PaginationItem>
+                                                )}
+                                            />
+                                        </Stack>
+                                    </Grid>
+                                </Card>
+                            ) : (
+                                // Mostrar mensaje si no hay publicaciones
+                                <Card sx={{ height:"415px", borderRadius:"20px", padding: "20px", display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
+                                    <Typography style={{paddingBottom:"15px"}} variant="body1">
+                                        Aun no tienes publicaciones activas. Crea la primera aquí:
+                                    </Typography>
+                                    <Button variant="contained" href="/sales" style={{ backgroundColor: "#f05d16", color:"#ffffff" }}>
+                                        Vender
+                                    </Button>
+                                </Card>
+                            )}
+                        </div>
+                    </Grid>
                 </Grid>
             </Box>
             <Footer />

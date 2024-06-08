@@ -233,7 +233,7 @@ export const NavBarLogin: React.FC<{}> = () => {
             </AppBar>
 
             <div>
-                <Dialog open={open} onClose={handleClose} PaperProps={{ style: { width: '360px', maxHeight: '80vh', margin: 'auto', borderRadius:"20px"}, }}  >
+                <Dialog open={open} onClose={handleClose} PaperProps={{ style: { width: '360px', maxHeight: '90vh' ,margin: 'auto', borderRadius:"20px"}, }}  >
                     <div style={{justifyContent:"center", textAlign: "center", position: 'relative',  }}>
                         <DialogTitle>
                             <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>

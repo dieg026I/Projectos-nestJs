@@ -69,11 +69,12 @@ function handleClick(event: React.MouseEvent<HTMLDivElement, MouseEvent>) {
 
     export const HomePageLogin: React.FC<HomeProps> = ({}: HomeProps) => {
     
+    {/*-----------------------------------------------------------------------------*/}
+    {/* Paginas Publicaciones */}
     const [page, setPage] = useState(1);
     const handleChange = (event: React.ChangeEvent<unknown>, value: number) => {
         setPage(value);
     };
-
 
     {/*-----------------------------------------------------------------------------*/}
     {/* Mostrar Publicacion */}
@@ -135,6 +136,7 @@ function handleClick(event: React.MouseEvent<HTMLDivElement, MouseEvent>) {
         ref.current?.scrollIntoView({ behavior: 'smooth' });
     };
 
+    {/*-----------------------------------------------------------------------------*/}
     {/* Mostrar boton "agregar al carro y ver detalle" */}
     const [activeCard, setActiveCard] = useState<string | null>(null);
 
@@ -346,27 +348,26 @@ function handleClick(event: React.MouseEvent<HTMLDivElement, MouseEvent>) {
                         ))}
                     </Grid>
                     <Grid container justifyContent="center" alignItems="center" style={{padding: "20px"}}>
-                    <Stack spacing={2}>
-                        <Pagination 
-                            count={Math.min(Math.ceil(publications.length / 5), 2)} 
-                            page={page} 
-                            onChange={handleChange}
-                            renderItem={(item) => (
-                                <PaginationItem
-                                    {...item}
-                                    sx={{
-                                        '&.Mui-selected': {
-                                            color: 'black',
-                                        },
-                                    }}
-                                >
-                                    • {/* Aquí puedes reemplazar el punto por el emoji que prefieras */}
-                                </PaginationItem>
-                            )}
-                        />
-                    </Stack>
+                        <Stack spacing={2}>
+                            <Pagination 
+                                count={Math.min(Math.ceil(publications.length / 5), 2)} 
+                                page={page} 
+                                onChange={handleChange}
+                                renderItem={(item) => (
+                                    <PaginationItem
+                                        {...item}
+                                        sx={{
+                                            '&.Mui-selected': {
+                                                color: 'black',
+                                            },
+                                        }}
+                                    >
+                                        •
+                                    </PaginationItem>
+                                )}
+                            />
+                        </Stack>
                     </Grid>
-
                 </Card>
 
                 <br />
