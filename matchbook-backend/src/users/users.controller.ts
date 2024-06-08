@@ -21,6 +21,11 @@ export class UsersController {
     return this.usersService.findOne(rut_user);
   }
 
+  @Get('userCity')
+  findAllWithCity() {
+    return this.usersService.findAllWithCity();
+  }
+
   @Put(':id')
   update(@Param('id') id: string, @Body() user: Users) {
     return this.usersService.update(id, user);
@@ -30,5 +35,6 @@ export class UsersController {
   remove(@Param('id') id: string) {
     return this.usersService.remove(id);
   }
+
   
 }

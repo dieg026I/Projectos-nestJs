@@ -2,10 +2,84 @@ import SideMenu from "../../components/sideMenu/sideMenu";
 
 import img from '../../assents/img/logoMatch.png'
 import { Box, Button, Card, CardActionArea, CardActions, CardContent, Checkbox, Grid, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography, useMediaQuery, useTheme } from "@mui/material";
+import { useEffect, useState } from "react";
+import axios from "axios";
 
 const checkBook = { inputProps: { 'aria-label': 'Checkbox demo' } };
 
+{/*
+interface Author {
+    id_author: string;
+    name_author: string;
+}
+
+interface Category {
+    id_category: string;
+    name_category: string;
+}
+*/}
+interface Publication {
+    id_publication: string;
+    date_publication: Date;
+    user_rut_user: number;
+    book: Book;
+    photo_showcase: string;
+}
+
+interface Book {
+    id_book: string;
+    name_book: string;
+    author_name: string;
+    cost_book: number;
+}
+
 const BookAdmin: React.FC = () => {
+
+    const [publications, setPublications] = useState<Publication[]>([]);
+    const [selectedPublications, setSelectedPublications] = useState<string[]>([]);
+
+    // Función para cargar los usuarios desde la base de datos
+    useEffect(() => {
+        const fetchPublications = async () => {
+            try {
+                const response = await axios.get('http://localhost:3001/publications');
+                // Asumiendo que la respuesta incluye los datos de los libros asociados
+                console.log('response.data ' + response.data);
+                setPublications(response.data);
+            } catch (error) {
+                console.error('Error al cargar las publicaciones', error);
+            }
+        };
+
+        fetchPublications();
+    }, []);
+
+    // Función para manejar la selección de publicaciones
+    const handleSelectPublication = (id: string) => {
+        const selectedIndex = selectedPublications.indexOf(id);
+        let newSelectedPublications: string[] = [];
+
+        if (selectedIndex === -1) {
+            newSelectedPublications = [...selectedPublications, id];
+        } else {
+            newSelectedPublications = selectedPublications.filter(selectedId => selectedId !== id);
+        }
+
+        setSelectedPublications(newSelectedPublications);
+    };
+
+    // Eliminar publicaciones seleccionadas
+    const deleteSelectedPublications = () => {
+        if (window.confirm('¿Realmente quieres eliminar la(s) publicación(es)?')) {
+            const deleteRequests = selectedPublications.map(id => axios.delete(`http://localhost:3001/publications/${id}`));
+            Promise.all(deleteRequests)
+                .then(() => {
+                    setPublications(publications.filter(publication => !selectedPublications.includes(publication.id_publication)));
+                    setSelectedPublications([]);
+                })
+                .catch(error => console.error('Hubo un error al eliminar las publicaciones', error));
+        }
+    };
 
     return (
         <Box display="flex" sx={{backgroundColor:"#f0f2f3"}}>
@@ -41,7 +115,7 @@ const BookAdmin: React.FC = () => {
                                 </Button>
                             </Grid>
                             <Grid className="text-center" item xs={12} sm={3} md={2} lg={2}>
-                                <Button href="/" variant="contained" style={{ textTransform: "none", backgroundColor: '#ff5252', color: 'white', borderRadius: '30px', width: 'auto', padding: '6px 16px' }}>
+                                <Button onClick={deleteSelectedPublications} variant="contained" style={{ textTransform: "none", backgroundColor: '#ff5252', color: 'white', borderRadius: '30px', width: 'auto', padding: '6px 16px' }}>
                                     Eliminar
                                 </Button>
                             </Grid>
@@ -51,7 +125,7 @@ const BookAdmin: React.FC = () => {
                         <Table>
                             <TableHead>
                                 <TableRow style={{ backgroundColor: '#d2efff' }}>
-                                    <Checkbox {...checkBook} />
+                                <TableCell  align="center"></TableCell>
                                     <TableCell style={{fontFamily:"SF Pro Display Semibold"}} align="center">Id Lib</TableCell>
                                     <TableCell style={{fontFamily:"SF Pro Display Semibold"}} align="center">Nombre</TableCell>
                                     <TableCell style={{fontFamily:"SF Pro Display Semibold"}} align="center">Autor</TableCell>
@@ -60,24 +134,27 @@ const BookAdmin: React.FC = () => {
                                 </TableRow>
                             </TableHead>
                             <TableBody>
-                            <TableRow>
-                                <Checkbox {...checkBook} />
-                                <TableCell align="center">
-                                    <Button variant="contained">Producto</Button>
-                                </TableCell>
-                                <TableCell align="center">
-                                    <Button variant="contained">Estado</Button>
-                                </TableCell>
-                                <TableCell align="center">
-                                    <Button variant="contained">Stock</Button>
-                                </TableCell>
-                                <TableCell align="center">
-                                    <Button variant="contained">Total</Button>
-                                </TableCell>
-                                <TableCell align="center">
-                                    <Button variant="contained">Acciones</Button>
-                                </TableCell>
-                            </TableRow>
+                            {publications.map((publication) => {
+                                if (publication && publication.book) {
+                                    return (
+                                        <TableRow key={publication.id_publication}>
+                                            <Checkbox
+                                                checked={selectedPublications.indexOf(publication.id_publication) !== -1}
+                                                onChange={() => handleSelectPublication(publication.id_publication)}
+                                            />
+                                            <TableCell align="center">{publication.id_publication}</TableCell>
+                                            <TableCell align="center">{publication.book.name_book}</TableCell>
+                                            <TableCell align="center">{publication.book.author_name}</TableCell>
+                                            <TableCell align="center">{publication.user_rut_user}</TableCell>
+                                            <TableCell align="center">{publication.book.cost_book}</TableCell>
+                                        </TableRow>
+                                    );
+                                } else {
+                                    // Manejo del caso en que 'book' no esté definido
+                                    console.error('Error: Objeto book no definido en la publicación', publication);
+                                    return null; // O retornar un componente de error o placeholder
+                                }
+                            })}
                             </TableBody>
                         </Table>
                         </TableContainer>

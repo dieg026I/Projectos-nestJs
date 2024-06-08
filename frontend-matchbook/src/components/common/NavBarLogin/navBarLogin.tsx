@@ -233,7 +233,7 @@ export const NavBarLogin: React.FC<{}> = () => {
             </AppBar>
 
             <div>
-                <Dialog open={open} onClose={handleClose} PaperProps={{ style: { width: '300px', maxHeight: '80vh', margin: 'auto', borderRadius:"20px"}, }}  >
+                <Dialog open={open} onClose={handleClose} PaperProps={{ style: { width: '360px', maxHeight: '80vh', margin: 'auto', borderRadius:"20px"}, }}  >
                     <div style={{justifyContent:"center", textAlign: "center", position: 'relative',  }}>
                         <DialogTitle>
                             <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
@@ -247,8 +247,8 @@ export const NavBarLogin: React.FC<{}> = () => {
                                     justifyContent: 'center', 
                                     alignItems: 'center',
                                     position: 'absolute', 
-                                    top: '27%', 
-                                    left: '160px', 
+                                    top: '14%', 
+                                    left: '190px', 
                                     transform: 'translateY(-50%)',
                                     boxShadow: '0px 3px 6px rgba(0, 0, 0, 0.36)'
                                 }}>
@@ -292,7 +292,7 @@ export const NavBarLogin: React.FC<{}> = () => {
                                 border: '2px solid borderColor',
                                 boxShadow: '0px 3px 6px rgba(0, 0, 0, 0.36)',
                                 fontSize:"15px", 
-                                marginBottom: "20px" ,
+                                marginBottom: "15px" ,
                                 fontFamily: "SF Pro Display Bold",
                                 }}
                                 
@@ -316,7 +316,7 @@ export const NavBarLogin: React.FC<{}> = () => {
                                 boxShadow: '0px 3px 6px rgba(0, 0, 0, 0.36)',
                                 fontSize:"15px", 
                                 marginBottom: "20px" ,
-                                marginTop: "20px" ,
+                                marginTop: "15px" ,
                                 fontFamily: "SF Pro Display Bold",
                                 }}
                                 
