@@ -38,7 +38,7 @@ export class Book {
   publisher_id_publisher: Publisher;
 
   @OneToMany(() => Publication, publication => publication.book)
-  publication: Publication[]
+  publications: Publication[]
 
   @ManyToMany(() => Category, (category) => category.books)
   categories: Category[];
