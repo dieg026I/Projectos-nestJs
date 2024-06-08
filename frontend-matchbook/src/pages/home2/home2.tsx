@@ -361,7 +361,7 @@ function handleClick(event: React.MouseEvent<HTMLDivElement, MouseEvent>) {
                                                     {/* Ubicación Libro */}
                                                     <Box sx={{ display: 'flex', fontSize: "13px" }}>
                                                         <PlaceIcon style={{ color:"#00a9e0", alignItems: 'center' }} />
-                                                        <span>Viña del Mar</span>
+                                                        <span>{users?.cities.name}</span>
                                                     </Box>
                                                 </Box>
                                             </>
