@@ -142,8 +142,6 @@ export const HomePage: React.FC<HomeProps> = ({}: HomeProps) => {
         }
         }   
     };
-
-    console.log('fetchPublication' + fetchPublications)
     fetchPublications();
     }, []);
 

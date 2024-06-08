@@ -54,9 +54,12 @@ export const NavBarLogin: React.FC<{}> = () => {
         setOpen(false);
     };
 
-    {/* Nombre de usuario */}
-    const [email_user, setEmail_user] = useState('');
+    {/* Nombre de usuario y correo */}
     const username = localStorage.getItem('username');
+    const userString = localStorage.getItem("user");
+    const user = userString ? JSON.parse(userString) : null;
+    const email_user = user ? user.email_user : '';
+    
 
     {/* Colores Boton Perfil */}
     const [bgColorProfile, setBgColorProfile] = useState('transparent');
@@ -127,7 +130,6 @@ export const NavBarLogin: React.FC<{}> = () => {
     };
 
 
-    
 
     return (
         <div className="navbar">
@@ -257,8 +259,8 @@ export const NavBarLogin: React.FC<{}> = () => {
                             </div>
                         </DialogTitle>
                         <DialogContent style={{justifyContent:"center", textAlign: "center", paddingBottom: "0px", marginBottom:"0px"}}>
-                            <h2 style={{ fontSize: "18px", fontFamily: "SF Pro Display Bold"}}>Na.rubilark</h2> {/*{username} */}
-                            <p style={{ fontSize: "15px", fontFamily: "SF Pro Display Regular"}}>na.rubilar@duocuc.cl</p> {/*{email_user} */}
+                            <h2 style={{ fontSize: "18px", fontFamily: "SF Pro Display Bold"}}>{username}</h2> {/*{username} */}
+                            <p style={{ fontSize: "15px", fontFamily: "SF Pro Display Regular"}}>{email_user}</p> {/*{email_user} */}
                             <Button fullWidth
                                 href="/profile" 
                                 variant="contained"  
