@@ -31,9 +31,13 @@ interface User {
   phone_user: number,
   email_user: string,
   password_users: string,
-  city_id: number,
+  cities: Cities,
 }
 
+interface Cities {
+  id_city: number;
+  name: string;
+}
 const LoginPage: React.FC = () => {
 
   const [email_user, setEmail] = React.useState('');

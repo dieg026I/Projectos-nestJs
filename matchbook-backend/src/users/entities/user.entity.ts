@@ -1,4 +1,4 @@
-import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, JoinColumn, PrimaryColumn, OneToMany } from 'typeorm';
+import { Entity, Column, ManyToOne, JoinColumn, PrimaryColumn, OneToMany } from 'typeorm';
 import { Cities } from 'src/commune/entities/cities.entity';
 import { Publication } from 'src/publication/entities/publication.entity';
 
@@ -33,8 +33,11 @@ export class Users {
   @JoinColumn({ name: 'city_id' })
   cities: Cities;
 
-  @OneToMany(() => Publication, publication => publication.user)
-  publication: Publication[];
+  @Column()
+  city_id: string;
+
+  @OneToMany(() => Publication, publication => publication.users)
+  publications: Publication[];
 
 
 }

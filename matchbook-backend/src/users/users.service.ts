@@ -15,9 +15,10 @@ export class UsersService {
     return this.usersRepository.find();
   }
 
-  findOne( lastname_user: string): Promise<Users> {
-    return this.usersRepository.findOneBy({lastname_user});
-  }
+  findOne( rut_user: number): Promise<Users> {
+   return this.usersRepository.findOne({where: {rut_user}, relations: ['cities']});
+}
+  
 
   findOneEmail(email_user: string): Promise<Users> {
     return this.usersRepository.findOne({ where: { email_user } });
