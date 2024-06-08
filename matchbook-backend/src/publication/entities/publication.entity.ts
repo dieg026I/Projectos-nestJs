@@ -2,7 +2,7 @@ import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, PrimaryColumn, JoinC
 import { Users } from '../../users/entities/user.entity';
 import { Book } from '../../book/entities/book.entity';
 
-@Entity('publication')
+@Entity('publications')
 export class Publication {
   @PrimaryColumn()
   id_publication: string;
@@ -10,14 +10,14 @@ export class Publication {
   @Column()
   date_publication: Date;
 
-  @ManyToOne(() => Users, (user) => user.publication)
+  @ManyToOne(() => Users, (user) => user.publications)
   @JoinColumn({ name: 'user_rut_user' })
   users: Users;
   
   @Column()
   user_rut_user: number;
   
-  @ManyToOne(() => Book, (book) => book.publication)
+  @ManyToOne(() => Book, (book) => book.publications)
   @JoinColumn({ name: 'book_id_book' })
   book: Book;
 
