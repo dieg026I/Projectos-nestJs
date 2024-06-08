@@ -49,4 +49,15 @@ export class PublicationService {
         throw error;
       });
   }
+
+
+  findAllWithUsers(user_rut_user: number): Promise<Publication[]> {
+    return this.publicationRepository.find({ where: {user_rut_user} , relations: ['book','book.author_id_author', 'book.publisher_id_publisher'] })
+      .catch(error => {
+        console.error('Error fetching publications with books:', error);
+        throw error;
+      });
+  }
+
+
 }

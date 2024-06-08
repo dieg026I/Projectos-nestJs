@@ -38,7 +38,7 @@ interface Users {
     password_users: string,
     cities: Cities,
     publications: Publication[]
-  }
+}
 
 interface Publication {
     id_publication: string;
@@ -116,8 +116,6 @@ function handleClick(event: React.MouseEvent<HTMLDivElement, MouseEvent>) {
         }
         }   
         
-        
-
     };
 
     fetchPublications();
@@ -363,7 +361,7 @@ function handleClick(event: React.MouseEvent<HTMLDivElement, MouseEvent>) {
                                                     {/* Ubicación Libro */}
                                                     <Box sx={{ display: 'flex', fontSize: "13px" }}>
                                                         <PlaceIcon style={{ color:"#00a9e0", alignItems: 'center' }} />
-                                                        <span>Viña del Mar</span>
+                                                        <span>{users?.cities.name}</span>
                                                     </Box>
                                                 </Box>
                                             </>

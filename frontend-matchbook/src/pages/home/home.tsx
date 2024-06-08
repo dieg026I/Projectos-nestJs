@@ -20,10 +20,27 @@ import axios from "axios";
 interface HomeProps {
 }
 
+interface Cities {
+    id_city: string;
+    name: string;
+}
+
+interface Users {
+    name_user: string,
+    lastname_user: string,
+    rut_user: number,
+    dv_user: string,
+    phone_user: number,
+    email_user: string,
+    password_users: string,
+    cities: Cities,
+    publications: Publication[]
+}
+
 interface Publication {
     id_publication: string;
     date_publication: Date;
-    user_rut_user: number;
+    users: Users;
     book: Book;
     photo_showcase: string;
     photo_cover: string;
@@ -100,6 +117,7 @@ export const HomePage: React.FC<HomeProps> = ({}: HomeProps) => {
     {/*-----------------------------------------------------------------------------*/}
     {/* Mostrar Publicacion */}
     const [publications, setPublications] = React.useState<Publication[]>([]);
+    const [users, setUsers] = React.useState<Users>();
 
     useEffect(() => {
         const fetchPublications = async () => {
@@ -111,6 +129,18 @@ export const HomePage: React.FC<HomeProps> = ({}: HomeProps) => {
         } catch (error) {
         console.error('Error fetching publications:', error);
         }
+        const userString = localStorage.getItem("user");
+        if (userString !== null){
+        const users : Users = JSON.parse(userString);
+        try {
+            const responseUser= await axios.get(`http://localhost:3001/users/${users.rut_user}`);
+            const userResponse = responseUser.data;
+            setUsers(userResponse);
+            console.log(JSON.stringify(responseUser.data, null, 2))
+        } catch (error) {
+        console.error('Error fetching publications:', error);
+        }
+        }   
     };
 
     console.log('fetchPublication' + fetchPublications)
@@ -326,7 +356,7 @@ export const HomePage: React.FC<HomeProps> = ({}: HomeProps) => {
                                                     {/* Ubicación Libro */}
                                                     <Box sx={{ display: 'flex', fontSize: "13px" }}>
                                                         <PlaceIcon style={{ color:"#00a9e0", alignItems: 'center' }} />
-                                                        <span>Viña del Mar</span>
+                                                        <span>{users?.cities.name}</span>
                                                     </Box>
                                                 </Box>
                                             </>

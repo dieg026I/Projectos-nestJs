@@ -9,7 +9,12 @@ import PlaceIcon from '@mui/icons-material/Place';
 import { FaHeart } from "react-icons/fa6";
 
 
-interface User {
+interface Cities {
+    id_city: string;
+    name: string;
+}
+
+interface Users {
     name_user: string,
     lastname_user: string,
     rut_user: number,
@@ -17,7 +22,8 @@ interface User {
     phone_user: number,
     email_user: string,
     password_users: string,
-    city_id: number,
+    cities: Cities,
+    publications: Publication[]
 }
 
 interface Publication {
@@ -25,7 +31,7 @@ interface Publication {
     date_publication: Date;
     user_rut_user: number;
     book: Book;
-    user: User;
+    users: Users;
     photo_showcase: string;
     photo_cover: string;
     photo_first_page: string;
@@ -56,7 +62,7 @@ interface Book {
 
 export default function Profile() {
 
-    const [user, setUser] = useState(null);
+    const [users, setUsers] = React.useState<Users>();
 
     {/* Mostrar Publicacion */}
     const [publications, setPublications] = React.useState<Publication[]>([]);
@@ -70,12 +76,6 @@ export default function Profile() {
         setPage(value);
     };
 
-    useEffect(() => {
-        // Obtener la información del usuario almacenada localmente
-        const usuarioAlmacenado = JSON.parse(localStorage.getItem("user") || '{}');
-        setUser(usuarioAlmacenado);
-    }, []);
-    
 
     useEffect(() => {
         const fetchPublications = async () => {
@@ -87,17 +87,25 @@ export default function Profile() {
         } catch (error) {
         console.error('Error fetching publications:', error);
         }
+        const userString = localStorage.getItem("user");
+        if (userString !== null){
+        const users : Users = JSON.parse(userString);
+        try {
+            const responseUser= await axios.get(`http://localhost:3001/users/${users.rut_user}`);
+            const userResponse = responseUser.data;
+            setUsers(userResponse);
+            console.log(JSON.stringify(responseUser.data, null, 2))
+        } catch (error) {
+        console.error('Error fetching publications:', error);
+        }
+        }   
     };
 
     console.log('fetchPublication' + fetchPublications)
     fetchPublications();
     }, []);
     
-    // En tu componente Profile, asegúrate de que los tipos coincidan al comparar los RUTs
-    const publicacionesUsuario = user ? publications.filter(pub => pub.user.rut_user === user) : [];
-
     {/*-----------------------------------------------------------------------------*/}
-
 
     return (
         <>
@@ -137,8 +145,8 @@ export default function Profile() {
                             </Box>
                         </Box>
                         <div>
-                            {publicacionesUsuario.length > 0 ? (
-                                // Mostrar las publicaciones del usuario
+            
+                                {/* Mostrar las publicaciones del usuario*/}
                                 <Card className="us" elevation={0} style={{backgroundColor: "#f4f6f9"}} >
                                 
                                     <Grid container spacing={4} justifyContent="center" style={{padding: "20px"}}>
@@ -201,7 +209,7 @@ export default function Profile() {
                                                                     {/* Ubicación Libro */}
                                                                     <Box sx={{ display: 'flex', fontSize: "13px" }}>
                                                                         <PlaceIcon style={{ color:"#00a9e0", alignItems: 'center' }} />
-                                                                        <span>Viña del Mar</span>
+                                                                        <span>{users?.cities.name}</span>
                                                                     </Box>
                                                                 </Box>
                                                     </div>
@@ -231,17 +239,7 @@ export default function Profile() {
                                         </Stack>
                                     </Grid>
                                 </Card>
-                            ) : (
-                                // Mostrar mensaje si no hay publicaciones
-                                <Card sx={{ height:"415px", borderRadius:"20px", padding: "20px", display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
-                                    <Typography style={{paddingBottom:"15px"}} variant="body1">
-                                        Aun no tienes publicaciones activas. Crea la primera aquí:
-                                    </Typography>
-                                    <Button variant="contained" href="/sales" style={{ backgroundColor: "#f05d16", color:"#ffffff" }}>
-                                        Vender
-                                    </Button>
-                                </Card>
-                            )}
+                            
                         </div>
                     </Grid>
                 </Grid>
