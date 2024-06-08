@@ -70,10 +70,12 @@ export default function Marketplace() {
     fetchPublications();
     }, []);
     
+    {/*-----------------------------------------------------------------------------*/}
     {/* Mostrar boton "agregar al carro y ver detalle" */}
     const [activeCard, setActiveCard] = useState<string | null>(null);
 
-    {/* Cambiar pagina" */}
+    {/*-----------------------------------------------------------------------------*/}
+    {/* Paginas Publicaciones */}
     const [page, setPage] = useState(1);
     const handleChange = (event: React.ChangeEvent<unknown>, value: number) => {
         setPage(value);
@@ -123,7 +125,6 @@ export default function Marketplace() {
                     </Grid>
                 </Grid>
 
-                {/* Aquí es donde usamos el grid de MUI para dividir en dos partes */}
                 <Grid container spacing={2} columnSpacing={{ xs: 1, sm: 2, md: 3 }} >
                     <Grid className="text-center" item xs={12} sm={6} md={3} lg={3}>
                         <Accordion style={{ margin:"10px", boxShadow: '0px 3px 6px rgba(0, 0, 0, 0.36)', borderRadius:"20px",minHeight:"65px",  alignContent:"center"}} expanded={openRegion} onChange={() => setOpenRegion(!openRegion)} >
@@ -131,12 +132,12 @@ export default function Marketplace() {
                                 <Typography style={{fontFamily:"SF Pro Text Bold"}}>Región</Typography>
                             </AccordionSummary>
                             <AccordionDetails style={{overflow: 'auto'}}>
-                                <FormControl>
+                                <FormControl fullWidth>
                                     <Select>
                                         <MenuItem value="Selecciona una comuna" disabled><em>Selecciona una región</em></MenuItem>
                                         {/* Aquí puedes agregar las regiones */}
                                     </Select>
-                                    <Typography style={{fontFamily:"SF Pro Text Bold", justifyContent:"left", justifyItems:"left" ,paddingTop:"10px", paddingBottom:"10px"}}>Comuna</Typography>
+                                    <Typography style={{ fontFamily: "SF Pro Text Bold", alignItems: "flex-start", paddingTop: "10px", paddingBottom: "10px", display: "flex" }}>Comuna</Typography>
                                     <Select>
                                         <MenuItem value="Selecciona una comuna" disabled><em>Selecciona una comuna</em></MenuItem>
                                         {/* Aquí puedes agregar las comunas */}

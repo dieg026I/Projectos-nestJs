@@ -18,11 +18,9 @@ import { useNavigate } from 'react-router-dom';
 import logo from "../../assents/img/logoMatch.png";
 import React, { useContext, useState } from "react";
 
-
 type FormValue = {
   email: string,
   password: string
-
 }
 
 interface User {

@@ -16,8 +16,8 @@ export class UsersService {
   }
 
   findOne( rut_user: number): Promise<Users> {
-   return this.usersRepository.findOne({where: {rut_user}, relations: ['cities']});
-}
+    return this.usersRepository.findOne({where: {rut_user}, relations: ['cities']});
+  }
   
 
   findOneEmail(email_user: string): Promise<Users> {
@@ -28,6 +28,16 @@ export class UsersService {
     return this.usersRepository.find({ relations: ['cities'] })
       .catch(error => {
         console.error('Error fetching publications with city:', error);
+        throw error;
+      });
+  }
+
+  findAllWithPublication(rut_user: number): Promise<Users> {
+    return this.usersRepository.findOne({ 
+      where : {rut_user},
+      relations: ['publication', 'publication.book' , 'publication.book.author_id_author'  ] })
+      .catch(error => {
+        console.error('Error fetching publications with publication:', error);
         throw error;
       });
   }

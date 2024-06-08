@@ -37,8 +37,8 @@ import { ReadingClub } from './reading_club/entities/reading_club.entity';
     host: 'localhost',
     port: 5432,
     username: 'postgres',
-    password: '95809580Dd',
-    database: 'Matchbook_BD',
+    password: '222648',
+    database: 'Matchbook_DB',
     entities: [Users, Cities, Region, Book, Author, Publisher,
     Publication, Category, Buy, ShipmentType, StatusSend, ReadingClub ],
     synchronize: false, // Solo para entornos de desarrollo

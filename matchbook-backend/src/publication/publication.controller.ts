@@ -30,6 +30,11 @@ export class PublicationController {
     return this.publicationService.findOne(id);
   }
 
+  @Get('publication_user/:user_rut_user')
+  findAllWithUsers(@Param('user_rut_user') user_rut_user: number): Promise<Publication[]> {
+    return this.publicationService.findAllWithUsers(user_rut_user);
+  }
+
   @Delete(':id')
   remove(@Param('id') id: string): Promise<void> {
     return this.publicationService.remove(id);
