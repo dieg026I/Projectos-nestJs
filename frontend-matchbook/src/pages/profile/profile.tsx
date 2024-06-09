@@ -155,7 +155,7 @@ export default function Profile() {
                                 
                                     <Grid container spacing={4} justifyContent="center" style={{padding: "20px"}}>
                                     
-                                    {users && Array.isArray(users.publications) && users.publications.slice(Math.max(users.publications.length - 10, 0)).reverse().slice((page - 1) * 5, page * 5).map((publication) => (
+                                    {users && Array.isArray(users.publications) && users.publications.slice((page - 1) * 2, page * 2).reverse().map((publication) => (
                                             <Card 
                                                 key={publication.id_publication} 
                                                 style={{ margin: "10px", width: "230px", borderRadius: "20px", textAlign: "left", position: 'relative', padding:"22px"}} 
@@ -224,7 +224,7 @@ export default function Profile() {
                                     <Grid container justifyContent="center" alignItems="center" style={{padding: "20px"}}>
                                         <Stack spacing={2}>
                                             <Pagination 
-                                                count={Math.min(Math.ceil(publications.length / 5), 2)} 
+                                                count={Math.ceil(publications.length / 2)} 
                                                 page={page} 
                                                 onChange={handleChange}
                                                 renderItem={(item) => (
