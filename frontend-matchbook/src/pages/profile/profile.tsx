@@ -213,7 +213,7 @@ export default function Profile() {
                                                                     {/* Ubicación Libro */}
                                                                     <Box sx={{ display: 'flex', fontSize: "13px" }}>
                                                                         <PlaceIcon style={{ color:"#00a9e0", alignItems: 'center' }} />
-                                                                        <span>{users?.cities.name}</span>
+                                                                        <span>{users.cities.name}</span>
                                                                     </Box>
                                                                 </Box>
                                                     </div>
