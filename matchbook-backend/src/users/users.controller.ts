@@ -18,7 +18,7 @@ export class UsersController {
 
   @Get('publication/:rut_user')
   findOnePublication(@Param('rut_user') rut_user: number) {
-    return this.usersService.findAllWithPublication(rut_user);
+    return this.usersService.findOneWithPublications(rut_user);
   }
 
   @Get('cities')
