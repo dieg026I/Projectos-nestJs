@@ -16,20 +16,22 @@ export class UsersController {
     return this.usersService.findAll();
   }
 
-  @Get(':id')
-  findOne(@Param('id') rut_user: number) {
-    return this.usersService.findOne(rut_user);
-  }
-
-  @Get(':rut_user')
+  @Get('publication/:rut_user')
   findOnePublication(@Param('rut_user') rut_user: number) {
     return this.usersService.findAllWithPublication(rut_user);
   }
 
-  @Get('userCity')
+  @Get('cities')
   findAllWithCity() {
     return this.usersService.findAllWithCity();
   }
+
+  @Get('user/:id')
+  findOne(@Param('id') rut_user: number) {
+    return this.usersService.findOne(rut_user);
+  }
+
+
 
   @Put(':id')
   update(@Param('id') id: string, @Body() user: Users) {
@@ -40,6 +42,4 @@ export class UsersController {
   remove(@Param('id') id: string) {
     return this.usersService.remove(id);
   }
-
-  
 }
