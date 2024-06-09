@@ -1,42 +1,55 @@
 import SideMenu from "../../components/sideMenu/sideMenu";
 import img from '../../assents/img/logoMatch.png'
-import { Box, Button, Card, CardActionArea, CardActions, CardContent, Checkbox, FormControl, Grid, InputLabel, OutlinedInput, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography, useMediaQuery, useTheme } from "@mui/material";
-import { useState } from "react";
+import { Autocomplete, AutocompleteInputChangeReason, Box, Button, Card, CardActionArea, CardActions, CardContent, Checkbox, FormControl, Grid, InputLabel, OutlinedInput, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Typography, useMediaQuery, useTheme } from "@mui/material";
+import { ChangeEvent, FormEvent, SyntheticEvent, useEffect, useState } from "react";
 import Divider from '@mui/material/Divider';
 import React from "react";
 import '../../App.css';
+import axios from "axios";
+
+
+
+interface Author {
+    id_author: string;
+    name_author: string;
+}
+interface Publisher {
+    id_publisher: string;
+    name_publisher: string;
+}
+interface Book {
+    id_book: string;
+    name_book: string;
+    format_book: string;
+    author_id_author: Author;
+    publisher_name: string; 
+    publisher_id_publisher: Publisher;
+    category: string;
+    year_book: number;
+    status_book: string;
+    stock_book: number;
+    description_book: string;
+}
 
 interface ReadingClub {
-    meeting_id: string;
-    meeting_Title: string;
-    meeting_Author: string;
-    meeting_Publisher: string;
-    meeting_Year: number;
-    meeting_Category: string;
-    meeting_Description: string;
-    meeting_Date: Date;
-    meeting_Time: number;
-    meeting_Place: string;
+    id_club: string;
+    date_club: Date;
+    time_club: string;
+    place_club: string;
+    description_club:string;
+    title_club: string;
+    image_club: string;
+    id_book_club: Book;
 }
 
 const ReadingClubAdmin: React.FC = () => {
 
     const [activeTab, setActiveTab] = useState('Agregar');
     const [selectedMeetingImage, setSelectedMeetingImage] = useState<File | null>(null);
-    const [selectedMeetingId, setSelectedMeetingId] = useState<string | null>(null);
-    
-    const [readingClub, setReadingClub] = useState<ReadingClub[]>(() => {
-        // Obtener los datos guardados al cargar el componente
-        const savedReadingClub = localStorage.getItem('readingClub');
-        return savedReadingClub ? JSON.parse(savedReadingClub) : [];
-    });
+    const [name_book, setNameBook] = React.useState('');
+    const [suggestions, setSuggestions] = useState([]);
 
-    const handleSaveReadingClub = (newReadingClub: ReadingClub) => {
-        // Actualizar el estado y guardar en localStorage
-        const updatedReadingClub = [...readingClub, newReadingClub];
-        setReadingClub(updatedReadingClub);
-        localStorage.setItem('readingClub', JSON.stringify(updatedReadingClub));
-    };
+
 
     const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         if (event.target.files && event.target.files[0]) {
@@ -44,44 +57,29 @@ const ReadingClubAdmin: React.FC = () => {
         }
     };
 
-
-    const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-        event.preventDefault();
-        const formData = new FormData(event.currentTarget);
-        const title = formData.get('meeting_Title') as string;
-        const publisher = formData.get('meeting_Publisher') as string;
-        const date = new Date(formData.get('meeting_Date') as string);
+    {/* MALO */}
+    const handleTitleChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+        const searchTerm = e.target.value;
+        setNameBook(searchTerm);
     
-        const newReadingClub: ReadingClub = {
-            meeting_id: createMeetingId(title, publisher, date),
-            meeting_Title: title,
-            meeting_Author: formData.get('meeting_Author') as string,
-            meeting_Publisher: publisher,
-            meeting_Year: Number(formData.get('meeting_Year')),
-            meeting_Category: formData.get('meeting_Category') as string,
-            meeting_Description: formData.get('meeting_Description') as string,
-            meeting_Date: date,
-            meeting_Time: Number(formData.get('meeting_Time')),
-            meeting_Place: formData.get('meeting_Place') as string,
-        };
-        handleSaveReadingClub(newReadingClub);
+        if (searchTerm.length === 0) {
+            setSuggestions([]);
+            return;
+        }
+    
+        try {
+            const response = await axios.get('http://localhost:3001/book/book');
+            console.log(response.data); // Agrega esta línea para ver qué devuelve tu API
+            // ... resto del código
+        } catch (error) {
+            console.error('Error al buscar libros:', error);
+        }
     };
     
-    const createMeetingId = (title: string, publisher: string, date: Date) => {
-        const publisherPrefix = publisher.substring(0, 3);
-        const dateString = date.toISOString().split('T')[0]; // Formato YYYY-MM-DD
-        return `${title}-${publisherPrefix}-${dateString}`;
-    };
 
-      // Función para eliminar una publicación
-    const deleteReadingClub = (meetingId: string) => {
-        const updatedReadingClub = readingClub.filter(pub => pub.meeting_id !== meetingId);
-        setReadingClub(updatedReadingClub);
-        localStorage.setItem('readingClub', JSON.stringify(updatedReadingClub));
-    };
-        
+
     return (
-        <form onSubmit={handleSubmit}>
+        <form >
         <Box sx={{backgroundColor:"#f0f2f3"}}>
             <SideMenu />
             {/* Añade un padding-left al componente principal para evitar que el contenido se solape con el SideMenu */}
@@ -130,7 +128,21 @@ const ReadingClubAdmin: React.FC = () => {
 
                                 <div style={{ display: 'flex', alignItems: 'center', marginTop:"26px", marginBottom:"26px"  }}>
                                     <label htmlFor="nombre-input" style={{ marginRight: '35px' }}>Titulo:</label>
-                                    <input type="text" id="titulo-input" name="meeting_Title" />
+                                    <TextField
+                                        id="name"
+                                        value={name_book}
+                                        onChange={handleTitleChange}
+                                        sx={{ width: '100%', color: "black", height: "45px", borderRadius: "10px" }}
+                                    />
+                                    {suggestions.length > 0 && (
+                                        <div style={{ position: 'absolute', zIndex: 1000, backgroundColor: 'white', width: '100%' }}>
+                                            {suggestions.map((name, index) => (
+                                                <div key={index} onClick={() => setNameBook(name)} style={{ padding: '10px', cursor: 'pointer' }}>
+                                                    {name}
+                                                </div>
+                                            ))}
+                                        </div>
+                                    )}
                                 </div>
 
                                 {/* Línea horizontal */}
@@ -161,13 +173,14 @@ const ReadingClubAdmin: React.FC = () => {
                                     <br />
                                     
                                     <div style={{ marginTop:"50px" , display: 'flex', justifyContent: 'center', alignItems: 'flex-end', height: '100%' }}>
-                                        <Button type="submit" style={{textTransform: "none", color:"#ffffff", backgroundColor:"#FF7F41", width:"200px", borderRadius:"15px"}}>Subir</Button>
+                                        <Button   type="submit" style={{textTransform: "none", color:"#ffffff", backgroundColor:"#FF7F41", width:"200px", borderRadius:"15px"}}>Subir</Button>
                                     </div>
                                 </div>
                             </div>
                         ) : (
                             <div>
-                                <Grid  container spacing={2} columnSpacing={{ xs: 1, sm: 2, md: 3 }}  alignItems= "center" >
+                                
+<Grid  container spacing={2} columnSpacing={{ xs: 1, sm: 2, md: 3 }}  alignItems= "center" >
                                     <Grid className="text-center" item xs={12} sm={6} md={6} lg={6}>
                                         <input
                                             type="search"
@@ -179,7 +192,6 @@ const ReadingClubAdmin: React.FC = () => {
                                     </Grid>
                                     <Grid className="text-center" item xs={12} sm={6} md={6} lg={6}>
                                     <Button
-                                        onClick={() => selectedMeetingId && deleteReadingClub(selectedMeetingId)}
                                         variant="contained"
                                         style={{ /* ... */ }}
                                     >
@@ -203,37 +215,39 @@ const ReadingClubAdmin: React.FC = () => {
                                         </TableRow>
                                     </TableHead>
                                     <TableBody>
-                                        {readingClub.map((meeting) => (
-                                            <TableRow key={meeting.meeting_id}>
+                                        
+                                            <TableRow >
+                                                {/*}
                                             <Checkbox
                                                 checked={selectedMeetingId === meeting.meeting_id}
                                                 onChange={() => setSelectedMeetingId(meeting.meeting_id)}
-                                            />
-                                            <TableCell align="center">{meeting.meeting_id}</TableCell>   
+                                            />*/}
+                                            <TableCell align="center"></TableCell>   
 
-                                            <TableCell align="center">{meeting.meeting_Title}</TableCell>
+                                            <TableCell align="center"></TableCell>
                                             
-                                            <TableCell align="center">{meeting.meeting_Author}</TableCell>
+                                            <TableCell align="center"></TableCell>
 
-                                            <TableCell align="center">{meeting.meeting_Publisher}</TableCell>
+                                            <TableCell align="center"></TableCell>
 
-                                            <TableCell align="center">{meeting.meeting_Year}</TableCell>
+                                            <TableCell align="center"></TableCell>
 
-                                            <TableCell align="center">{meeting.meeting_Category}</TableCell>
+                                            <TableCell align="center"></TableCell>
 
-                                            <TableCell align="center">{meeting.meeting_Description}</TableCell>
+                                            <TableCell align="center"></TableCell>
 
-                                            <TableCell align="center">{new Date(meeting.meeting_Date).toLocaleDateString()}</TableCell>
+                                            <TableCell align="center"></TableCell>
 
-                                            <TableCell align="center">{meeting.meeting_Time}</TableCell>
+                                            <TableCell align="center"></TableCell>
 
-                                            <TableCell align="center">{meeting.meeting_Place}</TableCell>
+                                            <TableCell align="center"></TableCell>
 
                                         </TableRow>
-                                        ))}
+                                        
                                     </TableBody>
                                 </Table>
                                 </TableContainer>
+                                
                             </div>
                         )}
                     </Card>

@@ -43,7 +43,6 @@ const LoginPage: React.FC = () => {
   const [email_user, setEmail] = React.useState('');
   const [password_user, setPassword] = React.useState('');
   const navigate = useNavigate();
-  const [user, setUser] = useState<User | null>(null);
 
   {/*-----------------------------------------------------------------------------*/}
   {/* Login */}
@@ -77,11 +76,6 @@ const LoginPage: React.FC = () => {
         const token = response.data.access_token;
         const user = response.data.user;
         if (user) {
-
-          const username = `${user.name_user.charAt(0).toLowerCase()}.${user.lastname_user.toLowerCase()}${String(user.rut_user).slice(-2)}`;
-          // Guardar el nombre de usuario localmente
-          localStorage.setItem("username", username);
-
           localStorage.setItem("user", JSON.stringify(user));
           console.log("Usuario Guardado: ", JSON.parse(localStorage.getItem("user") || '{}'));
         } else {

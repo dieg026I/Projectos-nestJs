@@ -29,6 +29,9 @@ export class Users {
   @Column()
   photo_user: string;
 
+  @Column()
+  username: string;
+
   @ManyToOne(() => Cities, (city) => city.users)
   @JoinColumn({ name: 'city_id' })
   cities: Cities;
@@ -37,7 +40,7 @@ export class Users {
   city_id: string;
 
   @OneToMany(() => Publication, publication => publication.users)
-  publications: Publication[];
+  publication: Publication[];
 
 
 }

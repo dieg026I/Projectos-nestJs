@@ -50,8 +50,6 @@ const SuggestionsBox = ({ suggestions, onSelect }: { suggestions: { title: strin
     );
 };
 
-
-
 const Sales: React.FC = () => {
 
     {/* Book */}
@@ -143,7 +141,6 @@ const Sales: React.FC = () => {
         }
     };
     
-
     const handleSuggestionSelect = (selectedTitle: string) => {
         setNameBook(selectedTitle);
         setSuggestions([]); 

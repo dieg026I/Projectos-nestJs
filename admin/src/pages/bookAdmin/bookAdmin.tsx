@@ -4,54 +4,82 @@ import img from '../../assents/img/logoMatch.png'
 import { Box, Button, Card, CardActionArea, CardActions, CardContent, Checkbox, Grid, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography, useMediaQuery, useTheme } from "@mui/material";
 import { useEffect, useState } from "react";
 import axios from "axios";
+import React from "react";
 
 const checkBook = { inputProps: { 'aria-label': 'Checkbox demo' } };
 
-{/*
+interface Cities {
+    id_city: string;
+    name: string;
+}
+
+interface Users {
+    name_user: string,
+    lastname_user: string,
+    rut_user: number,
+    dv_user: string,
+    phone_user: number,
+    email_user: string,
+    password_users: string,
+    cities: Cities,
+    publication: Publication[]
+}
+
+interface Publication {
+    id_publication: string;
+    date_publication: Date;
+    users: Users;
+    book: Book;
+    photo_showcase: string;
+    photo_cover: string;
+    photo_first_page: string;
+    photo_back_cover: string;
+    cost_book: number;
+}
 interface Author {
     id_author: string;
     name_author: string;
 }
-
-interface Category {
-    id_category: string;
-    name_category: string;
+interface Publisher {
+    id_publisher: string;
+    name_publisher: string;
 }
-*/}
-interface Publication {
-    id_publication: string;
-    date_publication: Date;
-    user_rut_user: number;
-    book: Book;
-    photo_showcase: string;
-}
-
 interface Book {
     id_book: string;
     name_book: string;
-    author_name: string;
-    cost_book: number;
+    format_book: string;
+    author_id_author: Author;
+    publisher_name: string; 
+    publisher_id_publisher: Publisher;
+    category: string;
+    year_book: number;
+    status_book: string;
+    stock_book: number;
+    description_book: string;
 }
 
 const BookAdmin: React.FC = () => {
 
-    const [publications, setPublications] = useState<Publication[]>([]);
     const [selectedPublications, setSelectedPublications] = useState<string[]>([]);
 
-    // Función para cargar los usuarios desde la base de datos
+    {/* Mostrar Publicacion */}
+    const [publications, setPublications] = React.useState<Publication[]>([]);
+    const [users, setUsers] = React.useState<Users>();
     useEffect(() => {
         const fetchPublications = async () => {
-            try {
-                const response = await axios.get('http://localhost:3001/publications');
-                // Asumiendo que la respuesta incluye los datos de los libros asociados
-                console.log('response.data ' + response.data);
-                setPublications(response.data);
-            } catch (error) {
-                console.error('Error al cargar las publicaciones', error);
-            }
-        };
+        try {
+            const response = await axios.get('http://localhost:3001/publications/publication');
+            const publicationResponse = response.data;
+            setPublications(response.data);
+            console.log(JSON.stringify(response.data, null, 2))
+        } catch (error) {
+        console.error('Error fetching publications:', error);
+        }
+        
+        
+    };
 
-        fetchPublications();
+    fetchPublications();
     }, []);
 
     // Función para manejar la selección de publicaciones
@@ -125,37 +153,46 @@ const BookAdmin: React.FC = () => {
                         <Table>
                             <TableHead>
                                 <TableRow style={{ backgroundColor: '#d2efff' }}>
-                                <TableCell  align="center"></TableCell>
+                                    <TableCell  align="center"></TableCell>
+                                    <TableCell style={{fontFamily:"SF Pro Display Semibold"}} align="center">Imagen</TableCell>
                                     <TableCell style={{fontFamily:"SF Pro Display Semibold"}} align="center">Id Lib</TableCell>
                                     <TableCell style={{fontFamily:"SF Pro Display Semibold"}} align="center">Nombre</TableCell>
                                     <TableCell style={{fontFamily:"SF Pro Display Semibold"}} align="center">Autor</TableCell>
                                     <TableCell style={{fontFamily:"SF Pro Display Semibold"}} align="center">Vendedor</TableCell>
+                                    <TableCell style={{fontFamily:"SF Pro Display Semibold"}} align="center">Rut Vendedor</TableCell>
                                     <TableCell style={{fontFamily:"SF Pro Display Semibold"}} align="center">Precio</TableCell>
                                 </TableRow>
                             </TableHead>
                             <TableBody>
-                            {publications.map((publication) => {
-                                if (publication && publication.book) {
-                                    return (
-                                        <TableRow key={publication.id_publication}>
-                                            <Checkbox
-                                                checked={selectedPublications.indexOf(publication.id_publication) !== -1}
-                                                onChange={() => handleSelectPublication(publication.id_publication)}
-                                            />
-                                            <TableCell align="center">{publication.id_publication}</TableCell>
-                                            <TableCell align="center">{publication.book.name_book}</TableCell>
-                                            <TableCell align="center">{publication.book.author_name}</TableCell>
-                                            <TableCell align="center">{publication.user_rut_user}</TableCell>
-                                            <TableCell align="center">{publication.book.cost_book}</TableCell>
-                                        </TableRow>
-                                    );
-                                } else {
-                                    // Manejo del caso en que 'book' no esté definido
-                                    console.error('Error: Objeto book no definido en la publicación', publication);
-                                    return null; // O retornar un componente de error o placeholder
-                                }
-                            })}
-                            </TableBody>
+        {publications.reverse().map((publication) => (
+            <TableRow key={publication.id_publication}>
+                <Checkbox
+                    checked={selectedPublications.indexOf(publication.id_publication) !== -1}
+                    onChange={() => handleSelectPublication(publication.id_publication)}
+                />
+                <TableCell align="center">
+                    <img 
+                        src={`http://localhost:3001/images/${publication.photo_showcase}`}
+                        alt="Imagen del libro" 
+                        style={{ 
+                            height:"auto", 
+                            width:"50px",
+                            maxWidth: '100%', 
+                            display: 'block', 
+                            marginLeft: 'auto', 
+                            marginRight: 'auto', 
+                        }}
+                    />
+                </TableCell>
+                <TableCell align="center">{publication.id_publication}</TableCell>
+                <TableCell align="center">{publication.book?.name_book || 'No disponible'}</TableCell>
+                <TableCell align="center">{publication.book?.author_id_author.name_author || 'No disponible'}</TableCell>
+                <TableCell align="center">{publication.users?.name_user +' '+ publication.users?.lastname_user || 'No disponible'}</TableCell>
+                <TableCell align="center">{publication.users?.rut_user || 'No disponible'}</TableCell>
+                <TableCell align="center">{publication.cost_book}</TableCell>
+            </TableRow>
+        ))}
+    </TableBody>
                         </Table>
                         </TableContainer>
                     </Card>

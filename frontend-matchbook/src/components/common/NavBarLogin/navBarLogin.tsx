@@ -33,8 +33,47 @@ import  Logo from "../../../assents/img/logoMatch.png";
 import { deepOrange } from '@mui/material/colors';
 import axios from 'axios';
 
+
+interface Users {
+    name_user: string,
+    lastname_user: string,
+    rut_user: number,
+    dv_user: string,
+    phone_user: number,
+    email_user: string,
+    password_users: string,
+    username: string
+}
+
+
 export const NavBarLogin: React.FC<{}> = () => {
     const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = useState<null | HTMLElement>(null);
+
+
+    {/* Nombre de usuario y correo */}
+    const [users, setUsers] = React.useState<Users>();
+
+    useEffect(() => {
+        const fetchPublications = async () => {
+        
+        const userString = localStorage.getItem("user");
+        if (userString !== null){
+        const users : Users = JSON.parse(userString);
+        try {
+            const responseUser= await axios.get(`http://localhost:3001/users/${users.rut_user}`);
+            const userResponse = responseUser.data;
+            setUsers(userResponse);
+            console.log(JSON.stringify(responseUser.data, null, 2))
+        } catch (error) {
+        console.error('Error fetching publications:', error);
+        }
+        }   
+        
+    };
+
+    fetchPublications();
+    }, []);
+
 
     {/* Resposivo */}
     const isMobile = useMediaQuery('(max-width:1080px)') ;
@@ -54,13 +93,7 @@ export const NavBarLogin: React.FC<{}> = () => {
         setOpen(false);
     };
 
-    {/* Nombre de usuario y correo */}
-    const username = localStorage.getItem('username');
-    const userString = localStorage.getItem("user");
-    const user = userString ? JSON.parse(userString) : null;
-    const email_user = user ? user.email_user : '';
-    
-
+ 
     {/* Colores Boton Perfil */}
     const [bgColorProfile, setBgColorProfile] = useState('transparent');
     const [textColorProfile, setTextColorProfile] = useState('#f05d16');
@@ -208,7 +241,7 @@ export const NavBarLogin: React.FC<{}> = () => {
                                             </IconButton>
                                             <div onClick={handleOpen}>
                                                 <Avatar style={{backgroundColor: "#f05d16"}} src="/broken-image.jpg"  />
-                                                <div>{username}</div> 
+                                                <div>{users?.username}</div> 
                                             </div>
 
                                         </>
@@ -223,7 +256,7 @@ export const NavBarLogin: React.FC<{}> = () => {
 
                                             <div onClick={handleOpen}>
                                                 <Avatar style={{backgroundColor: "#f05d16"}} src="/broken-image.jpg"  />
-                                                <div>{username}</div> 
+                                                <div>{users?.username}</div> 
                                             </div>
                                         </>
                                     )}
@@ -259,8 +292,8 @@ export const NavBarLogin: React.FC<{}> = () => {
                             </div>
                         </DialogTitle>
                         <DialogContent style={{justifyContent:"center", textAlign: "center", paddingBottom: "0px", marginBottom:"0px"}}>
-                            <h2 style={{ fontSize: "18px", fontFamily: "SF Pro Display Bold"}}>{username}</h2> {/*{username} */}
-                            <p style={{ fontSize: "15px", fontFamily: "SF Pro Display Regular"}}>{email_user}</p> {/*{email_user} */}
+                            <h2 style={{ fontSize: "18px", fontFamily: "SF Pro Display Bold"}}>{users?.username}</h2> {/*{username} */}
+                            <p style={{ fontSize: "15px", fontFamily: "SF Pro Display Regular"}}>{users?.email_user}</p> {/*{email_user} */}
                             <Button fullWidth
                                 href="/profile" 
                                 variant="contained"  
