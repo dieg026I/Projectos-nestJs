@@ -292,8 +292,8 @@ export const NavBarLogin: React.FC<{}> = () => {
                             </div>
                         </DialogTitle>
                         <DialogContent style={{justifyContent:"center", textAlign: "center", paddingBottom: "0px", marginBottom:"0px"}}>
-                            <h2 style={{ fontSize: "18px", fontFamily: "SF Pro Display Bold"}}>{users?.username}</h2> {/*{username} */}
-                            <p style={{ fontSize: "15px", fontFamily: "SF Pro Display Regular"}}>{users?.email_user}</p> {/*{email_user} */}
+                            <h2 style={{ fontSize: "18px", fontFamily: "SF Pro Display Bold"}}>{users?.username}</h2> 
+                            <p style={{ fontSize: "15px", fontFamily: "SF Pro Display Regular"}}>{users?.email_user}</p> 
                             <Button fullWidth
                                 href="/profile" 
                                 variant="contained"  

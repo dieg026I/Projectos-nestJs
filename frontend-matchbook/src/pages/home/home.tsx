@@ -145,12 +145,10 @@ export const HomePage: React.FC<HomeProps> = ({}: HomeProps) => {
     fetchPublications();
     }, []);
 
-
     {/*-----------------------------------------------------------------------------*/}
     {/* Mostrar boton "agregar al carro y ver detalle" */}
     const [activeCard, setActiveCard] = useState<string | null>(null);
     
-
     {/*-----------------------------------------------------------------------------*/}
     {/* Paginas Publicaciones */}
     const [page, setPage] = useState(1);
@@ -222,7 +220,6 @@ export const HomePage: React.FC<HomeProps> = ({}: HomeProps) => {
                     </div>
                     <div>
                         <img className="carousel" src={image2} />
-                        
                     </div>
                 </Carousel>
             </div>
