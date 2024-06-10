@@ -43,7 +43,7 @@ export class PublicationService {
   }
 
   findAllWithBooks(): Promise<Publication[]> {
-    return this.publicationRepository.find({ relations: ['book','book.author_id_author', 'book.publisher_id_publisher', 'users'] })
+    return this.publicationRepository.find({ relations: ['book','book.author_id_author', 'book.publisher_id_publisher', 'users', 'users.cities'] })
       .catch(error => {
         console.error('Error fetching publications with books:', error);
         throw error;

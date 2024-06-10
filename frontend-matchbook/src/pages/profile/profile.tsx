@@ -91,7 +91,7 @@ export default function Profile() {
         if (userString !== null){
         const users : Users = JSON.parse(userString);
         try {
-            const responseUser= await axios.get(`http://localhost:3001/users/${users.rut_user}`);
+            const responseUser= await axios.get(`http://localhost:3001/users/publication/${users.rut_user}`);
             const userResponse = responseUser.data;
             setUsers(userResponse);
             console.log(JSON.stringify(responseUser.data, null, 2))
@@ -151,7 +151,7 @@ export default function Profile() {
                                 
                                     <Grid container spacing={4} justifyContent="center" style={{padding: "20px"}}>
                                     
-                                        {Array.isArray(publications) && publications.slice(Math.max(publications.length - 10, 0)).reverse().slice((page - 1) * 5, page * 5).map((publication) => (
+                                        {Array.isArray(users?.publications) && users?.publications.slice((page - 1) * 2, page * 2).reverse().map((publication) => (
                                             <Card 
                                                 key={publication.id_publication} 
                                                 style={{ margin: "10px", width: "230px", borderRadius: "20px", textAlign: "left", position: 'relative', padding:"22px"}} 
@@ -220,7 +220,7 @@ export default function Profile() {
                                     <Grid container justifyContent="center" alignItems="center" style={{padding: "20px"}}>
                                         <Stack spacing={2}>
                                             <Pagination 
-                                                count={Math.min(Math.ceil(publications.length / 5), 2)} 
+                                                count={(Math.ceil(publications.length / 5), 2)} 
                                                 page={page} 
                                                 onChange={handleChange}
                                                 renderItem={(item) => (

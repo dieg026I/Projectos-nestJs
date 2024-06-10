@@ -1,6 +1,6 @@
-import { Autocomplete, Box, Button, Card, CardActionArea, CardActions, CardContent, CardMedia, Checkbox, FormControl, FormControlLabel, FormGroup, FormLabel, Grid, InputLabel, MenuItem, NoSsr, Radio, RadioGroup, Select, SelectChangeEvent, TextField, ThemeProvider, Typography, createTheme } from "@mui/material";
+import { Autocomplete, Box, Button, Card, CardActionArea, CardActions, CardContent, CardMedia, Checkbox, FormControl, FormControlLabel, FormGroup, FormLabel, Grid, InputLabel, MenuItem, NoSsr, Popper, Radio, RadioGroup, Select, SelectChangeEvent, TextField, ThemeProvider, Typography, createTheme } from "@mui/material";
 import { CardBody, CardFooter } from "react-bootstrap";
-import { useContext, useEffect, useRef, useState } from 'react';
+import { ChangeEvent, useContext, useEffect, useRef, useState } from 'react';
 import AddIcon from '@mui/icons-material/Add';
 import React from "react";
 import axios from "axios";
@@ -14,6 +14,7 @@ import { UserContext } from "../UserContext";
 import { Navigate, useNavigate } from "react-router-dom";
 import { Console } from "console";
 import Footer from "../../components/common/Footer/footer";
+import { AutocompleteInputChangeReason } from '@mui/material/Autocomplete';
 
 interface Author {
     id_author: string;
@@ -36,16 +37,28 @@ interface Book {
     description_book: string;
 }
 
+interface BookSuggestion {
+    title: string;
+    authors: string[];
+    publisher?: string;
+    publishedDate?: string; // Cambiado a string para coincidir con la API
+}
+
+interface SuggestionsBoxProps {
+    suggestions: BookSuggestion[];
+    onSelect: (selectedBook: BookSuggestion) => void;
+}
+
 {/*-----------------------------------------------------------------------------*/}
 {/* Sugerencia */}
-const SuggestionsBox = ({ suggestions, onSelect }: { suggestions: { title: string; authors: string[] }[], onSelect: (selectedTitle: string) => void }) => {
-    return (
+const SuggestionsBox: React.FC<SuggestionsBoxProps> = ({ suggestions, onSelect }) => {
+        return (
         <div style={{ position: 'absolute', top: '74%', left: '255px', width: '35%', background: 'white', boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)', maxHeight: '200px', overflowY: 'auto' , zIndex: 1000 }}>
-            {suggestions.map((book, index) => (
-                <div key={index} onClick={() => onSelect(book.title)} style={{ padding: '10px', borderBottom: '1px solid #ccc' }}>
-                    <strong>{book.title}</strong> by {book.authors.join(', ')}
-                </div>
-            ))}
+        {suggestions.map((book, index) => (
+            <div key={index} onClick={() => onSelect(book)} style={{ padding: '10px', borderBottom: '1px solid #ccc' }}>
+            <strong>{book.title}</strong> by {book.authors.join(', ')}
+            </div>
+        ))}
         </div>
     );
 };
@@ -61,7 +74,7 @@ const Sales: React.FC = () => {
     const [category, setCategory] = React.useState<Category[]>([]);
     const [OneCategory, setOneCategory] = React.useState<Category>();
     const [selectedCategory, setSelectedCategory] = useState('');
-    const [year_book, setYearBook] = React.useState(0);
+    const [year_book, setYearBook] = useState<number | null>(null);
     const [status_book, setStatusBook ] = React.useState('');
     const [selectedStatus, setSelectedStatus] = useState('');
     const [stock_book, setStockBook] = React.useState(0);
@@ -80,7 +93,14 @@ const Sales: React.FC = () => {
     {/* Sugerencia */}
     const [suggestions, setSuggestions] = useState<{ title: string; authors: string[] }[]>([]);
 
-    
+    const [selectedTitle, setSelectedTitle] = useState('');
+
+    const [open, setOpen] = useState(false);
+    const [options, setOptions] = useState<BookSuggestion[]>([]);
+    const [selectedBook, setSelectedBook] = useState<BookSuggestion | null>(null);
+
+
+
     {/*-----------------------------------------------------------------------------*/}
     {/* Eliminar Animaciones */}
     const theme = createTheme({
@@ -120,31 +140,69 @@ const Sales: React.FC = () => {
         },
     });
     
-
-
     {/*-----------------------------------------------------------------------------*/}
     {/* Título */}
 
-    const handleTitleChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-        const searchTerm = e.target.value;
-        try {
-            const response = await axios.get(
-                `https://www.googleapis.com/books/v1/volumes?q=${searchTerm}&key=AIzaSyDJrjXWiZuxrAOhRE4GB1Xltcdy0dhsPsM`
-            );
-            const books = response.data.items.map((item: any) => ({
+    const handleInputChange = async (
+        event: React.SyntheticEvent<Element, Event>,
+        value: string,
+        reason: AutocompleteInputChangeReason
+    ) => {
+        if (reason === 'input') {
+            if (value.length > 2) {
+            try {
+                const response = await axios.get(`https://www.googleapis.com/books/v1/volumes?q=${value}`);
+                const books = response.data.items.map((item: any) => ({
                 title: item.volumeInfo.title,
-                authors: item.volumeInfo.authors || [], // Si no hay autores, establecemos un arreglo vacío
-            }));
-            setSuggestions(books);
-        } catch (error) {
-            console.error('Error al buscar libros:', error);
+                authors: item.volumeInfo.authors || [],
+                publisher: item.volumeInfo.publisher,
+                publishedDate: item.volumeInfo.publishedDate,
+                }));
+                setOptions(books);
+            } catch (error) {
+                console.error('Error al buscar libros:', error);
+            }
+            }
         }
     };
-    
-    const handleSuggestionSelect = (selectedTitle: string) => {
-        setNameBook(selectedTitle);
-        setSuggestions([]); 
+
+
+    const handleSelectChange = (event: React.ChangeEvent<{}>, value: BookSuggestion | null) => {
+    setSelectedBook(value);
+    if (value) {
+        setAuthorName(value.authors.join(', '));
+        setPublisherName(value.publisher || '');
+        // Asegúrate de que el año sea un número o null
+        setYearBook(value.publishedDate ? new Date(value.publishedDate).getFullYear() : null);
+    }
     };
+    
+    const handleSuggestionSelect = async (selectedBook: BookSuggestion) => {
+        // Establecer el título del libro
+        setNameBook(selectedBook.title);
+        
+        // Buscar detalles adicionales del libro seleccionado
+        try {
+            const response = await axios.get(
+            `https://www.googleapis.com/books/v1/volumes?q=intitle:${encodeURIComponent(selectedBook.title)}`
+            );
+            const bookDetails = response.data.items[0].volumeInfo;
+        
+            // Establecer el nombre del autor
+            setAuthorName(bookDetails.authors.join(', '));
+        
+            // Establecer el año de publicación
+            setYearBook(bookDetails.publishedDate.substring(0, 4));
+        
+            // Establecer la editorial
+            setPublisherName(bookDetails.publisher);
+        } catch (error) {
+            console.error('Error al obtener detalles del libro:', error);
+        }
+        // Limpiar sugerencias
+        setSuggestions([]);
+    };
+    
 
     {/*-----------------------------------------------------------------------------*/}
     {/* Step and Scroll */}
@@ -210,7 +268,6 @@ const Sales: React.FC = () => {
         axios.get('http://localhost:3001/categories')
             .then(response => {
             setCategory(response.data);
-            console.log('Mostrar Categorias: '+ response.data);
             });
     }, []);
 
@@ -221,7 +278,6 @@ const Sales: React.FC = () => {
         axios.get(`http://localhost:3001/categories/${id_category}`)
             .then(response => {
             setOneCategory(response.data);
-            console.log('Mostrar Categorias: ' + response.data);
             });
 
     };
@@ -232,13 +288,13 @@ const Sales: React.FC = () => {
             setDescriptionBook(description_book);
         }
     }
+
     {/*-----------------------------------------------------------------------------*/}
     {/* Status */}
     
         
     const handleStatusChange = (event: SelectChangeEvent) => {
     setSelectedStatus(event.target.value);
-    console.log("estado: " + event.target.value)
     };
 
     {/*-----------------------------------------------------------------------------*/}
@@ -262,7 +318,6 @@ const Sales: React.FC = () => {
             id_author: id_author,    
             name_author: author_name,
             });
-            console.log(responseAuthor.data)
             const author_id = responseAuthor.data.id_author
             // Luego, guarda la editorial y obtén su ID
             let id_publisher = uuidv4();
@@ -270,7 +325,6 @@ const Sales: React.FC = () => {
                 id_publisher: id_publisher,    
                 name_publisher: publisher_name  
             });
-            console.log(responsePublisher.data)
             const publisher_id = responsePublisher.data.id_publisher;
             const bookId = `${name_book}-${author_name.length}-${publisher_name.slice(0, 3)}`.toLowerCase();
 
@@ -289,13 +343,11 @@ const Sales: React.FC = () => {
                 categories: [OneCategory]
             });
     
-            console.log(responseBook.data);
             handleNext();
         } catch (error) {
             console.error('Hubo un error al ingresar la publicación:', error);
         }
         const userString = localStorage.getItem('user');
-        console.log('Usuario: ' + userString )
     };
     
     const add_book = (event: React.FormEvent) => {
@@ -348,8 +400,6 @@ const Sales: React.FC = () => {
             'Content-Type': 'multipart/form-data',
             },
         });
-    
-        console.log(response.data);
         
         navigate('/home2')
     
@@ -375,9 +425,7 @@ const Sales: React.FC = () => {
             
                 <NoSsr>
                     <ThemeProvider theme={theme}>
-                    
                         <div>
-                            
                             <Box className="fondoVenta" sx={{ paddingTop: step === 2 ? '64px' : '0px' }}>
                                 
                                 <Card  sx={{ marginTop:"90px", borderRadius:"20px",width:"1100px", maxWidth: "1400px", maxHeight:"100%" }} ref={contentRef} style={contentStyle} >
@@ -418,16 +466,27 @@ const Sales: React.FC = () => {
                                                 </CardContent>
                                                 <CardBody style={{marginLeft:"30px", }}>
                                                     <h6 style={{fontFamily:"SF Pro Display Bold"}}>Título</h6>
-                                                    <FormControl style={{ width:"50%" }}>
-                                                        <InputLabel style={{ fontSize: "16px"}} ></InputLabel>
-                                                        < TextField
-                                                            id="name"
-                                                            value={name_book}
-                                                            onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                                                                setNameBook(e.target.value);
-                                                                handleTitleChange(e);
-                                                            }}
-                                                            sx={{ width: '100%', color: "black", height: "45px", borderRadius: "10px" }}
+                                                    <FormControl fullWidth>
+                                                        <InputLabel id="book-select-label"></InputLabel>
+                                                        <Autocomplete
+                                                        id="book-search-autocomplete"
+                                                        open={open}
+                                                        onOpen={() => setOpen(true)}
+                                                        onClose={() => setOpen(false)}
+                                                        getOptionLabel={(option) => `${option.title} - ${option.authors.join(', ')}`}
+                                                        options={options}
+                                                        loading={open && options.length === 0}
+                                                        onChange={handleSelectChange}
+                                                        onInputChange={handleInputChange}
+                                                        PopperComponent={(props) => <Popper {...props} disablePortal={false} />}
+                                                        renderInput={(params) => (
+                                                            <TextField
+                                                                {...params}
+                                                                label="Buscar libro"
+                                                                variant="outlined"
+                                                                fullWidth
+                                                            />
+                                                        )}
                                                         />
                                                     </FormControl>
                                                 </CardBody>

@@ -60,7 +60,7 @@ export const NavBarLogin: React.FC<{}> = () => {
         if (userString !== null){
         const users : Users = JSON.parse(userString);
         try {
-            const responseUser= await axios.get(`http://localhost:3001/users/${users.rut_user}`);
+            const responseUser= await axios.get(`http://localhost:3001/users/rut/${users.rut_user}`);
             const userResponse = responseUser.data;
             setUsers(userResponse);
             console.log(JSON.stringify(responseUser.data, null, 2))
@@ -239,10 +239,11 @@ export const NavBarLogin: React.FC<{}> = () => {
                                             <IconButton href="/sales" color="inherit"  >
                                                 <LuDollarSign style={{ width: "35px", height:"35px"}} />
                                             </IconButton>
-                                            <div onClick={handleOpen}>
-                                                <Avatar style={{backgroundColor: "#f05d16"}} src="/broken-image.jpg"  />
-                                                <div>{users?.username}</div> 
+                                            <div onClick={handleOpen} style={{ display: 'flex', alignItems: 'center' }}>
+                                                <Avatar style={{ backgroundColor: "#f05d16" }} src="/broken-image.jpg" />
+                                                <div style={{ marginLeft: '10px' }}>{users?.username}</div>
                                             </div>
+
 
                                         </>
                                     ) : (
@@ -254,9 +255,9 @@ export const NavBarLogin: React.FC<{}> = () => {
 
                                             <Button style={{ backgroundColor: '#f05d16' , textTransform: "none", color: "#ffff", fontSize: "16px", marginLeft: "10px", borderRadius:"20px", width:"90px", padding:"6px" }} href="/sales">Vender</Button>
 
-                                            <div onClick={handleOpen}>
-                                                <Avatar style={{backgroundColor: "#f05d16"}} src="/broken-image.jpg"  />
-                                                <div>{users?.username}</div> 
+                                            <div onClick={handleOpen} style={{ display: 'flex', alignItems: 'center' }}>
+                                                <Avatar style={{ backgroundColor: "#f05d16" }} src="/broken-image.jpg" />
+                                                <div style={{ marginLeft: '10px' }}>{users?.username}</div>
                                             </div>
                                         </>
                                     )}
