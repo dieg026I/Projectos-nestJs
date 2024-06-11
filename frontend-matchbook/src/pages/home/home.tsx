@@ -4,7 +4,6 @@ import NavBar from "../../components/common/NavBar/navBar";
 import Footer from "../../components/common/Footer/footer";
 import image1 from "../../assents/img/car1.png";
 import image2 from "../../assents/img/car2.png";
-import libro from "../../assents/img/libro.png";
 import us1 from "../../assents/img/us1.png";
 import us2 from "../../assents/img/us2.png";
 import us3 from "../../assents/img/us3.png";
@@ -34,7 +33,8 @@ interface Users {
     email_user: string,
     password_users: string,
     cities: Cities,
-    publications: Publication[]
+    username: string,
+    publication: Publication[]
 }
 
 interface Publication {
