@@ -129,30 +129,15 @@ export const HomePage: React.FC<HomeProps> = ({}: HomeProps) => {
         } catch (error) {
         console.error('Error fetching publications:', error);
         }
-        const userString = localStorage.getItem("user");
-        if (userString !== null){
-        const users : Users = JSON.parse(userString);
-        try {
-            const responseUser= await axios.get(`http://localhost:3001/users/${users.rut_user}`);
-            const userResponse = responseUser.data;
-            setUsers(userResponse);
-            console.log(JSON.stringify(responseUser.data, null, 2))
-        } catch (error) {
-        console.error('Error fetching publications:', error);
-        }
-        }   
+        
     };
-
-    console.log('fetchPublication' + fetchPublications)
     fetchPublications();
     }, []);
-
 
     {/*-----------------------------------------------------------------------------*/}
     {/* Mostrar boton "agregar al carro y ver detalle" */}
     const [activeCard, setActiveCard] = useState<string | null>(null);
     
-
     {/*-----------------------------------------------------------------------------*/}
     {/* Paginas Publicaciones */}
     const [page, setPage] = useState(1);
@@ -224,7 +209,6 @@ export const HomePage: React.FC<HomeProps> = ({}: HomeProps) => {
                     </div>
                     <div>
                         <img className="carousel" src={image2} />
-                        
                     </div>
                 </Carousel>
             </div>
@@ -356,7 +340,7 @@ export const HomePage: React.FC<HomeProps> = ({}: HomeProps) => {
                                                     {/* Ubicación Libro */}
                                                     <Box sx={{ display: 'flex', fontSize: "13px" }}>
                                                         <PlaceIcon style={{ color:"#00a9e0", alignItems: 'center' }} />
-                                                        <span>{users?.cities.name}</span>
+                                                        <span>{publication.users?.cities?.name}</span>
                                                     </Box>
                                                 </Box>
                                             </>

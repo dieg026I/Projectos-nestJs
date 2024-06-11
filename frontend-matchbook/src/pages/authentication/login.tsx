@@ -43,7 +43,6 @@ const LoginPage: React.FC = () => {
   const [email_user, setEmail] = React.useState('');
   const [password_user, setPassword] = React.useState('');
   const navigate = useNavigate();
-  const [user, setUser] = useState<User | null>(null);
 
   {/*-----------------------------------------------------------------------------*/}
   {/* Login */}

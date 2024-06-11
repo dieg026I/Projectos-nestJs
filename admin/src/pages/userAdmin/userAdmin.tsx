@@ -19,7 +19,8 @@ interface User {
     dv_user: string,
     phone_user: number,
     email_user: string,
-    city_id: Cities,
+    username: string,
+    cities: Cities,
 }
 
 const UserAdmin: React.FC = () => {
@@ -31,7 +32,7 @@ const UserAdmin: React.FC = () => {
     useEffect(() => {
         const fetchUsers = async () => {
             try {
-                const response = await axios.get('http://localhost:3001/users'); // Ajusta la URL según tu backend
+                const response = await axios.get('http://localhost:3001/users/userCity'); // Ajusta la URL según tu backend
                 console.log('response data' + response.data)
                 console.log('users'+users);
                 setUsers(response.data);
@@ -132,7 +133,7 @@ const UserAdmin: React.FC = () => {
                                         />
                                     <TableCell align="center">{user.rut_user} </TableCell>
 
-                                    <TableCell align="center"> Estado </TableCell>
+                                    <TableCell align="center"> {user.username} </TableCell>
 
                                     <TableCell align="center"> {user.email_user} </TableCell>
 
@@ -144,7 +145,7 @@ const UserAdmin: React.FC = () => {
 
                                     <TableCell align="center"> {user.phone_user}</TableCell>
 
-                                    <TableCell align="center">c</TableCell>
+                                    <TableCell align="center">{user.cities.name}</TableCell>
                                 </TableRow>
                                 ))}
                             </TableBody>

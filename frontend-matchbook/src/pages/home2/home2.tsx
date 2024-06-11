@@ -107,12 +107,12 @@ function handleClick(event: React.MouseEvent<HTMLDivElement, MouseEvent>) {
         if (userString !== null){
         const users : Users = JSON.parse(userString);
         try {
-            const responseUser= await axios.get(`http://localhost:3001/users/${users.rut_user}`);
+            const responseUser= await axios.get(`http://localhost:3001/users/rut/${users.rut_user}`);
             const userResponse = responseUser.data;
             setUsers(userResponse);
             console.log(JSON.stringify(responseUser.data, null, 2))
         } catch (error) {
-        console.error('Error fetching publications:', error);
+        console.error('error usuario local:', error);
         }
         }   
         
@@ -361,7 +361,7 @@ function handleClick(event: React.MouseEvent<HTMLDivElement, MouseEvent>) {
                                                     {/* Ubicación Libro */}
                                                     <Box sx={{ display: 'flex', fontSize: "13px" }}>
                                                         <PlaceIcon style={{ color:"#00a9e0", alignItems: 'center' }} />
-                                                        <span>{users?.cities.name}</span>
+                                                        <span>{publication.users?.cities?.name}</span>
                                                     </Box>
                                                 </Box>
                                             </>
