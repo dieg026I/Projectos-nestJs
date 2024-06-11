@@ -37,7 +37,7 @@ export class Users {
   city_id: string;
 
   @OneToMany(() => Publication, publication => publication.users)
-  publications: Publication[];
+  publication: Publication[];
 
 
 }
