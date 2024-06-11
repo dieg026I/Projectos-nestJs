@@ -41,27 +41,14 @@ interface BookSuggestion {
     title: string;
     authors: string[];
     publisher?: string;
-    publishedDate?: string; // Cambiado a string para coincidir con la API
+    publishedDate?: string;
+    image?: string;
 }
 
-interface SuggestionsBoxProps {
-    suggestions: BookSuggestion[];
-    onSelect: (selectedBook: BookSuggestion) => void;
-}
 
 {/*-----------------------------------------------------------------------------*/}
 {/* Sugerencia */}
-const SuggestionsBox: React.FC<SuggestionsBoxProps> = ({ suggestions, onSelect }) => {
-        return (
-        <div style={{ position: 'absolute', top: '74%', left: '255px', width: '35%', background: 'white', boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)', maxHeight: '200px', overflowY: 'auto' , zIndex: 1000 }}>
-        {suggestions.map((book, index) => (
-            <div key={index} onClick={() => onSelect(book)} style={{ padding: '10px', borderBottom: '1px solid #ccc' }}>
-            <strong>{book.title}</strong> by {book.authors.join(', ')}
-            </div>
-        ))}
-        </div>
-    );
-};
+
 
 const Sales: React.FC = () => {
 
@@ -98,8 +85,6 @@ const Sales: React.FC = () => {
     const [open, setOpen] = useState(false);
     const [options, setOptions] = useState<BookSuggestion[]>([]);
     const [selectedBook, setSelectedBook] = useState<BookSuggestion | null>(null);
-
-
 
     {/*-----------------------------------------------------------------------------*/}
     {/* Eliminar Animaciones */}
@@ -157,6 +142,7 @@ const Sales: React.FC = () => {
                 authors: item.volumeInfo.authors || [],
                 publisher: item.volumeInfo.publisher,
                 publishedDate: item.volumeInfo.publishedDate,
+                image: item.volumeInfo.image,
                 }));
                 setOptions(books);
             } catch (error) {
@@ -166,41 +152,14 @@ const Sales: React.FC = () => {
         }
     };
 
-
     const handleSelectChange = (event: React.ChangeEvent<{}>, value: BookSuggestion | null) => {
-    setSelectedBook(value);
-    if (value) {
-        setAuthorName(value.authors.join(', '));
-        setPublisherName(value.publisher || '');
-        // Asegúrate de que el año sea un número o null
-        setYearBook(value.publishedDate ? new Date(value.publishedDate).getFullYear() : null);
-    }
-    };
-    
-    const handleSuggestionSelect = async (selectedBook: BookSuggestion) => {
-        // Establecer el título del libro
-        setNameBook(selectedBook.title);
-        
-        // Buscar detalles adicionales del libro seleccionado
-        try {
-            const response = await axios.get(
-            `https://www.googleapis.com/books/v1/volumes?q=intitle:${encodeURIComponent(selectedBook.title)}`
-            );
-            const bookDetails = response.data.items[0].volumeInfo;
-        
-            // Establecer el nombre del autor
-            setAuthorName(bookDetails.authors.join(', '));
-        
-            // Establecer el año de publicación
-            setYearBook(bookDetails.publishedDate.substring(0, 4));
-        
-            // Establecer la editorial
-            setPublisherName(bookDetails.publisher);
-        } catch (error) {
-            console.error('Error al obtener detalles del libro:', error);
+        setSelectedBook(value);
+        if (value) {
+            setAuthorName(value.authors.join(', '));
+            setPublisherName(value.publisher || '');
+            setYearBook(value.publishedDate ? new Date(value.publishedDate).getFullYear() : null);
+            setImageShowcase(value.image || null);
         }
-        // Limpiar sugerencias
-        setSuggestions([]);
     };
     
 
@@ -232,12 +191,17 @@ const Sales: React.FC = () => {
     const [imageFirst, setImageFirst] = useState<string | null>(null);
     const [imageBack, setImageBack] = useState<string | null>(null);
 
-    const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        if (e.target.files) {
-            setPhotoShowcase(e.target.files[0]);
-            setImageShowcase(URL.createObjectURL(e.target.files[0]));
+    const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        if (event.target.files && event.target.files[0]) {
+            const fileReader = new FileReader();
+            fileReader.onload = (e) => {
+                if (e.target) {
+                    setImageShowcase(e.target.result as string);
+                }
+            }; 
         }
     };
+    
 
     const handleImageChangeCover = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.files) {
@@ -292,7 +256,6 @@ const Sales: React.FC = () => {
     {/*-----------------------------------------------------------------------------*/}
     {/* Status */}
     
-        
     const handleStatusChange = (event: SelectChangeEvent) => {
     setSelectedStatus(event.target.value);
     };
@@ -311,6 +274,12 @@ const Sales: React.FC = () => {
     const handleSubmitBook = async (event: React.FormEvent) => {
         event.preventDefault();
     
+        // Validación de campos requeridos
+        if (!name_book || !author_name || !publisher_name || !year_book || !cost_book) {
+            alert("Por favor, completa todos los campos requeridos.");
+            return;
+        }
+
         try {
             // Primero, guarda el autor y obtén su ID
             let id_author = uuidv4();
@@ -351,9 +320,12 @@ const Sales: React.FC = () => {
     };
     
     const add_book = (event: React.FormEvent) => {
-        event.preventDefault();
+            event.preventDefault();
         handleSubmitBook(event).then(() => {
             toast("Libro guardado con éxito!");
+        }).catch((error) => {
+            // Manejar el error aquí si la promesa es rechazada
+            console.error('Error al guardar el libro:', error);
         });
     };
 
@@ -362,6 +334,12 @@ const Sales: React.FC = () => {
     
     const handleSubmitPublication = async (event: React.FormEvent) => {
         event.preventDefault();
+
+        // Validación de campos requeridos
+        if (!name_book || !author_name || !publisher_name || !year_book || !cost_book || !category || !status_book) {
+            alert("Por favor, completa todos los campos requeridos.");
+            return;
+        }
         
         const formData = new FormData();
 
@@ -406,7 +384,6 @@ const Sales: React.FC = () => {
     }catch (error) {
         console.error('Hubo un error al registrar el libro:', error);
         }
-    
     };
 
     {/*-----------------------------------------------------------------------------*/}
@@ -422,17 +399,13 @@ const Sales: React.FC = () => {
     return (
         <>
             <NavBarLogin />
-            
                 <NoSsr>
                     <ThemeProvider theme={theme}>
                         <div>
                             <Box className="fondoVenta" sx={{ paddingTop: step === 2 ? '64px' : '0px' }}>
                                 
                                 <Card  sx={{ marginTop:"90px", borderRadius:"20px",width:"1100px", maxWidth: "1400px", maxHeight:"100%" }} ref={contentRef} style={contentStyle} >
-                                
-                                    {suggestions.length > 0 && (
-                                        <SuggestionsBox suggestions={suggestions} onSelect={handleSuggestionSelect} />
-                                    )}
+
                                     <CardActionArea disableRipple>
                                         <CardContent style={{backgroundColor:"#002E5D", alignContent:"center"}}>
                                             <div style={{textAlign: "center", alignContent:"center", color:"#ffff", fontFamily: "SF Pro Display Medium", paddingTop:"10px"}} >
@@ -478,7 +451,6 @@ const Sales: React.FC = () => {
                                                         loading={open && options.length === 0}
                                                         onChange={handleSelectChange}
                                                         onInputChange={handleInputChange}
-                                                        PopperComponent={(props) => <Popper {...props} disablePortal={false} />}
                                                         renderInput={(params) => (
                                                             <TextField
                                                                 {...params}
@@ -487,7 +459,9 @@ const Sales: React.FC = () => {
                                                                 fullWidth
                                                             />
                                                         )}
-                                                        />
+                                                        // ... otras props que puedas necesitar
+                                                    />
+
                                                     </FormControl>
                                                 </CardBody>
                                                 </> 
@@ -572,19 +546,23 @@ const Sales: React.FC = () => {
                                                                     id="year"
                                                                     className="mb-3 formulario"
                                                                     placeholder="Año"
-                                                                    type="year"
-                                                                    value={year_book}
-                                                                    onChange={e => setYearBook (Number(e.target.value))}
+                                                                    type="text" // Cambiado de "year" a "text" para permitir la entrada de texto libre
+                                                                    value={year_book === 0 ? '' : year_book} // Si el valor es 0, muestra una cadena vacía
+                                                                    onChange={e => {
+                                                                        const value = e.target.value;
+                                                                        // Solo actualiza el estado si el valor ingresado es un número o está vacío
+                                                                        setYearBook(value === '' ? 0 : !isNaN(Number(value)) ? Number(value) : year_book);
+                                                                    }}
                                                                     InputLabelProps={{
                                                                         sx: { fontSize: "16px" } 
                                                                     }}
                                                                     InputProps={{
                                                                         inputProps: { 
-                                                                            min: 0, 
-                                                                            style: { 
-                                                                                MozAppearance: 'textfield',
-                                                                                appearance: 'textfield'
-                                                                            }
+                                                                        min: 0, 
+                                                                        style: { 
+                                                                            MozAppearance: 'textfield',
+                                                                            appearance: 'textfield'
+                                                                        }
                                                                         }
                                                                     }}
                                                                 />
@@ -595,42 +573,48 @@ const Sales: React.FC = () => {
                                                             <Grid item xs={6}>
                                                                 <h6 style={{fontFamily:"SF Pro Display Bold"}}>Precio de venta</h6>
                                                                 <TextField fullWidth 
-                                                                    style={{ color: "black" }}
-                                                                    id="cost"
-                                                                    className="mb-3 formulario"
-                                                                    placeholder="Precio"
-                                                                    type="numeric"
-                                                                    value={cost_book}
-                                                                    onChange={e => setCostBook(Number(e.target.value))}
-                                                                    InputLabelProps={{
-                                                                        sx: { fontSize: "16px" } 
-                                                                    }}
-                                                                    variant="outlined"
-                                                                    sx={{ borderRadius: 20 }}
+                                                                style={{ color: "black" }}
+                                                                id="cost"
+                                                                className="mb-3 formulario"
+                                                                placeholder="Precio"
+                                                                type="text"
+                                                                value={cost_book === 0 ? '' : cost_book} // Si el valor es 0, muestra una cadena vacía
+                                                                onChange={e => {
+                                                                    const value = e.target.value;
+                                                                    // Si el valor es una cadena vacía o un número válido, actualiza el estado
+                                                                    setCostBook(value === '' ? 0 : !isNaN(Number(value)) ? Number(value) : cost_book);
+                                                                }}
+                                                                InputLabelProps={{
+                                                                    sx: { fontSize: "16px" } 
+                                                                }}
+                                                                variant="outlined"
+                                                                sx={{ borderRadius: 20 }}
                                                                 />
+
                                                             </Grid>
                                                             {/* Estado del libro */}
                                                             <Grid item xs={6}>
-                                                                <FormControl fullWidth>
-                                                                    <h6 style={{fontFamily:"SF Pro Display Bold"}}>Estado del libro</h6>
-                                                                    <Select fullWidth 
-                                                                        style={{ color: "black" }}
-                                                                        id="status"
-                                                                        className="mb-3 formulario"
-                                                                        onChange={handleStatusChange}
-                                                                        value={selectedStatus}
-                                                                        labelId="status-label"
-                                                                        sx={{ borderRadius:"15px"}}
-                                                                        displayEmpty                                       
-                                                                    >
-                                                                        <MenuItem value="">Selecciona una opción</MenuItem>
-                                                                        <MenuItem value="Nuevo">Nuevo</MenuItem>
-                                                                        <MenuItem value="Usado: Como nuevo">Usado: Como nuevo</MenuItem>
-                                                                        <MenuItem value="Usado: Con algo de desgaste">Usado: Con algo de desgaste</MenuItem>
-                                                                        <MenuItem value="Usado: Con mucho desgaste">Usado: Con mucho desgaste</MenuItem>
-                                                                        <MenuItem value="Usado:  En mal estado">Usado:  En mal estado</MenuItem>
-                                                                        </Select>
-                                                                </FormControl>
+                                                            <FormControl fullWidth>
+                                                                <h6 style={{ fontFamily: "SF Pro Display Bold" }}>Estado del libro</h6>
+                                                                <Select
+                                                                fullWidth
+                                                                style={{ color: "black" }}
+                                                                id="status"
+                                                                className="mb-3 formulario"
+                                                                onChange={handleStatusChange}
+                                                                value={selectedStatus}
+                                                                labelId="status-label"
+                                                                sx={{ borderRadius: "15px" }}
+                                                                displayEmpty
+                                                                >
+                                                                <MenuItem value="">Selecciona una opción</MenuItem>
+                                                                <MenuItem value="Nuevo">Nuevo</MenuItem>
+                                                                <MenuItem value="Usado: Como nuevo">Usado: Como nuevo</MenuItem>
+                                                                <MenuItem value="Usado: Con algo de desgaste">Usado: Con algo de desgaste</MenuItem>
+                                                                <MenuItem value="Usado: Con mucho desgaste">Usado: Con mucho desgaste</MenuItem>
+                                                                <MenuItem value="Usado: En mal estado">Usado: En mal estado</MenuItem>
+                                                                </Select>
+                                                            </FormControl>
                                                             </Grid>
                                                         </Grid>
                                                         <Grid container spacing={2} >
@@ -661,22 +645,25 @@ const Sales: React.FC = () => {
                                                             </Grid>
                                                             {/* Num ejemplares */}
                                                             <Grid item xs={6} alignItems="flex-start">
-                                                                <FormGroup>
+                                                                
+                                                                {selectedStatus === "Nuevo" && (
+                                                                    <FormGroup>
                                                                     <FormControlLabel
                                                                         control={<Checkbox checked={isChecked} onChange={handleCheckboxChange} />}
                                                                         label="Deseo publicar más de un ejemplar"
                                                                     />
                                                                     {isChecked && (
                                                                         <TextField 
-                                                                            fullWidth 
-                                                                            id="stock"
-                                                                            label="Número de Libros"
-                                                                            type="number"
-                                                                            value={stock_book}
-                                                                            onChange={(event) => setStockBook(Number(event.target.value))}
+                                                                        fullWidth 
+                                                                        id="stock"
+                                                                        label="Número de Libros"
+                                                                        type="number"
+                                                                        value={stock_book}
+                                                                        onChange={(event) => setStockBook(Number(event.target.value))}
                                                                         />
                                                                     )}
-                                                                </FormGroup>
+                                                                    </FormGroup>
+                                                                )}
                                                                 <br />
                                                                 <h6 style={{color: "#000000", fontFamily:"SF Pro Display Bold"}}>Información Adicional</h6>
 
