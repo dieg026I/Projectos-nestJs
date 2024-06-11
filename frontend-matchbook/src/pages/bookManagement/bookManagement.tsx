@@ -1,19 +1,69 @@
-import React, { useState } from 'react';
-import { Box, Button, Card, CardActionArea, CardActions, CardContent, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography, useMediaQuery, useTheme } from "@mui/material";
+import React, { useEffect, useState } from 'react';
+import { Box, Button, Card, CardActionArea, CardActions, CardContent, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Typography, useMediaQuery, useTheme } from "@mui/material";
 import Footer from "../../components/common/Footer/footer";
 import NavBarLogin from "../../components/common/NavBarLogin/navBarLogin";
+import axios from 'axios';
+import { IoTrashOutline } from "react-icons/io5";
+import { HiOutlinePencil } from "react-icons/hi2";
+import { VscDebugStart } from "react-icons/vsc";
+
+interface Cities {
+    id_city: string;
+    name: string;
+}
+
+interface Users {
+    name_user: string,
+    lastname_user: string,
+    rut_user: number,
+    dv_user: string,
+    phone_user: number,
+    email_user: string,
+    password_users: string,
+    cities: Cities,
+    publication: Publication[]
+}
+
+interface Publication {
+    id_publication: string;
+    date_publication: Date;
+    users: Users;
+    book: Book;
+    photo_showcase: string;
+    photo_cover: string;
+    photo_first_page: string;
+    photo_back_cover: string;
+    cost_book: number;
+}
+interface Author {
+    id_author: string;
+    name_author: string;
+}
+interface Publisher {
+    id_publisher: string;
+    name_publisher: string;
+}
+interface Book {
+    id_book: string;
+    name_book: string;
+    format_book: string;
+    author_id_author: Author;
+    publisher_name: string; 
+    publisher_id_publisher: Publisher;
+    category: string;
+    year_book: number;
+    status_book: string;
+    stock_book: number;
+    description_book: string;
+}
+
 
 const BookManagement: React.FC = () => {
     const [activeTab, setActiveTab] = useState('publicaciones');
     const theme = useTheme();
     const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
-
-    const cardStyle = {
-        borderRadius: "20px",
-        width: isSmallScreen ? '90%' : '1100px', // Ajusta el ancho para pantallas pequeñas
-        // ... otros estilos ...
-    };
-
+    const [users, setUsers] = React.useState<Users>();
+    const [publications, setPublications] = React.useState<Publication[]>([]);
 
     {/* Titulos */}
     const getTitle = () => {
@@ -28,41 +78,96 @@ const BookManagement: React.FC = () => {
                 return "";
         }
     };
+
+    useEffect(() => {
+        const fetchPublications = async () => {
+        try {
+            const response = await axios.get('http://localhost:3001/publications/publication');
+            const publicationResponse = response.data;
+            setPublications(response.data);
+            console.log(JSON.stringify(response.data, null, 2))
+        } catch (error) {
+        console.error('Error fetching publications:', error);
+        }
+        const userString = localStorage.getItem("user");
+        
+        
+        try {
+            const formData = new FormData();
+            const userString = localStorage.getItem("user");
+            if (userString !== null){
+            const users : Users = JSON.parse(userString);
+            const responseUser= await axios.get(`http://localhost:3001/users/publication/${users.rut_user}`);
+            const userResponse = responseUser.data;
+            setUsers(userResponse);
+            console.log(JSON.stringify(responseUser.data, null, 2))
+            }
+        } catch (error) {
+        console.error('Error fetching publications:', error);
+        }
+        
+    };
+
+    fetchPublications();
+    }, []);
+
     
     {/* Contenido Pestañas */}
     const getContent = () => {
         switch (activeTab) {
             case 'publicaciones':
                 return (
-                    <TableContainer component={Paper} style={{padding:"0"}}>
-                        <Table>
+                    <TableContainer component={Paper} style={{ padding: "0", maxHeight: '450px',  }}>
+                        <Table style={{  borderRadius: '10px' }}>
                             <TableHead>
                                 <TableRow style={{ backgroundColor:"#d2efff"}}>
                                     <TableCell align="center">Producto</TableCell>
                                     <TableCell align="center">Estado</TableCell>
                                     <TableCell align="center">Stock</TableCell>
-                                    <TableCell align="center">Total</TableCell>
+                                    <TableCell align="center">Precio</TableCell>
                                     <TableCell align="center">Acciones</TableCell>
                                 </TableRow>
                             </TableHead>
                             <TableBody>
-                                <TableRow>
-                                    <TableCell align="center">
-                                        <Button variant="contained">Producto</Button>
+                            {users && Array.isArray(users.publication) && users.publication.reverse().map((publication) => (
+                                <TableRow key={publication.id_publication}>
+                                    <TableCell align="center" style={{ display: 'flex', alignItems: 'center', marginLeft: '50px', }}>
+                                        <img
+                                        src={`http://localhost:3001/images/${publication.photo_showcase}`}
+                                        alt="Imagen del libro"
+                                        style={{
+                                            height: "auto",
+                                            width: "110px",
+                                            maxWidth: '100%',
+                                            marginRight: '10px',
+                                            margin:"5px"
+                                        }}
+                                        />
+                                        <div style={{ alignSelf: 'flex-start', textAlign:"left", marginLeft:"10px"}}>
+                                            <Typography style={{fontFamily:"SF Pro Display Bold"}}>{publication.book.name_book || 'No disponible'}</Typography>
+                                            <span style={{fontFamily:"SF Pro Display Regular"}}>{publication.book.author_id_author.name_author || 'No disponible'}</span>
+                                        </div>
+                                        
                                     </TableCell>
+
+                                    <TableCell align="center"> pausada </TableCell>
+
+                                    <TableCell align="center"> stock </TableCell>
+
+                                    <TableCell align="center">${publication.cost_book}</TableCell>
                                     <TableCell align="center">
-                                        <Button variant="contained">Estado</Button>
-                                    </TableCell>
-                                    <TableCell align="center">
-                                        <Button variant="contained">Stock</Button>
-                                    </TableCell>
-                                    <TableCell align="center">
-                                        <Button variant="contained">Total</Button>
-                                    </TableCell>
-                                    <TableCell align="center">
-                                        <Button variant="contained">Acciones</Button>
+                                        <Button variant="contained" style={{ borderRadius: '50%', width: '40px', height: '40px', padding: '0', minWidth: '0', marginRight:"6px" }}>
+                                            <IoTrashOutline />
+                                        </Button>
+                                        <Button variant="contained" style={{ borderRadius: '50%', width: '40px', height: '40px', padding: '0', minWidth: '0' }}>
+                                            <HiOutlinePencil />
+                                        </Button>
+                                        <Button variant="contained" style={{ borderRadius: '50%', width: '40px', height: '40px', padding: '0', minWidth: '0', marginLeft:"6px" }}>
+                                            <VscDebugStart />
+                                        </Button>
                                     </TableCell>
                                 </TableRow>
+                                ))}
                             </TableBody>
                         </Table>
                     </TableContainer>
@@ -86,6 +191,54 @@ const BookManagement: React.FC = () => {
                 );
             default:
                 return null;
+        }
+    };
+
+    const [selectedPublications, setSelectedPublications] = useState<string[]>([]);
+
+    {/* Mostrar Publicacion */}
+
+    useEffect(() => {
+        const fetchPublications = async () => {
+        try {
+            const response = await axios.get('http://localhost:3001/publications/publication');
+            const publicationResponse = response.data;
+            setPublications(response.data);
+            console.log(JSON.stringify(response.data, null, 2))
+        } catch (error) {
+        console.error('Error fetching publications:', error);
+        }
+        
+        
+    };
+
+    fetchPublications();
+    }, []);
+
+    // Función para manejar la selección de publicaciones
+    const handleSelectPublication = (id: string) => {
+        const selectedIndex = selectedPublications.indexOf(id);
+        let newSelectedPublications: string[] = [];
+
+        if (selectedIndex === -1) {
+            newSelectedPublications = [...selectedPublications, id];
+        } else {
+            newSelectedPublications = selectedPublications.filter(selectedId => selectedId !== id);
+        }
+
+        setSelectedPublications(newSelectedPublications);
+    };
+
+    // Eliminar publicaciones seleccionadas
+    const deleteSelectedPublications = () => {
+        if (window.confirm('¿Realmente quieres eliminar la(s) publicación(es)?')) {
+            const deleteRequests = selectedPublications.map(id => axios.delete(`http://localhost:3001/publications/${id}`));
+            Promise.all(deleteRequests)
+                .then(() => {
+                    setPublications(publications.filter(publication => !selectedPublications.includes(publication.id_publication)));
+                    setSelectedPublications([]);
+                })
+                .catch(error => console.error('Hubo un error al eliminar las publicaciones', error));
         }
     };
 
@@ -150,7 +303,7 @@ const BookManagement: React.FC = () => {
 // Estilos comunes para las pestañas
 const tabStyle = {
     position: 'absolute',
-    top: '95px',
+    top: '78px',
     backgroundColor: '#f44336',
     color: '#fff',
     borderRadius: '20px 20px 0 0',
@@ -160,7 +313,7 @@ const tabStyle = {
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
-    cursor: 'pointer' // Agrega el cursor de mano al pasar el mouse
+    cursor: 'pointer'
 };
 
 export default BookManagement;

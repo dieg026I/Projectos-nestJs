@@ -64,7 +64,7 @@ const Sales: React.FC = () => {
     const [year_book, setYearBook] = useState<number | null>(null);
     const [status_book, setStatusBook ] = React.useState('');
     const [selectedStatus, setSelectedStatus] = useState('');
-    const [stock_book, setStockBook] = React.useState(0);
+    const [stock_book, setStockBook] = React.useState(1);
     const [description_book, setDescriptionBook] = React.useState('');
 
     {/* Publicación */}
