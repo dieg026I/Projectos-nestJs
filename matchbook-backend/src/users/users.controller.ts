@@ -28,9 +28,8 @@ export class UsersController {
 
   @Get('publication/:rut_user')
   findOnePublication(@Param('rut_user') rut_user: number) {
-    return this.usersService.findAllWithPublication(rut_user);
+    return this.usersService.findOneWithPublications(rut_user);
   }
-
 
   @Put(':id')
   update(@Param('id') id: string, @Body() user: Users) {
@@ -41,6 +40,4 @@ export class UsersController {
   remove(@Param('id') id: string) {
     return this.usersService.remove(id);
   }
-
-  
 }

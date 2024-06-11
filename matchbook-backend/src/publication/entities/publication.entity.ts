@@ -1,6 +1,7 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, PrimaryColumn, JoinColumn } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, PrimaryColumn, JoinColumn, OneToMany } from 'typeorm';
 import { Users } from '../../users/entities/user.entity';
 import { Book } from '../../book/entities/book.entity';
+import { Buy } from 'src/buy/entities/buy.entity';
 
 @Entity('publication')
 export class Publication {
@@ -38,4 +39,7 @@ export class Publication {
   
   @Column()
   cost_book: number;
+  
+  @OneToMany(() => Buy, buy => buy.publication)
+  buy: Buy[];
 }

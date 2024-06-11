@@ -32,12 +32,10 @@ export class UsersService {
       });
   }
 
-  findAllWithPublication(rut_user: number): Promise<Users> {
-    return this.usersRepository.findOne({ 
-      where : {rut_user},
-      relations: ['publication', 'publication.book' , 'publication.book.author_id_author'  ] })
+  findOneWithPublications(rut_user: number): Promise<Users> {
+    return this.usersRepository.findOne({where: {rut_user},  relations: ['publication','cities', 'publication.book', 'publication.book.author_id_author'] })
       .catch(error => {
-        console.error('Error fetching publications with publication:', error);
+        console.error('Error fetching user with publications:', error);
         throw error;
       });
   }
