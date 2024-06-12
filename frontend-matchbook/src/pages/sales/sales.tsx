@@ -84,7 +84,7 @@ const Sales: React.FC = () => {
 
     const [open, setOpen] = useState(false);
     const [options, setOptions] = useState<BookSuggestion[]>([]);
-    const [selectedBook, setSelectedBook] = useState<BookSuggestion | null>(null);
+    const [selectedBook, setSelectedBook] = useState<BookSuggestion | null>(null); 
 
     {/*-----------------------------------------------------------------------------*/}
     {/* Eliminar Animaciones */}
@@ -153,12 +153,13 @@ const Sales: React.FC = () => {
     };
 
     const handleSelectChange = (event: React.ChangeEvent<{}>, value: BookSuggestion | null) => {
-        setSelectedBook(value);
         if (value) {
-            setAuthorName(value.authors.join(', '));
+            setNameBook(value.title);
             setPublisherName(value.publisher || '');
             setYearBook(value.publishedDate ? new Date(value.publishedDate).getFullYear() : null);
             setImageShowcase(value.image || null);
+        } else {
+            setNameBook('');
         }
     };
     
@@ -202,7 +203,6 @@ const Sales: React.FC = () => {
         }
     };
     
-
     const handleImageChangeCover = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.files) {
             setPhotoCover(e.target.files[0])
@@ -275,10 +275,31 @@ const Sales: React.FC = () => {
         event.preventDefault();
     
         // Validación de campos requeridos
-        if (!name_book || !author_name || !publisher_name || !year_book || !cost_book) {
-            alert("Por favor, completa todos los campos requeridos.");
+        if (!name_book) {
+            alert("Por favor, ingresa el nombre del libro.");
             return;
         }
+        if (!author_name) {
+            alert("Por favor, ingresa el nombre del autor.");
+            return;
+        }
+        if (!publisher_name) {
+            alert("Por favor, ingresa el nombre de la editorial.");
+            return;
+        }
+        if (!year_book) {
+            alert("Por favor, ingresa el año del libro.");
+            return;
+        }
+        if (!cost_book) {
+            alert("Por favor, ingresa el costo del libro.");
+            return;
+        }
+        if (!category) {
+            alert("Por favor, selecciona una categoría.");
+            return;
+        }
+
 
         try {
             // Primero, guarda el autor y obtén su ID
@@ -319,16 +340,6 @@ const Sales: React.FC = () => {
         const userString = localStorage.getItem('user');
     };
     
-    const add_book = (event: React.FormEvent) => {
-            event.preventDefault();
-        handleSubmitBook(event).then(() => {
-            toast("Libro guardado con éxito!");
-        }).catch((error) => {
-            // Manejar el error aquí si la promesa es rechazada
-            console.error('Error al guardar el libro:', error);
-        });
-    };
-
     {/*-----------------------------------------------------------------------------*/}
     {/* Publicación */}
     
@@ -336,10 +347,31 @@ const Sales: React.FC = () => {
         event.preventDefault();
 
         // Validación de campos requeridos
-        if (!name_book || !author_name || !publisher_name || !year_book || !cost_book || !category || !status_book) {
-            alert("Por favor, completa todos los campos requeridos.");
+        if (!name_book) {
+            alert("Por favor, ingresa el nombre del libro.");
             return;
         }
+        if (!author_name) {
+            alert("Por favor, ingresa el nombre del autor.");
+            return;
+        }
+        if (!publisher_name) {
+            alert("Por favor, ingresa el nombre de la editorial.");
+            return;
+        }
+        if (!year_book) {
+            alert("Por favor, ingresa el año del libro.");
+            return;
+        }
+        if (!cost_book) {
+            alert("Por favor, ingresa el costo del libro.");
+            return;
+        }
+        if (!category) {
+            alert("Por favor, selecciona una categoría.");
+            return;
+        }
+
         
         const formData = new FormData();
 
@@ -449,6 +481,7 @@ const Sales: React.FC = () => {
                                                         getOptionLabel={(option) => `${option.title} - ${option.authors.join(', ')}`}
                                                         options={options}
                                                         loading={open && options.length === 0}
+                                                        value={selectedBook}
                                                         onChange={handleSelectChange}
                                                         onInputChange={handleInputChange}
                                                         renderInput={(params) => (
@@ -459,9 +492,7 @@ const Sales: React.FC = () => {
                                                                 fullWidth
                                                             />
                                                         )}
-                                                        // ... otras props que puedas necesitar
                                                     />
-
                                                     </FormControl>
                                                 </CardBody>
                                                 </> 
@@ -495,7 +526,6 @@ const Sales: React.FC = () => {
                                                                     InputLabelProps={{
                                                                         sx: { fontSize: "16px"} 
                                                                     }}
-                                                                    
                                                                     sx={{ borderRadius: 20 }}
                                                                 />
                                                             </Grid>
@@ -758,7 +788,6 @@ const Sales: React.FC = () => {
                                                                     )}
                                                                 </CardContent>
                                                             </Card>
-
                                                             {/* Portada Página (Fotografía) */}
                                                             <Card style={{ margin: "10px", alignContent: "center", height:"255px", width: "175px", borderRadius: "20px", textAlign: "center", position: 'relative'}} sx={{ maxWidth: 345, padding: "10px"}}>
                                                                 <CardContent style={{padding:"0px", position: "relative"}}>
@@ -793,7 +822,6 @@ const Sales: React.FC = () => {
                                                                     )}
                                                                 </CardContent>
                                                             </Card>
-
                                                             {/* Contraportada (Fotografía) */}
                                                             <Card style={{ margin: "10px", alignContent: "center", height:"255px", width: "175px", borderRadius: "20px", textAlign: "center", position: 'relative'}} sx={{ maxWidth: 345, padding: "10px"}}>
                                                                 <CardContent style={{padding:"0px", position: "relative"}}>
@@ -828,7 +856,6 @@ const Sales: React.FC = () => {
                                                                     )}
                                                                 </CardContent>
                                                             </Card>
-
                                                     </Grid>
                                                 </div>
                                             </>
@@ -851,7 +878,7 @@ const Sales: React.FC = () => {
                                         </div>
                                     ) : step === 2 ? (
                                         <div style={{justifyContent: "flex-start"}}>
-                                        <Button onClick={add_book}  style={{ backgroundColor:"#1eaeff", color: "#ffffff", borderRadius:"30px", textTransform: "none", marginRight:"30px", width:"130px", height:"50px", fontWeight:"bold"}} >
+                                        <Button onClick={handleSubmitBook}  style={{ backgroundColor:"#1eaeff", color: "#ffffff", borderRadius:"30px", textTransform: "none", marginRight:"30px", width:"130px", height:"50px", fontWeight:"bold"}} >
                                             Siguiente
                                         </Button>
                                         <ToastContainer 
