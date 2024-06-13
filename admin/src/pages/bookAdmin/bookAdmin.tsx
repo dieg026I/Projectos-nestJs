@@ -119,22 +119,29 @@ const BookAdmin: React.FC = () => {
         }
     };
 
-    const [isModalOpen, setIsModalOpen] = useState(false);
+    {/* -------------------- */}
+    {/* Modal Agregar */}
+    const [isModalOpenAdd, setIsModalOpenAdd] = useState(false);
     const [newPublication, setNewPublication] = useState({
         // ...inicializa con los campos necesarios para una nueva publicación
     });
 
     // Función para abrir el modal
-    const openModal = () => setIsModalOpen(true);
+    const openModalAdd = () => setIsModalOpenAdd(true);
 
     // Función para cerrar el modal
-    const closeModal = () => setIsModalOpen(false);
+    const closeModalAdd = () => setIsModalOpenAdd(false);
 
-    // Función para enviar los datos del formulario
-    const submitNewPublication = async () => {
-        // ...enviar los datos a la API y manejar la respuesta
-        closeModal();
-    };
+    {/* -------------------- */}
+    {/* Modal Modificar */}
+    const [isModalOpenEdit, setIsModalOpenEdit] = useState(false);
+
+    // Función para abrir el modal
+    const openModalEdit = () => setIsModalOpenEdit(true);
+
+    // Función para cerrar el modal
+    const closeModalEdit = () => setIsModalOpenEdit(false);
+
 
 
     const addNewPublication = async () => {
@@ -296,47 +303,36 @@ const BookAdmin: React.FC = () => {
     const [imageFirst, setImageFirst] = useState<string | null>(null);
     const [imageBack, setImageBack] = useState<string | null>(null);
 
-    const VisuallyHiddenInput = styled('input')({
-    clip: 'rect(0 0 0 0)',
-    clipPath: 'inset(50%)',
-    height: 1,
-    overflow: 'hidden',
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    whiteSpace: 'nowrap',
-    width: 1,
-    });
 
-    const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        if (event.target.files && event.target.files[0]) {
-            const fileReader = new FileReader();
-            fileReader.onload = (e) => {
-                if (e.target) {
-                    setImageShowcase(e.target.result as string);
-                }
-            }; 
+    const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (e.target.files) {
+            const file = e.target.files[0];
+            setPhotoShowcase(file); 
+            setImageShowcase(file.name); 
+        }
+    };
+
+    const handleImageChangeCover = (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (e.target.files) {
+            const file = e.target.files[0];
+            setPhotoCover(file); 
+            setImageCover(file.name); 
         }
     };
     
-    const handleImageChangeCover = (e: React.ChangeEvent<HTMLInputElement>) => {
-        if (e.target.files) {
-            setPhotoCover(e.target.files[0])
-            setImageCover(URL.createObjectURL(e.target.files[0]));
-        }
-    };
-
     const handleImageChangeFirst = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.files) {
-            setPhotoFirstPage(e.target.files[0])
-            setImageFirst(URL.createObjectURL(e.target.files[0]));
+            const file = e.target.files[0];
+            setPhotoFirstPage(file); 
+            setImageFirst(file.name); 
         }
     };
-
+    
     const handleImageChangeBack = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.files) {
-            setPhotoBackCover(e.target.files[0])
-            setImageBack(URL.createObjectURL(e.target.files[0]));
+            const file = e.target.files[0];
+            setPhotoBackCover(file); 
+            setImageBack(file.name); 
         }
     };
 
@@ -410,7 +406,7 @@ const BookAdmin: React.FC = () => {
             });
     
             // Navegar a la página de inicio después de guardar
-            navigate('/home2');
+            closeModalAdd();
     
         } catch (error) {
             console.error('Hubo un error al procesar tu solicitud:', error);
@@ -442,12 +438,12 @@ const BookAdmin: React.FC = () => {
                                 /> {/*placeholder={value}*/}
                             </Grid>
                             <Grid className="text-center" item xs={12} sm={3} md={2} lg={2}>
-                                <Button  onClick={() => modifyPublication(id_publication)}  variant="contained" style={{ textTransform: "none", backgroundColor: '#7A7A7A', color: 'white', borderRadius: '30px', width: 'auto', padding: '6px 16px' }}>
+                                <Button variant="contained" style={{ textTransform: "none", backgroundColor: '#7A7A7A', color: 'white', borderRadius: '30px', width: 'auto', padding: '6px 16px' }}>
                                     Modificar
                                 </Button>
                             </Grid>
                             <Grid className="text-center" item xs={12} sm={3} md={2} lg={2}>
-                                <Button  onClick={openModal} variant="contained" style={{ textTransform: "none", backgroundColor: '#0b9000', color: 'white', borderRadius: '30px', width: 'auto', padding: '6px 16px' }}>
+                                <Button  onClick={openModalAdd} variant="contained" style={{ textTransform: "none", backgroundColor: '#0b9000', color: 'white', borderRadius: '30px', width: 'auto', padding: '6px 16px' }}>
                                     Agregar
                                 </Button>
                             </Grid>
@@ -457,10 +453,12 @@ const BookAdmin: React.FC = () => {
                                 </Button>
                             </Grid>
                         </Grid>
-                        <Modal open={isModalOpen} onClose={closeModal}>
+
+                        {/* Modal Agregar */}
+                        <Modal open={isModalOpenAdd} onClose={closeModalAdd}>
                             <div style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100vh", overflowY: "auto" }} >
                                 <Card style={{ width: "1030px", maxHeight: "650px", overflowY: "auto", position: "relative", paddingLeft:"20px", paddingRight:"20px", marginTop:"20px", marginBottom:"20px", paddingBottom:"20px"}}>
-                                    <MdClose onClick={closeModal} style={{ position: "absolute", right: 0, top: 0, padding:"10px", width:"25px", height:"25px"}} />
+                                    <MdClose onClick={closeModalAdd} style={{ position: "absolute", right: 0, top: 0, padding:"10px", width:"25px", height:"25px"}} />
                                     <Grid container spacing={2} alignItems="center" >
                                         <Grid item xs={12}>
                                         <h6 style={{fontFamily:"SF Pro Display Bold", fontSize:"18px", margin:"0", marginTop:"20px", marginBottom:"20px"}}>Título</h6>
@@ -641,57 +639,79 @@ const BookAdmin: React.FC = () => {
                                             <div>
                                                 <h6  style={{ fontFamily: "SF Pro Display Bold" , fontSize:"18px" , margin:"0", marginBottom:"20px", marginTop:"20px"}}>Imagenes </h6>
 
-                                                    <div style={{ display:"flex", justifyContent:"left" }}>
+                                                <div style={{ display:"flex", justifyContent:"left" }}>
+
+                                                    <div style={{padding:"0"}}>
                                                         <Button
                                                             style={{marginRight:"30px"}}
                                                             component="label"
-                                                            role={undefined}
                                                             variant="contained"
-                                                            tabIndex={-1}
                                                             startIcon={<IoMdCloudDownload />}
-                                                            >
-                                                            Upload file
-                                                            <VisuallyHiddenInput type="file" />
+                                                        >
+                                                            Portada Vitrina
+                                                            <input type="file" hidden onChange={handleImageChange} />
                                                         </Button>
+                                                        {imageShowcase && (
+                                                            <p style={{ fontSize: "small" }}>
+                                                                {imageShowcase.length > 25 ? `...${imageShowcase.substring(imageShowcase.length - 25)}` : imageShowcase}
+                                                            </p>
+                                                        )}
                                                         <br />
+                                                    </div>
 
+                                                    <div >
                                                         <Button
                                                             component="label"
-                                                            role={undefined}
                                                             variant="contained"
-                                                            tabIndex={-1}
                                                             startIcon={<IoMdCloudDownload />}
-                                                            >
-                                                            Upload file
-                                                            <VisuallyHiddenInput type="file" />
+                                                        >
+                                                            Portada Real
+                                                            <input type="file" hidden onChange={handleImageChangeCover} />
                                                         </Button>
+                                                        {imageCover && (
+                                                            <p style={{ fontSize: "small"}}>
+                                                                {imageCover.length > 25 ? `...${imageCover.substring(imageCover.length - 25)}` : imageCover}
+                                                            </p>
+                                                        )}
                                                     </div>
-                                                    <br />
+                                                </div>
+                                                <br />
 
-                                                    <div style={{ display:"flex", justifyContent:"left" }}>
+                                                <div style={{ display:"flex", justifyContent:"left" }}>
+
+                                                    <div>
                                                         <Button
                                                             style={{marginRight:"30px"}}
                                                             component="label"
-                                                            role={undefined}
                                                             variant="contained"
-                                                            tabIndex={-1}
                                                             startIcon={<IoMdCloudDownload />}
-                                                            >
-                                                            Upload file
-                                                            <VisuallyHiddenInput type="file" />
+                                                        >
+                                                            Portada Página
+                                                            <input type="file" hidden onChange={handleImageChangeFirst} />
                                                         </Button>
+                                                        {imageFirst && (
+                                                            <p style={{ fontSize: "small" }}>
+                                                                {imageFirst.length > 25 ? `...${imageFirst.substring(imageFirst.length - 25)}` : imageFirst}
+                                                            </p>
+                                                        )}
+                                                    </div>
 
+                                                    <div>
                                                         <Button
                                                             component="label"
-                                                            role={undefined}
                                                             variant="contained"
-                                                            tabIndex={-1}
                                                             startIcon={<IoMdCloudDownload />}
-                                                            >
-                                                            Upload file
-                                                            <VisuallyHiddenInput type="file" />
+                                                        >
+                                                            Contraportada
+                                                            <input type="file" hidden onChange={handleImageChangeBack} />
                                                         </Button>
+                                                        {imageBack && (
+                                                            <p style={{ fontSize: "small" }}>
+                                                                {imageBack.length > 25 ? `...${imageBack.substring(imageBack.length - 25)}` : imageBack}
+                                                            </p>
+                                                        )}
                                                     </div>
+                                                </div>
                                             </div>
                                             <br />
 
@@ -732,7 +752,7 @@ const BookAdmin: React.FC = () => {
                                 </Card>
                             </div>
                         </Modal>
-
+                        
                         <TableContainer component={Paper} style={{ padding: '0', height:"600px" }}>
                         <Table>
                             <TableHead>
