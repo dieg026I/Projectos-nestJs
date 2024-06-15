@@ -195,8 +195,9 @@ const BookAdmin: React.FC = () => {
             await axios.post('http://localhost:3001/publications/upload', formData, {
                 headers: { 'Content-Type': 'multipart/form-data' },
             });
-    
+            alert('Publicación Agregada');
             closeModalAdd();
+            window.location.reload();
     
         } catch (error) {
             console.error('Hubo un error al procesar tu solicitud:', error);
@@ -345,6 +346,8 @@ const BookAdmin: React.FC = () => {
                 .then(() => {
                     setPublications(publications.filter(publication => !selectedPublications.includes(publication.id_publication)));
                     setSelectedPublications([]);
+                    alert('Publicación Eliminada');
+                    window.location.reload();
                 })
                 .catch(error => console.error('Hubo un error al eliminar las publicaciones', error));
         }
@@ -410,10 +413,11 @@ const BookAdmin: React.FC = () => {
                             categories: bookPublication.category
                         });
 
-                        // Agrega depuración para verificar el valor de author_id_author
-                        console.log("author_id_author: ", bookPublication.author_id_author);
+                        
 
-                        const id_author_book = bookPublication.author_id_author;
+                        const id_author_book = bookPublication.author_id_author.id_author;
+                        // Agrega depuración para verificar el valor de author_id_author
+                        console.log("author_id_author: ", bookPublication.author_id_author.id_author);
 
                         if (id_author_book) {
                             console.log("nombre Autor: "+ id_author_book)
@@ -435,7 +439,7 @@ const BookAdmin: React.FC = () => {
                             setEditingId(null);
                             setSelectedPublications([]);
                             alert('Publicación actualizada con éxito');
-                            {/*window.location.reload();*/}
+                            window.location.reload();
                         } else {
                             console.error('El ID del autor es undefined');
                             alert('Error: No se encontró el ID del autor.');
@@ -483,14 +487,21 @@ const BookAdmin: React.FC = () => {
                             <Button
                                 onClick={() => {
                                     if (selectedPublications.length === 1) {
-                                    setEditingId(selectedPublications[0]);
+                                        const selectedId = selectedPublications[0];
+                                        setEditingId(selectedId);
+                                        // Encuentra la publicación seleccionada y establece los valores para la edición.
+                                        const publicationToEdit = publications.find(pub => pub.id_publication === selectedId);
+                                        if (publicationToEdit) {
+                                            setEditedBookName(publicationToEdit.book.name_book);
+                                            setEditedAuthorName(publicationToEdit.book.author_id_author.name_author);
+                                        }
                                     } else {
-                                    alert('Por favor, selecciona una sola publicación para modificar.');
+                                        alert('Por favor, selecciona una sola publicación para modificar.');
                                     }
                                 }}
                                 variant="contained"
                                 style={{ textTransform: "none", backgroundColor: '#7A7A7A', color: 'white', borderRadius: '30px', width: 'auto', padding: '6px 16px' }}
-                                >
+                            >
                                 Modificar
                             </Button>
                             </Grid>

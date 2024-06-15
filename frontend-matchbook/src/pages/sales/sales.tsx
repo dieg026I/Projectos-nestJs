@@ -192,14 +192,11 @@ const Sales: React.FC = () => {
     const [imageFirst, setImageFirst] = useState<string | null>(null);
     const [imageBack, setImageBack] = useState<string | null>(null);
 
-    const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        if (event.target.files && event.target.files[0]) {
-            const fileReader = new FileReader();
-            fileReader.onload = (e) => {
-                if (e.target) {
-                    setImageShowcase(e.target.result as string);
-                }
-            }; 
+    const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (e.target.files) {
+            const file = e.target.files[0];
+            setPhotoShowcase(file); 
+            setImageShowcase(file.name); 
         }
     };
     

@@ -37,7 +37,7 @@ export class PublicationService {
   }
 
   findOne(id_publication: string): Promise<Publication> {
-    return this.publicationRepository.findOne({where : {id_publication}, relations: ['book']});
+    return this.publicationRepository.findOne({where : {id_publication}, relations: ['book', 'book.author_id_author', 'book.publisher_id_publisher']});
 
   }
 
