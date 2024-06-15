@@ -1,8 +1,14 @@
-import { Controller, Get, Param, Delete, Post, UseInterceptors, UploadedFile, UploadedFiles, Body } from '@nestjs/common';
+import { Controller, Get, Param, Delete, Post, UseInterceptors, UploadedFile, UploadedFiles, Body, Put } from '@nestjs/common';
 import { PublicationService } from './publication.service';
 import { Publication } from './entities/publication.entity';
 import { FilesInterceptor } from '@nestjs/platform-express';
 import { multerConfig } from 'src/config/multer.config';
+
+export class UpdateBookDto {
+  name_book?: string;
+  name_author?: string;
+}
+
 @Controller('publications')
 export class PublicationController {
   constructor(private readonly publicationService: PublicationService) {}
@@ -25,7 +31,7 @@ export class PublicationController {
     return this.publicationService.findAll();
   }
   
-  @Get(':id')
+  @Get('onePublication/:id')
   findOne(@Param('id') id: string): Promise<Publication> {
     return this.publicationService.findOne(id);
   }
@@ -40,6 +46,11 @@ export class PublicationController {
     return this.publicationService.remove(id);
   }
 
+  @Put(':id')
+  async update(@Param('id') id: string, @Body() publication: Publication) {
+    return this.publicationService.update(id, publication);
+  }
 
 }
+
 

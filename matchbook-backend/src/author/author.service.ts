@@ -23,8 +23,8 @@ export class AuthorService {
     return this.authorRepository.findOne( { where: {id_author} } );
   }
 
-  update(id: string, author: Author) {
-    return this.authorRepository.update(id, author);
+  update(id_author: string, author: Author) {
+    return this.authorRepository.update(id_author, author);
   }
 
   remove(id: string) {

@@ -1,12 +1,10 @@
 import SideMenu from "../../components/sideMenu/sideMenu";
-import img from '../../assents/img/logoMatch.png'
 import { Autocomplete, AutocompleteInputChangeReason, Box, Button, Card, CardActionArea, CardActions, CardContent, Checkbox, FormControl, FormControlLabel, FormGroup, FormLabel, Grid, InputLabel, MenuItem, Modal, Paper, Radio, RadioGroup, Select, SelectChangeEvent, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Typography, styled, useMediaQuery, useTheme } from "@mui/material";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import React from "react";
 import { useNavigate } from "react-router";
 import { v4 as uuidv4 } from 'uuid';
-import { ToastContainer, toast } from 'react-toastify';
 import { MdClose } from "react-icons/md";
 import { IoMdCloudDownload } from "react-icons/io";
 
@@ -61,8 +59,8 @@ interface Book {
     status_book: string;
     stock_book: number;
     description_book: string;
+    publication: Publication[]
 }
-
 interface BookSuggestion {
     title: string;
     authors: string[];
@@ -74,122 +72,16 @@ interface BookSuggestion {
 const BookAdmin: React.FC = () => {
 
     const [selectedPublications, setSelectedPublications] = useState<string[]>([]);
-
-    {/* Mostrar Publicacion */}
     const [publications, setPublications] = React.useState<Publication[]>([]);
     const [users, setUsers] = React.useState<Users>();
-    useEffect(() => {
-        const fetchPublications = async () => {
-        try {
-            const response = await axios.get('http://localhost:3001/publications/publication');
-            const publicationResponse = response.data;
-            setPublications(response.data);
-            console.log(JSON.stringify(response.data, null, 2))
-        } catch (error) {
-        console.error('Error fetching publications:', error);
-        }
-    };
-
-    fetchPublications();
-    }, []);
-
-    // Función para manejar la selección de publicaciones
-    const handleSelectPublication = (id: string) => {
-        const selectedIndex = selectedPublications.indexOf(id);
-        let newSelectedPublications: string[] = [];
-
-        if (selectedIndex === -1) {
-            newSelectedPublications = [...selectedPublications, id];
-        } else {
-            newSelectedPublications = selectedPublications.filter(selectedId => selectedId !== id);
-        }
-        setSelectedPublications(newSelectedPublications);
-    };
-
-    // Eliminar publicaciones seleccionadas
-    const deleteSelectedPublications = () => {
-        if (window.confirm('¿Realmente quieres eliminar la(s) publicación(es)?')) {
-            const deleteRequests = selectedPublications.map(id => axios.delete(`http://localhost:3001/publications/${id}`));
-            Promise.all(deleteRequests)
-                .then(() => {
-                    setPublications(publications.filter(publication => !selectedPublications.includes(publication.id_publication)));
-                    setSelectedPublications([]);
-                })
-                .catch(error => console.error('Hubo un error al eliminar las publicaciones', error));
-        }
-    };
-
-    {/* -------------------- */}
+    
     {/* Modal Agregar */}
     const [isModalOpenAdd, setIsModalOpenAdd] = useState(false);
-    const [newPublication, setNewPublication] = useState({
-        // ...inicializa con los campos necesarios para una nueva publicación
-    });
-
-    // Función para abrir el modal
-    const openModalAdd = () => setIsModalOpenAdd(true);
-
-    // Función para cerrar el modal
-    const closeModalAdd = () => setIsModalOpenAdd(false);
-
-    {/* -------------------- */}
-    {/* Modal Modificar */}
-    const [isModalOpenEdit, setIsModalOpenEdit] = useState(false);
-
-    // Función para abrir el modal
-    const openModalEdit = () => setIsModalOpenEdit(true);
-
-    // Función para cerrar el modal
-    const closeModalEdit = () => setIsModalOpenEdit(false);
-
-
-
-    const addNewPublication = async () => {
-        // Aquí deberías tener un formulario o algún método para obtener los datos de la nueva publicación
-        const newPublicationData = {
-            // ...datos de la nueva publicación
-        };
-    
-        try {
-            const response = await axios.post('http://localhost:3001/publications', newPublicationData);
-            if (response.status === 201) {
-                // Agregar la nueva publicación al estado para que se muestre en la interfaz
-                setPublications([...publications, response.data]);
-            }
-        } catch (error) {
-            console.error('Error al agregar la publicación:', error);
-        }
-    };
-    
-    // Función para modificar una publicación existente
-    const modifyPublication = async (id: string) => {
-        // Aquí deberías tener un formulario o algún método para obtener los datos actualizados de la publicación
-        const updatedPublicationData = {
-            // ...datos actualizados de la publicación
-        };
-    
-        try {
-            const response = await axios.put(`http://localhost:3001/publications/${id}`, updatedPublicationData);
-            if (response.status === 200) {
-                // Actualizar la publicación en el estado para que se muestre en la interfaz
-                setPublications(publications.map(pub => pub.id_publication === id ? response.data : pub));
-            }
-        } catch (error) {
-            console.error('Error al modificar la publicación:', error);
-        }
-    };
-    
-
-    {/* Formulario */}
 
     {/* Sugerencia */}
-    const [suggestions, setSuggestions] = useState<{ title: string; authors: string[] }[]>([]);
-
-    const [selectedTitle, setSelectedTitle] = useState('');
 
     const [open, setOpen] = useState(false);
     const [options, setOptions] = useState<BookSuggestion[]>([]);
-    const [selectedBook, setSelectedBook] = useState<BookSuggestion | null>(null);
 
     {/* Book */}
     const [name_book, setNameBook] = React.useState('');
@@ -213,11 +105,115 @@ const BookAdmin: React.FC = () => {
     const [photo_cover, setPhotoCover] = React.useState<File | null>(null);
     const [photo_first_page, setPhotoFirstPage] = React.useState<File | null>(null);
     const [photo_back_cover, setPhotoBackCover] = React.useState<File | null>(null);
-    const [book, setBook] = React.useState<Book>();
+    const [book, setBook] = React.useState< Book | null>(null);
+
+    {/* Imagenes */}
+    const [imageShowcase, setImageShowcase] = useState<string | null>(null);
+    const [imageCover, setImageCover] = useState<string | null>(null);
+    const [imageFirst, setImageFirst] = useState<string | null>(null);
+    const [imageBack, setImageBack] = useState<string | null>(null);
+
+    {/* Editar/Modificar */}
+    const [editingId, setEditingId] = useState<string | null>(null);
+    const [editedBookName, setEditedBookName] = useState<string | null>(null);
+    const [editedAuthorName, setEditedAuthorName] = useState<string | null>(null);
+
     const navigate = useNavigate();
 
+    {/* Mostrar Publicacion */}
+    useEffect(() => {
+        const fetchPublications = async () => {
+        try {
+            const response = await axios.get('http://localhost:3001/publications/publication');
+            const publicationResponse = response.data;
+            setPublications(response.data);
+        } catch (error) {
+        console.error('Error fetching publications:', error);
+        }
+    };
+
+    fetchPublications();
+    }, []);
+    {/* ------------------------------------------------- */}
+
+    {/* Publicación */}
+    const handleSubmitPublication = async (event: React.FormEvent) => {
+        event.preventDefault();
+    
+        // Validación de campos requeridos
+        if (!name_book || !author_name || !publisher_name || !year_book || !cost_book || !category) {
+            alert("Por favor, completa todos los campos requeridos.");
+            return;
+        }
+    
+        try {
+            let id_author = uuidv4();
+            await axios.post('http://localhost:3001/author', {
+                id_author: id_author,    
+                name_author: author_name,
+            });
+    
+            let id_publisher = uuidv4();
+            await axios.post('http://localhost:3001/publisher', {
+                id_publisher: id_publisher,    
+                name_publisher: publisher_name  
+            });
+    
+            const bookId = `${name_book}-${author_name.length}-${publisher_name.slice(0, 3)}`.toLowerCase();
+    
+            await axios.post('http://localhost:3001/book', {
+                id_book: bookId,
+                name_book: name_book,
+                format_book: format_book,
+                author_id_author: id_author,
+                publisher_id_publisher: id_publisher,
+                year_book: year_book,
+                status_book: selectedStatus,
+                stock_book: stock_book,
+                description_book: description_book,
+                categories: [OneCategory]
+            });
+    
+            const formData = new FormData();
+            const id_publication = uuidv4();
+    
+            if (photo_showcase) formData.append('images', photo_showcase);
+            if (photo_cover) formData.append('images', photo_cover);
+            if (photo_first_page) formData.append('images', photo_first_page);
+            if (photo_back_cover) formData.append('images', photo_back_cover);
+    
+            const userString = localStorage.getItem("user");
+            if (userString) {
+                const user = JSON.parse(userString);
+                formData.append('rut_user', JSON.stringify(user.rut_user));
+            }
+    
+            formData.append('id_publication', id_publication);
+            formData.append('id_book', bookId);
+            formData.append('cost_book', cost_book.toString());
+    
+            await axios.post('http://localhost:3001/publications/upload', formData, {
+                headers: { 'Content-Type': 'multipart/form-data' },
+            });
+    
+            closeModalAdd();
+    
+        } catch (error) {
+            console.error('Hubo un error al procesar tu solicitud:', error);
+        }
+    };
+    {/* ------------------------------------------------- */}
+
+    {/* Modal Agregar */}
+
+    // Función para abrir el modal
+    const openModalAdd = () => setIsModalOpenAdd(true);
+
+    // Función para cerrar el modal
+    const closeModalAdd = () => setIsModalOpenAdd(false);
     {/*-----------------------------------------------------------------------------*/}
-    {/* Título */}
+
+    {/* Título libro (api google book) */}
     const handleInputChange = async (
         event: React.SyntheticEvent<Element, Event>,
         value: string,
@@ -253,11 +249,11 @@ const BookAdmin: React.FC = () => {
             setNameBook('');
         }
     };
-        
     {/*-----------------------------------------------------------------------------*/}
-    {/* Category */}
 
-    //llamar categorias
+    {/* Categorias */}
+
+    //Llamar categorias
     useEffect(() => {
         axios.get('http://localhost:3001/categories')
             .then(response => {
@@ -265,6 +261,7 @@ const BookAdmin: React.FC = () => {
             });
     }, []);
 
+    //Seleccionar categorias
     const handleCategoryChange = (event: SelectChangeEvent<string>) => {
         const selectedValue = (event.target.value);
         setSelectedCategory(selectedValue);
@@ -274,7 +271,9 @@ const BookAdmin: React.FC = () => {
             setOneCategory(response.data);
             });
     };
-    
+    {/*-----------------------------------------------------------------------------*/}
+
+    {/* Descripción */}
     const handleDescriptionChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
         if (event.target.value) {
             const description_book = event.target.value;
@@ -283,11 +282,12 @@ const BookAdmin: React.FC = () => {
     }
 
     {/*-----------------------------------------------------------------------------*/}
-    {/* Status */}
+    {/* Estado */}
     
     const handleStatusChange = (event: SelectChangeEvent) => {
     setSelectedStatus(event.target.value);
     };
+    {/*-----------------------------------------------------------------------------*/}
 
     {/* Checkbox mas libros */}
     const [isChecked, setIsChecked] = useState(false);
@@ -295,15 +295,11 @@ const BookAdmin: React.FC = () => {
     const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setIsChecked(event.target.checked);
     };
-
     {/*-----------------------------------------------------------------------------*/}
+
     {/* Imagenes */}
-    const [imageShowcase, setImageShowcase] = useState<string | null>(null);
-    const [imageCover, setImageCover] = useState<string | null>(null);
-    const [imageFirst, setImageFirst] = useState<string | null>(null);
-    const [imageBack, setImageBack] = useState<string | null>(null);
 
-
+    //Portada Vitrina
     const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.files) {
             const file = e.target.files[0];
@@ -312,6 +308,7 @@ const BookAdmin: React.FC = () => {
         }
     };
 
+    //Portada Real
     const handleImageChangeCover = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.files) {
             const file = e.target.files[0];
@@ -320,6 +317,8 @@ const BookAdmin: React.FC = () => {
         }
     };
     
+
+    //Portada Pagina
     const handleImageChangeFirst = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.files) {
             const file = e.target.files[0];
@@ -328,6 +327,7 @@ const BookAdmin: React.FC = () => {
         }
     };
     
+    //Contraportada
     const handleImageChangeBack = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.files) {
             const file = e.target.files[0];
@@ -335,90 +335,132 @@ const BookAdmin: React.FC = () => {
             setImageBack(file.name); 
         }
     };
+    {/* ------------------------------------------------- */}
 
-    {/* Publicación */}
-    
-    const handleSubmitPublication = async (event: React.FormEvent) => {
-        event.preventDefault();
-    
-        // Validación de campos requeridos
-        if (!name_book || !author_name || !publisher_name || !year_book || !cost_book || !category) {
-            alert("Por favor, completa todos los campos requeridos.");
-            return;
-        }
-    
-        try {
-            // Primero, guarda el autor y obtén su ID
-            let id_author = uuidv4();
-            await axios.post('http://localhost:3001/author', {
-                id_author: id_author,    
-                name_author: author_name,
-            });
-    
-            // Luego, guarda la editorial y obtén su ID
-            let id_publisher = uuidv4();
-            await axios.post('http://localhost:3001/publisher', {
-                id_publisher: id_publisher,    
-                name_publisher: publisher_name  
-            });
-    
-            const bookId = `${name_book}-${author_name.length}-${publisher_name.slice(0, 3)}`.toLowerCase();
-    
-            // Guarda el libro con los IDs del autor y la editorial
-            await axios.post('http://localhost:3001/book', {
-                id_book: bookId,
-                name_book: name_book,
-                format_book: format_book,
-                author_id_author: id_author,
-                publisher_id_publisher: id_publisher,
-                year_book: year_book,
-                status_book: selectedStatus,
-                stock_book: stock_book,
-                description_book: description_book,
-                categories: [OneCategory]
-            });
-    
-            // Preparar datos para la publicación
-            const formData = new FormData();
-            const id_publication = uuidv4();
-    
-            // Agregar fotos si están presentes
-            if (photo_showcase) formData.append('images', photo_showcase);
-            if (photo_cover) formData.append('images', photo_cover);
-            if (photo_first_page) formData.append('images', photo_first_page);
-            if (photo_back_cover) formData.append('images', photo_back_cover);
-    
-            // Agregar datos del usuario
-            const userString = localStorage.getItem("user");
-            if (userString) {
-                const user = JSON.parse(userString);
-                formData.append('rut_user', JSON.stringify(user.rut_user));
-            }
-    
-            // Agregar datos del libro y la publicación
-            formData.append('id_publication', id_publication);
-            formData.append('id_book', bookId);
-            formData.append('cost_book', cost_book.toString());
-    
-            // Guardar la publicación
-            await axios.post('http://localhost:3001/publications/upload', formData, {
-                headers: { 'Content-Type': 'multipart/form-data' },
-            });
-    
-            // Navegar a la página de inicio después de guardar
-            closeModalAdd();
-    
-        } catch (error) {
-            console.error('Hubo un error al procesar tu solicitud:', error);
+    {/* Eliminar publicaciones seleccionadas*/}
+    const deleteSelectedPublications = () => {
+        if (window.confirm('¿Realmente quieres eliminar la(s) publicación(es)?')) {
+            const deleteRequests = selectedPublications.map(id => axios.delete(`http://localhost:3001/publications/${id}`));
+            Promise.all(deleteRequests)
+                .then(() => {
+                    setPublications(publications.filter(publication => !selectedPublications.includes(publication.id_publication)));
+                    setSelectedPublications([]);
+                })
+                .catch(error => console.error('Hubo un error al eliminar las publicaciones', error));
         }
     };
+    {/* ------------------------------------------------- */}
 
+    {/* Seleccion de Publicaciones*/}
+    const handleSelectPublication = (id: string) => {
+    
+    const selectedIndex = selectedPublications.indexOf(id);
+    let newSelectedPublications: string[] = [];
+    
+    if (selectedIndex === -1) {
+        newSelectedPublications = [...selectedPublications, id];
+    } else {
+        newSelectedPublications = selectedPublications.filter(selectedId => selectedId !== id);
+        
+        if (editingId === id) {
+        const publicationToReset = publications.find(pub => pub.id_publication === id);
+        if (publicationToReset) {
+            setEditedBookName(publicationToReset.book.name_book);
+            setEditedAuthorName(publicationToReset.book.author_id_author.name_author);
+        }
+        setEditingId(null);
+        }
+    }
+    setSelectedPublications(newSelectedPublications);
+    };
+    {/* ------------------------------------------------- */}
 
+    {/* Modificar y Guardar edicion (nombre y autor)*/}
+    const handleSaveClick = async () => {
+        if (editingId) {
+            try {
+                console.log("editingId: " + editingId);
+    
+                const responseBook = await axios.get(`http://localhost:3001/publications/onePublication/${editingId}`);
+                console.log("responseBook: ", responseBook);
+    
+                const publicationBook: Publication = responseBook.data;
+                console.log("publicationBook: ", publicationBook);
+    
+                // Asegúrate de que publicationBook.book no es null antes de continuar
+                if (publicationBook.book) {
+                    const bookPublication: Book = publicationBook.book;
+                    console.log("bookPublication: ", bookPublication);
+    
+                    // Utiliza bookPublication.id_book directamente aquí
+                    const id_book = bookPublication.id_book;
+                    console.log("id_book: " + id_book);
+    
+                    if (id_book) {
+                        await axios.put(`http://localhost:3001/book/${id_book}`, {
+                            id_book: bookPublication.id_book,
+                            name_book: editedBookName,
+                            format_book: bookPublication.format_book,
+                            author_id_author: bookPublication.author_id_author,
+                            publisher_id_publisher: bookPublication.publisher_id_publisher,
+                            year_book: bookPublication.year_book,
+                            status_book: bookPublication.status_book,
+                            stock_book: bookPublication.stock_book,
+                            description_book: bookPublication.description_book,
+                            categories: bookPublication.category
+                        });
+
+                        // Agrega depuración para verificar el valor de author_id_author
+                        console.log("author_id_author: ", bookPublication.author_id_author);
+
+                        const id_author_book = bookPublication.author_id_author;
+
+                        if (id_author_book) {
+                            console.log("nombre Autor: "+ id_author_book)
+                            
+                            console.log("Intentando actualizar autor con id: ", id_author_book);
+                            const responseAuthor = await axios.put(`http://localhost:3001/author/${id_author_book}`, {
+                                id_author: id_author_book,
+                                name_author: editedAuthorName
+                            });
+                            console.log("Respuesta de actualización del autor: ", responseAuthor);
+
+                            console.log("nombre Autor: "+ id_author_book)
+
+                            console.log("nombre libro: "+ name_book )
+                            console.log("editedname: " + editedBookName)
+
+                            console.log("editedAuthorName: "+ editedAuthorName)
+                        
+                            setEditingId(null);
+                            setSelectedPublications([]);
+                            alert('Publicación actualizada con éxito');
+                            {/*window.location.reload();*/}
+                        } else {
+                            console.error('El ID del autor es undefined');
+                            alert('Error: No se encontró el ID del autor.');
+                        }
+                    } else {
+                        console.error('id_book es undefined');
+                        alert('Error: No se encontró el ID del libro.');
+                        }
+                } else {
+                    console.error('El libro asociado a la publicación es null');
+                    alert('Error: El libro asociado a la publicación no se encontró.');
+                }
+            } catch (error) {
+                console.error('Error al guardar los cambios:', error);
+                alert('Error al guardar los cambios');
+            }
+        } else {
+            alert('No hay una publicación seleccionada para guardar.');
+        }
+    };
+    
     return (
         <Box display="flex" sx={{backgroundColor:"#f0f2f3"}}>
             <SideMenu />
-            {/* Añade un padding-left al componente principal para evitar que el contenido se solape con el SideMenu */}
-            <Box component="main" flexGrow={1} sx={{ paddingLeft: '224px' }}> {/* Ajusta el valor de 224px según el ancho de tu SideMenu */}
+            <Box component="main" flexGrow={1} sx={{ paddingLeft: '224px' }}>
                 
                 <div style={{ height: '100px', width: '100%', backgroundColor:"#ffffff", color:"#00A9E0", paddingLeft:"28px", alignContent:"center", fontFamily:"SF Pro Display Bold", fontSize:"20px" }}>
                     <h2>Administración de Libros</h2>
@@ -438,12 +480,22 @@ const BookAdmin: React.FC = () => {
                                 /> {/*placeholder={value}*/}
                             </Grid>
                             <Grid className="text-center" item xs={12} sm={3} md={2} lg={2}>
-                                <Button variant="contained" style={{ textTransform: "none", backgroundColor: '#7A7A7A', color: 'white', borderRadius: '30px', width: 'auto', padding: '6px 16px' }}>
-                                    Modificar
-                                </Button>
+                            <Button
+                                onClick={() => {
+                                    if (selectedPublications.length === 1) {
+                                    setEditingId(selectedPublications[0]);
+                                    } else {
+                                    alert('Por favor, selecciona una sola publicación para modificar.');
+                                    }
+                                }}
+                                variant="contained"
+                                style={{ textTransform: "none", backgroundColor: '#7A7A7A', color: 'white', borderRadius: '30px', width: 'auto', padding: '6px 16px' }}
+                                >
+                                Modificar
+                            </Button>
                             </Grid>
                             <Grid className="text-center" item xs={12} sm={3} md={2} lg={2}>
-                                <Button  onClick={openModalAdd} variant="contained" style={{ textTransform: "none", backgroundColor: '#0b9000', color: 'white', borderRadius: '30px', width: 'auto', padding: '6px 16px' }}>
+                                <Button onClick={openModalAdd} variant="contained" style={{ textTransform: "none", backgroundColor: '#0b9000', color: 'white', borderRadius: '30px', width: 'auto', padding: '6px 16px' }}>
                                     Agregar
                                 </Button>
                             </Grid>
@@ -548,11 +600,10 @@ const BookAdmin: React.FC = () => {
                                                 id="year"
                                                 className="mb-3 formulario"
                                                 placeholder="Año"
-                                                type="text" // Cambiado de "year" a "text" para permitir la entrada de texto libre
-                                                value={year_book === 0 ? '' : year_book} // Si el valor es 0, muestra una cadena vacía
+                                                type="text"
+                                                value={year_book === 0 ? '' : year_book}
                                                 onChange={e => {
                                                     const value = e.target.value;
-                                                    // Solo actualiza el estado si el valor ingresado es un número o está vacío
                                                     setYearBook(value === '' ? 0 : !isNaN(Number(value)) ? Number(value) : year_book);
                                                 }}
                                                 InputLabelProps={{
@@ -580,10 +631,9 @@ const BookAdmin: React.FC = () => {
                                             className="mb-3 formulario"
                                             placeholder="Precio"
                                             type="text"
-                                            value={cost_book === 0 ? '' : cost_book} // Si el valor es 0, muestra una cadena vacía
+                                            value={cost_book === 0 ? '' : cost_book}
                                             onChange={e => {
                                                 const value = e.target.value;
-                                                // Si el valor es una cadena vacía o un número válido, actualiza el estado
                                                 setCostBook(value === '' ? 0 : !isNaN(Number(value)) ? Number(value) : cost_book);
                                             }}
                                             InputLabelProps={{
@@ -754,58 +804,80 @@ const BookAdmin: React.FC = () => {
                         </Modal>
                         
                         <TableContainer component={Paper} style={{ padding: '0', height:"600px" }}>
-                        <Table>
-                            <TableHead>
-                                <TableRow style={{ backgroundColor: '#d2efff' }}>
-                                    <TableCell  align="center"></TableCell>
-                                    <TableCell style={{fontFamily:"SF Pro Display Semibold"}} align="center">Imagen</TableCell>
-                                    <TableCell style={{fontFamily:"SF Pro Display Semibold"}} align="center">Id Lib</TableCell>
-                                    <TableCell style={{fontFamily:"SF Pro Display Semibold"}} align="center">Nombre</TableCell>
-                                    <TableCell style={{fontFamily:"SF Pro Display Semibold"}} align="center">Autor</TableCell>
-                                    <TableCell style={{fontFamily:"SF Pro Display Semibold"}} align="center">Vendedor</TableCell>
-                                    <TableCell style={{fontFamily:"SF Pro Display Semibold"}} align="center">Rut Vendedor</TableCell>
-                                    <TableCell style={{fontFamily:"SF Pro Display Semibold"}} align="center">Precio</TableCell>
-                                </TableRow>
-                            </TableHead>
-                            <TableBody>
-                                {publications.reverse().map((publication) => (
-                                    <TableRow key={publication.id_publication}>
-                                        <Checkbox
-                                            checked={selectedPublications.indexOf(publication.id_publication) !== -1}
-                                            onChange={() => handleSelectPublication(publication.id_publication)}
-                                        />
-                                        <TableCell align="center">
-                                            <img 
-                                                src={`http://localhost:3001/images/${publication.photo_showcase}`}
-                                                alt="Imagen del libro" 
-                                                style={{ 
-                                                    height:"auto", 
-                                                    width:"50px",
-                                                    maxWidth: '100%', 
-                                                    display: 'block', 
-                                                    marginLeft: 'auto', 
-                                                    marginRight: 'auto', 
-                                                }}
-                                            />
-                                        </TableCell>
-                                        <TableCell align="center">{publication.id_publication}</TableCell>
-                                        <TableCell align="center">{publication.book?.name_book || 'No disponible'}</TableCell>
-                                        <TableCell align="center">{publication.book?.author_id_author.name_author || 'No disponible'}</TableCell>
-                                        <TableCell align="center">{publication.users?.name_user +' '+ publication.users?.lastname_user || 'No disponible'}</TableCell>
-                                        <TableCell align="center">{publication.users?.rut_user || 'No disponible'}</TableCell>
-                                        <TableCell align="center">{publication.cost_book}</TableCell>
+                            <Table>
+                                <TableHead>
+                                    <TableRow style={{ backgroundColor: '#d2efff' }}>
+                                        <TableCell  align="center"></TableCell>
+                                        <TableCell style={{fontFamily:"SF Pro Display Semibold"}} align="center">Imagen</TableCell>
+                                        <TableCell style={{fontFamily:"SF Pro Display Semibold"}} align="center">Id Lib</TableCell>
+                                        <TableCell style={{fontFamily:"SF Pro Display Semibold"}} align="center">Nombre</TableCell>
+                                        <TableCell style={{fontFamily:"SF Pro Display Semibold"}} align="center">Autor</TableCell>
+                                        <TableCell style={{fontFamily:"SF Pro Display Semibold"}} align="center">Vendedor</TableCell>
+                                        <TableCell style={{fontFamily:"SF Pro Display Semibold"}} align="center">Rut Vendedor</TableCell>
+                                        <TableCell style={{fontFamily:"SF Pro Display Semibold"}} align="center">Precio</TableCell>
+                                        <TableCell style={{fontFamily:"SF Pro Display Semibold"}} align="center">Acciones</TableCell>
                                     </TableRow>
-                                ))}
-                            </TableBody>
-                        </Table>
+                                </TableHead>
+                                <TableBody>
+                                    {publications.reverse().map((publication) => (
+                                        <TableRow key={publication.id_publication}>
+                                            <Checkbox
+                                                checked={selectedPublications.indexOf(publication.id_publication) !== -1}
+                                                onChange={() => handleSelectPublication(publication.id_publication)}
+                                            />
+                                            <TableCell align="center">
+                                                <img 
+                                                    src={`http://localhost:3001/images/${publication.photo_showcase}`}
+                                                    alt="Imagen del libro" 
+                                                    style={{ 
+                                                        height:"auto", 
+                                                        width:"50px",
+                                                        maxWidth: '100%', 
+                                                        display: 'block', 
+                                                        marginLeft: 'auto', 
+                                                        marginRight: 'auto', 
+                                                    }}
+                                                />
+                                            </TableCell>
+                                            <TableCell align="center">{publication.id_publication}</TableCell>
+                                            <TableCell align="center">
+                                                {editingId === publication.id_publication ? (
+                                                <TextField
+                                                    value={editedBookName}
+                                                    onChange={(e) => setEditedBookName(e.target.value)}
+                                                />
+                                                ) : (
+                                                publication.book?.name_book || 'No disponible'
+                                                )}
+                                            </TableCell>
+                                            <TableCell align="center">
+                                                {editingId === publication.id_publication ? (
+                                                <TextField
+                                                    value={editedAuthorName}
+                                                    onChange={(e) => setEditedAuthorName(e.target.value)}
+                                                />
+                                                ) : (
+                                                publication.book?.author_id_author.name_author || 'No disponible'
+                                                )}
+                                            </TableCell>
+                                            <TableCell align="center">{publication.users?.name_user +' '+ publication.users?.lastname_user || 'No disponible'}</TableCell>
+                                            <TableCell align="center">{publication.users?.rut_user || 'No disponible'}</TableCell>
+                                            <TableCell align="center">{publication.cost_book}</TableCell>
+                                            {editingId === publication.id_publication && (
+                                                <TableCell align="center">
+                                                <Button onClick={handleSaveClick}>Guardar</Button>
+                                                </TableCell>
+                                            )}
+                                        </TableRow>
+                                    ))}
+                                </TableBody>
+                            </Table>
                         </TableContainer>
                     </Card>
                 </div>
-                
             </Box>
         </Box>
     );
 
 };
 export default BookAdmin;
-

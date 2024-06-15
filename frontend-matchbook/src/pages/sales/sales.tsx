@@ -434,9 +434,8 @@ const Sales: React.FC = () => {
                 <NoSsr>
                     <ThemeProvider theme={theme}>
                         <div>
-                            <Box className="fondoVenta" sx={{ paddingTop: step === 2 ? '64px' : '0px' }}>
-                                
-                                <Card  sx={{ marginTop:"90px", borderRadius:"20px",width:"1100px", maxWidth: "1400px", maxHeight:"100%" }} ref={contentRef} style={contentStyle} >
+                            <Box className="fondoVenta" sx={{ paddingTop: step === 2 ? '40px' : '0px', paddingBottom: '30px' }}>
+                                <Card  sx={{ marginTop:"90px", borderRadius:"20px",width:"1100px", maxWidth: "1400px", maxHeight:"100%", marginBottom:"10px" }} ref={contentRef} style={contentStyle} >
 
                                     <CardActionArea disableRipple>
                                         <CardContent style={{backgroundColor:"#002E5D", alignContent:"center"}}>
@@ -516,7 +515,7 @@ const Sales: React.FC = () => {
                                                             <Grid item xs={6}>
                                                                 <h6 style={{fontFamily:"SF Pro Display Bold"}}>Autor</h6>
                                                                 <TextField fullWidth 
-                                                                    style={{ color: "black", borderRadius: 20 }}
+                                                                    style={{ color: "black" }}
                                                                     id="author"
                                                                     className="mb-3 formulario"
                                                                     placeholder="Autor/a de la obra"
@@ -526,7 +525,6 @@ const Sales: React.FC = () => {
                                                                     InputLabelProps={{
                                                                         sx: { fontSize: "16px"} 
                                                                     }}
-                                                                    sx={{ borderRadius: 20 }}
                                                                 />
                                                             </Grid>
                                                             {/* Categoría */}
@@ -537,7 +535,7 @@ const Sales: React.FC = () => {
                                                                     <Select 
                                                                         labelId="category-label"
                                                                         id="category"
-                                                                        sx={{ width: '100%', color: "black", borderRadius:"15px"}}
+                                                                        sx={{  color: "black"}}
                                                                         onChange={handleCategoryChange}
                                                                         value={selectedCategory.toString()}
                                                                         placeholder="Selecciona"
@@ -576,11 +574,10 @@ const Sales: React.FC = () => {
                                                                     id="year"
                                                                     className="mb-3 formulario"
                                                                     placeholder="Año"
-                                                                    type="text" // Cambiado de "year" a "text" para permitir la entrada de texto libre
-                                                                    value={year_book === 0 ? '' : year_book} // Si el valor es 0, muestra una cadena vacía
+                                                                    type="text" 
+                                                                    value={year_book === 0 ? '' : year_book} 
                                                                     onChange={e => {
                                                                         const value = e.target.value;
-                                                                        // Solo actualiza el estado si el valor ingresado es un número o está vacío
                                                                         setYearBook(value === '' ? 0 : !isNaN(Number(value)) ? Number(value) : year_book);
                                                                     }}
                                                                     InputLabelProps={{
@@ -608,10 +605,9 @@ const Sales: React.FC = () => {
                                                                 className="mb-3 formulario"
                                                                 placeholder="Precio"
                                                                 type="text"
-                                                                value={cost_book === 0 ? '' : cost_book} // Si el valor es 0, muestra una cadena vacía
+                                                                value={cost_book === 0 ? '' : cost_book}
                                                                 onChange={e => {
                                                                     const value = e.target.value;
-                                                                    // Si el valor es una cadena vacía o un número válido, actualiza el estado
                                                                     setCostBook(value === '' ? 0 : !isNaN(Number(value)) ? Number(value) : cost_book);
                                                                 }}
                                                                 InputLabelProps={{
@@ -634,7 +630,6 @@ const Sales: React.FC = () => {
                                                                 onChange={handleStatusChange}
                                                                 value={selectedStatus}
                                                                 labelId="status-label"
-                                                                sx={{ borderRadius: "15px" }}
                                                                 displayEmpty
                                                                 >
                                                                 <MenuItem value="">Selecciona una opción</MenuItem>
@@ -856,56 +851,56 @@ const Sales: React.FC = () => {
                                                                     )}
                                                                 </CardContent>
                                                             </Card>
-                                                    </Grid>
-                                                </div>
-                                            </>
-                                        )}            
-                                    </CardContent>
-                                </CardActionArea>
-                                <CardActions style={{ justifyContent: 'space-between', marginRight:"50%", marginLeft:"60%" }}>
-                                    {step > 1 && (
-                                        <div style={{justifyContent: "flex-end"}}>
-                                        <Button onClick={handlePrevious} style={{ backgroundColor:"#1eaeff", color: "#ffffff", borderRadius:"30px", textTransform: "none", marginRight:"30px", width:"130px", height:"50px", fontWeight:"bold"}} >
-                                            Anterior
-                                        </Button>
-                                        </div>
-                                    )}
-                                    {step === 1 ? (
-                                        <div style={{justifyContent: "flex-start"}}>
-                                        <Button onClick={handleNext} style={{ backgroundColor:"#1eaeff", color: "#ffffff", borderRadius:"30px", textTransform: "none", marginRight:"30px", width:"130px", height:"50px", fontWeight:"bold"}} >
-                                            Siguiente
-                                        </Button>
-                                        </div>
-                                    ) : step === 2 ? (
-                                        <div style={{justifyContent: "flex-start"}}>
-                                        <Button onClick={handleSubmitBook}  style={{ backgroundColor:"#1eaeff", color: "#ffffff", borderRadius:"30px", textTransform: "none", marginRight:"30px", width:"130px", height:"50px", fontWeight:"bold"}} >
-                                            Siguiente
-                                        </Button>
-                                        <ToastContainer 
-                                        position="top-right"
-                                        autoClose={5000}
-                                        hideProgressBar={false}
-                                        newestOnTop={false}
-                                        closeOnClick
-                                        rtl={false}
-                                        pauseOnFocusLoss
-                                        draggable
-                                        pauseOnHover
-                                        />
-                                        </div>
-                                    ) : (
-                                        <div style={{ display: 'flex', justifyContent: 'flex-start' }}>
-                                        <Button onClick={handleAddAnother} style={{ backgroundColor:"#1eaeff", color: "#ffffff", borderRadius:"30px", textTransform: "none",  width:"130px", height:"50px", fontWeight:"bold"}} >
-                                            Agregar otro
-                                        </Button>
-                                        <Button onClick={handleSubmitPublication} style={{ backgroundColor:"#1eaeff", color: "#ffffff", borderRadius:"30px", textTransform: "none",  width:"130px", height:"50px", fontWeight:"bold"}} >
-                                            Completado
-                                        </Button>
-                                        </div>
-                                    )}
-                                </CardActions>
-                                    <CardContent style={{backgroundColor:"#002E5D"}}></CardContent>
-                            </Card> 
+                                                        </Grid>
+                                                    </div>
+                                                </>
+                                            )}            
+                                        </CardContent>
+                                    </CardActionArea>
+                                    <CardActions style={{ justifyContent: 'space-between', marginRight:"50%", marginLeft:"60%" }}>
+                                        {step > 1 && (
+                                            <div style={{justifyContent: "flex-end"}}>
+                                            <Button onClick={handlePrevious} style={{ backgroundColor:"#1eaeff", color: "#ffffff", borderRadius:"30px", textTransform: "none", marginRight:"30px", width:"130px", height:"50px", fontWeight:"bold"}} >
+                                                Anterior
+                                            </Button>
+                                            </div>
+                                        )}
+                                        {step === 1 ? (
+                                            <div style={{justifyContent: "flex-start"}}>
+                                            <Button onClick={handleNext} style={{ backgroundColor:"#1eaeff", color: "#ffffff", borderRadius:"30px", textTransform: "none", marginRight:"30px", width:"130px", height:"50px", fontWeight:"bold"}} >
+                                                Siguiente
+                                            </Button>
+                                            </div>
+                                        ) : step === 2 ? (
+                                            <div style={{justifyContent: "flex-start"}}>
+                                            <Button onClick={handleSubmitBook}  style={{ backgroundColor:"#1eaeff", color: "#ffffff", borderRadius:"30px", textTransform: "none", marginRight:"30px", width:"130px", height:"50px", fontWeight:"bold"}} >
+                                                Siguiente
+                                            </Button>
+                                            <ToastContainer 
+                                            position="top-right"
+                                            autoClose={5000}
+                                            hideProgressBar={false}
+                                            newestOnTop={false}
+                                            closeOnClick
+                                            rtl={false}
+                                            pauseOnFocusLoss
+                                            draggable
+                                            pauseOnHover
+                                            />
+                                            </div>
+                                        ) : (
+                                            <div style={{ display: 'flex', justifyContent: 'flex-start' }}>
+                                            <Button onClick={handleAddAnother} style={{ backgroundColor:"#1eaeff", color: "#ffffff", borderRadius:"30px", textTransform: "none",  width:"130px", height:"50px", fontWeight:"bold"}} >
+                                                Agregar otro
+                                            </Button>
+                                            <Button onClick={handleSubmitPublication} style={{ backgroundColor:"#1eaeff", color: "#ffffff", borderRadius:"30px", textTransform: "none",  width:"130px", height:"50px", fontWeight:"bold"}} >
+                                                Completado
+                                            </Button>
+                                            </div>
+                                        )}
+                                    </CardActions>
+                                        <CardContent style={{backgroundColor:"#002E5D"}}></CardContent>
+                            </Card>
                         </Box>
                     </div>
                 </ThemeProvider>

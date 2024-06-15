@@ -1,9 +1,12 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Publication } from './entities/publication.entity';
 import { Users } from 'src/users/entities/user.entity';
 import { Book } from 'src/book/entities/book.entity';
+import { UpdateBookDto } from './publication.controller';
+
+
 
 @Injectable()
 export class PublicationService {
@@ -34,7 +37,7 @@ export class PublicationService {
   }
 
   findOne(id_publication: string): Promise<Publication> {
-    return this.publicationRepository.findOne({where : {id_publication}});
+    return this.publicationRepository.findOne({where : {id_publication}, relations: ['book']});
 
   }
 
@@ -58,5 +61,7 @@ export class PublicationService {
       });
   }
 
-
+  update(id: string, publication: Publication) {
+    return this.publicationRepository.update(id, publication);
+  }
 }
