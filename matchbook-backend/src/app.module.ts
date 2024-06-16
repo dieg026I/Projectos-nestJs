@@ -29,6 +29,8 @@ import { Buy } from './buy/entities/buy.entity';
 import { ShipmentType } from './shipment_type/entities/shipment_type.entity';
 import { StatusSend } from './status_send/entities/status_send.entity';
 import { ReadingClub } from './reading_club/entities/reading_club.entity';
+import { ShoppingCartModule } from './shopping_cart/shopping_cart.module';
+import { ShoppingCart } from './shopping_cart/entities/shopping_cart.entity';
 
 @Module({
   imports: [
@@ -40,7 +42,7 @@ import { ReadingClub } from './reading_club/entities/reading_club.entity';
     password: '222648',
     database: 'Matchbook_DB',
     entities: [Users, Cities, Region, Book, Author, Publisher,
-    Publication, Category, Buy, ShipmentType, StatusSend, ReadingClub ],
+    Publication, Category, Buy, ShipmentType, StatusSend, ReadingClub, ShoppingCart ],
     synchronize: false, // Solo para entornos de desarrollo
     autoLoadEntities: false,
     logging: true
@@ -57,7 +59,8 @@ import { ReadingClub } from './reading_club/entities/reading_club.entity';
     BuyModule,
     StatusSendModule,
     ShipmentTypeModule,
-    ReadingClubModule ],
+    ReadingClubModule,
+    ShoppingCartModule ],
   controllers: [AppController],
   providers: [AppService],
 })
