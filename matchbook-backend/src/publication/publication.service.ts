@@ -4,9 +4,7 @@ import { Repository } from 'typeorm';
 import { Publication } from './entities/publication.entity';
 import { Users } from 'src/users/entities/user.entity';
 import { Book } from 'src/book/entities/book.entity';
-import { UpdateBookDto } from './publication.controller';
-
-
+import { Cities } from 'src/commune/entities/cities.entity';
 
 @Injectable()
 export class PublicationService {
@@ -31,7 +29,41 @@ export class PublicationService {
     return publication;
   }
   
-  
+  async search(term: string): Promise<Publication[]> {
+    return this.publicationRepository
+      .createQueryBuilder('publication')
+      .leftJoinAndSelect('publication.book', 'book')
+      .leftJoinAndSelect('book.author_id_author', 'author')
+      .where('book.name_book ILIKE :term', { term: `%${term}%` })
+      .orWhere('author.name_author ILIKE :term', { term: `%${term}%` })
+      .getMany();
+}
+
+findByFilters(region?: string, city?: string, category?: string, price?: number) {
+  let query = this.publicationRepository.createQueryBuilder('publication')
+  .innerJoinAndSelect('publication.users', 'users')
+  .innerJoinAndSelect('publication.book', 'book')
+  .innerJoinAndSelect('publication.users.cities', 'cities')
+  .innerJoinAndSelect('publication.users.cities.region', 'regions')
+  .innerJoinAndSelect('publication.book.categories', 'category')
+  if (region) {
+    query = query.andWhere('region.name <= :region', { region });
+  }
+
+  if (city) {
+    query = query.andWhere("cities.name <= :city", { city });
+  }
+
+  if (category) {
+    query = query.andWhere("category.name_category <= :category", { category });
+  }
+
+  if (price) {
+    query = query.andWhere("publication.cost_book <= :price", { price });
+  }
+
+  return query.getMany();
+}
   findAll(): Promise<Publication[]> {
     return this.publicationRepository.find();
   }
