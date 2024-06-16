@@ -1,11 +1,17 @@
-import { Controller, Get, Param, Delete, Post, UseInterceptors, UploadedFile, UploadedFiles, Body } from '@nestjs/common';
+import { Controller, Get, Param, Delete, Post, UseInterceptors, UploadedFile, UploadedFiles, Body, Query } from '@nestjs/common';
 import { PublicationService } from './publication.service';
 import { Publication } from './entities/publication.entity';
 import { FilesInterceptor } from '@nestjs/platform-express';
 import { multerConfig } from 'src/config/multer.config';
+
 @Controller('publications')
 export class PublicationController {
   constructor(private readonly publicationService: PublicationService) {}
+
+  @Get()
+  findAll(): Promise<Publication[]> {
+    return this.publicationService.findAll();
+  }
 
   @Post('upload')
   @UseInterceptors(FilesInterceptor('images', 4, multerConfig))
@@ -19,21 +25,17 @@ export class PublicationController {
   findAllPublication() {
     return this.publicationService.findAllWithBooks();
   }
-  
-  @Get()
-  findAll(): Promise<Publication[]> {
-    return this.publicationService.findAll();
+
+  @Get('search/:term')
+  search(@Param('term') term: string): Promise<Publication[]> {
+    return this.publicationService.search(term);
   }
-  
-  @Get(':id')
+
+  @Get('one/:id')
   findOne(@Param('id') id: string): Promise<Publication> {
     return this.publicationService.findOne(id);
   }
-
-  @Get('publication_user/:user_rut_user')
-  findAllWithUsers(@Param('user_rut_user') user_rut_user: number): Promise<Publication[]> {
-    return this.publicationService.findAllWithUsers(user_rut_user);
-  }
+  
 
   @Delete(':id')
   remove(@Param('id') id: string): Promise<void> {

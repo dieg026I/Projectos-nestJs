@@ -43,6 +43,7 @@ import { ReadingClub } from './reading_club/entities/reading_club.entity';
     Publication, Category, Buy, ShipmentType, StatusSend, ReadingClub ],
     synchronize: false, // Solo para entornos de desarrollo
     autoLoadEntities: false,
+    logging: true
   }),RegionModule,CommuneModule, UsersModule, AuthModule,
     JwtModule.register({
     secret: 'secretKey', 
