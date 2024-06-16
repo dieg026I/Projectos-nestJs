@@ -376,7 +376,7 @@ export const HomePage: React.FC<HomeProps> = ({}: HomeProps) => {
 
                 <br />
                 <Button 
-                    href="/" 
+                    href="/marketplace" 
                     variant="contained"  
                     style={{ 
                         textTransform: "none", 

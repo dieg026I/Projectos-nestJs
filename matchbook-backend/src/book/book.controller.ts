@@ -16,14 +16,14 @@ export class BookController {
     return this.bookService.findAll();
   }
 
-  @Get(':id')
+  @Get('oneBook/:id')
   findOne(@Param('id_book') id_book: string) {
     return this.bookService.findOnebyid(id_book);
   }
 
-  @Put(':id')
-  update(@Param('id') id: string, @Body() book: Book) {
-    return this.bookService.update(+id, book);
+  @Put(':id_book')
+  update(@Param('id_book') id_book: string, @Body() book: Book) {
+    return this.bookService.update(id_book, book);
   }
 
   @Delete(':id')

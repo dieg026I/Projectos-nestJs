@@ -58,7 +58,7 @@ export const Footer: React.FC<{}> = () => {
                 <Grid item xs={12} sm={3}>
                     <h6 className='footerTitle'>Atención al cliente</h6>
                     <ul className='footerText'>
-                        <li>ContactoQmatchbook</li>
+                        <li>Contacto Matchbook</li>
                         <li>Preguntas frecuentes</li>
                     </ul>
                 </Grid>

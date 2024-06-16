@@ -153,13 +153,13 @@ export default function Profile() {
                                 {/* Mostrar las publicaciones del usuario*/}
                                 <Card className="us" elevation={0} style={{backgroundColor: "#f4f6f9"}} >
                                 
-                                    <Grid container spacing={4} justifyContent="center" style={{padding: "20px"}}>
+                                    <Grid container spacing={4} justifyContent="center" style={{padding: "20px", marginTop:"20px"}}>
                                     
                                     {users && Array.isArray(users.publication) && users.publication.slice((page - 1) * 2, page * 2).reverse().map((publication) => (
                                             <Card 
                                                 key={publication.id_publication} 
-                                                style={{ margin: "10px", width: "230px", borderRadius: "20px", textAlign: "left", position: 'relative', padding:"22px"}} 
-                                                sx={{ maxWidth: 345, padding: "10px"}}
+                                                style={{ margin: "10px", width: "150px",height:"auto" ,borderRadius: "20px", textAlign: "left", position: 'relative', padding:"22px"}} 
+                                                sx={{ maxWidth: 345, padding: "10px", marginTop:"30px"}}
                                             >
                                                 {/* Imagen libros */}
                                                 <CardMedia
@@ -169,7 +169,7 @@ export default function Profile() {
                                                         src={`http://localhost:3001/images/${publication.photo_showcase}`}
                                                         alt="Imagen del libro" 
                                                         style={{ 
-                                                            height: '180px', 
+                                                            height: '150px', 
                                                             width: 'auto', 
                                                             maxWidth: '100%', 
                                                             display: 'block', 
@@ -180,7 +180,7 @@ export default function Profile() {
                                                     <FaHeart style={{ position: 'absolute', top: '10px', right: '10px', color: '#f05d16' }} />
                                                 </CardMedia>
                                                 
-                                                <CardContent style={{padding: "5px", paddingTop: "15px", marginTop:"35px"}}>
+                                                <CardContent style={{padding: "5px", paddingTop: "15px", marginTop:"7px"}}>
                                                     {/* Titulo Libro */}
                                                     <Typography 
                                                         gutterBottom 
@@ -194,7 +194,7 @@ export default function Profile() {
                                                             overflow: 'hidden' 
                                                         }}
                                                     >
-                                                        {publication.book.name_book.length > 30 ? `${publication.book.name_book.substring(0, 30)}...` : publication.book.name_book}
+                                                        {publication.book.name_book.length > 25 ? `${publication.book.name_book.substring(0, 25)}...` : publication.book.name_book}
                                                     </Typography>
 
                                                     <div style={{ height: '80px', overflow: 'hidden' }}>
@@ -206,7 +206,7 @@ export default function Profile() {
                                                                 <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' , fontSize: "14px", marginTop:"15px" }}>
                                                                 
                                                                     {/* Precio Libro */}
-                                                                    <Typography gutterBottom variant="h5" component="div" style={{fontSize: "20px", fontWeight: "bold", paddingTop: "5px"}}>
+                                                                    <Typography gutterBottom component="div" style={{fontSize: "15px", fontWeight: "bold", paddingTop: "5px"}}>
                                                                         ${publication.cost_book}
                                                                     </Typography>
                                             

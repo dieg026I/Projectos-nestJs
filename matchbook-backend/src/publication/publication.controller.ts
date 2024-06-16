@@ -1,4 +1,4 @@
-import { Controller, Get, Param, Delete, Post, UseInterceptors, UploadedFile, UploadedFiles, Body, Query } from '@nestjs/common';
+import { Controller, Get, Param, Delete, Post, UseInterceptors, UploadedFile, UploadedFiles, Body, Put, Query } from '@nestjs/common';
 import { PublicationService } from './publication.service';
 import { Publication } from './entities/publication.entity';
 import { FilesInterceptor } from '@nestjs/platform-express';
@@ -30,18 +30,33 @@ export class PublicationController {
   search(@Param('term') term: string): Promise<Publication[]> {
     return this.publicationService.search(term);
   }
-
-  @Get('one/:id')
+  
+  @Get('onePublication/:id')
   findOne(@Param('id') id: string): Promise<Publication> {
     return this.publicationService.findOne(id);
   }
-  
 
+  @Get('findByFilters')
+  async findByFilters(
+    @Query('region') region?: string,
+    @Query('city') city?: string,
+    @Query('category') category?: string,
+    @Query('price') price?: number
+  ) {
+    const filters = { region, city, category, price };
+    return await this.publicationService.findByFilters(filters);
+  }
+  
   @Delete(':id')
   remove(@Param('id') id: string): Promise<void> {
     return this.publicationService.remove(id);
   }
 
+  @Put(':id')
+  async update(@Param('id') id: string, @Body() publication: Publication) {
+    return this.publicationService.update(id, publication);
+  }
 
 }
+
 

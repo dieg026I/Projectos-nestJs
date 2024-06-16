@@ -84,7 +84,7 @@ const Sales: React.FC = () => {
 
     const [open, setOpen] = useState(false);
     const [options, setOptions] = useState<BookSuggestion[]>([]);
-    const [selectedBook, setSelectedBook] = useState<BookSuggestion | null>(null);
+    const [selectedBook, setSelectedBook] = useState<BookSuggestion | null>(null); 
 
     {/*-----------------------------------------------------------------------------*/}
     {/* Eliminar Animaciones */}
@@ -153,12 +153,13 @@ const Sales: React.FC = () => {
     };
 
     const handleSelectChange = (event: React.ChangeEvent<{}>, value: BookSuggestion | null) => {
-        setSelectedBook(value);
         if (value) {
-            setAuthorName(value.authors.join(', '));
+            setNameBook(value.title);
             setPublisherName(value.publisher || '');
             setYearBook(value.publishedDate ? new Date(value.publishedDate).getFullYear() : null);
             setImageShowcase(value.image || null);
+        } else {
+            setNameBook('');
         }
     };
     
@@ -191,18 +192,14 @@ const Sales: React.FC = () => {
     const [imageFirst, setImageFirst] = useState<string | null>(null);
     const [imageBack, setImageBack] = useState<string | null>(null);
 
-    const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        if (event.target.files && event.target.files[0]) {
-            const fileReader = new FileReader();
-            fileReader.onload = (e) => {
-                if (e.target) {
-                    setImageShowcase(e.target.result as string);
-                }
-            }; 
+    const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (e.target.files) {
+            const file = e.target.files[0];
+            setPhotoShowcase(file); 
+            setImageShowcase(file.name); 
         }
     };
     
-
     const handleImageChangeCover = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.files) {
             setPhotoCover(e.target.files[0])
@@ -275,8 +272,28 @@ const Sales: React.FC = () => {
         event.preventDefault();
     
         // Validación de campos requeridos
-        if (!name_book || !author_name || !publisher_name || !year_book || !cost_book) {
-            alert("Por favor, completa todos los campos requeridos.");
+        if (!name_book) {
+            alert("Por favor, ingresa el nombre del libro.");
+            return;
+        }
+        if (!author_name) {
+            alert("Por favor, ingresa el nombre del autor.");
+            return;
+        }
+        if (!publisher_name) {
+            alert("Por favor, ingresa el nombre de la editorial.");
+            return;
+        }
+        if (!year_book) {
+            alert("Por favor, ingresa el año del libro.");
+            return;
+        }
+        if (!cost_book) {
+            alert("Por favor, ingresa el costo del libro.");
+            return;
+        }
+        if (!category) {
+            alert("Por favor, selecciona una categoría.");
             return;
         }
 
@@ -297,7 +314,6 @@ const Sales: React.FC = () => {
             const publisher_id = responsePublisher.data.id_publisher;
             const bookId = `${name_book}-${author_name.length}-${publisher_name.slice(0, 3)}`.toLowerCase();
 
-    
             // Finalmente, guarda el libro con los IDs del autor y la editorial
             const responseBook = await axios.post('http://localhost:3001/book', {
                 id_book: bookId,
@@ -319,16 +335,6 @@ const Sales: React.FC = () => {
         const userString = localStorage.getItem('user');
     };
     
-    const add_book = (event: React.FormEvent) => {
-            event.preventDefault();
-        handleSubmitBook(event).then(() => {
-            toast("Libro guardado con éxito!");
-        }).catch((error) => {
-            // Manejar el error aquí si la promesa es rechazada
-            console.error('Error al guardar el libro:', error);
-        });
-    };
-
     {/*-----------------------------------------------------------------------------*/}
     {/* Publicación */}
     
@@ -336,11 +342,31 @@ const Sales: React.FC = () => {
         event.preventDefault();
 
         // Validación de campos requeridos
-        if (!name_book || !author_name || !publisher_name || !year_book || !cost_book || !category || !status_book) {
-            alert("Por favor, completa todos los campos requeridos.");
+        if (!name_book) {
+            alert("Por favor, ingresa el nombre del libro.");
             return;
         }
-        
+        if (!author_name) {
+            alert("Por favor, ingresa el nombre del autor.");
+            return;
+        }
+        if (!publisher_name) {
+            alert("Por favor, ingresa el nombre de la editorial.");
+            return;
+        }
+        if (!year_book) {
+            alert("Por favor, ingresa el año del libro.");
+            return;
+        }
+        if (!cost_book) {
+            alert("Por favor, ingresa el costo del libro.");
+            return;
+        }
+        if (!category) {
+            alert("Por favor, selecciona una categoría.");
+            return;
+        }
+
         const formData = new FormData();
 
         const bookId = `${name_book}-${author_name.length}-${publisher_name.slice(0, 3)}`.toLowerCase()
@@ -402,9 +428,8 @@ const Sales: React.FC = () => {
                 <NoSsr>
                     <ThemeProvider theme={theme}>
                         <div>
-                            <Box className="fondoVenta" sx={{ paddingTop: step === 2 ? '64px' : '0px' }}>
-                                
-                                <Card  sx={{ marginTop:"90px", borderRadius:"20px",width:"1100px", maxWidth: "1400px", maxHeight:"100%" }} ref={contentRef} style={contentStyle} >
+                            <Box className="fondoVenta" sx={{ paddingTop: step === 2 ? '40px' : '0px', paddingBottom: '30px' }}>
+                                <Card  sx={{ marginTop:"90px", borderRadius:"20px",width:"1100px", maxWidth: "1400px", maxHeight:"100%", marginBottom:"10px" }} ref={contentRef} style={contentStyle} >
 
                                     <CardActionArea disableRipple>
                                         <CardContent style={{backgroundColor:"#002E5D", alignContent:"center"}}>
@@ -449,6 +474,7 @@ const Sales: React.FC = () => {
                                                         getOptionLabel={(option) => `${option.title} - ${option.authors.join(', ')}`}
                                                         options={options}
                                                         loading={open && options.length === 0}
+                                                        value={selectedBook}
                                                         onChange={handleSelectChange}
                                                         onInputChange={handleInputChange}
                                                         renderInput={(params) => (
@@ -459,9 +485,7 @@ const Sales: React.FC = () => {
                                                                 fullWidth
                                                             />
                                                         )}
-                                                        // ... otras props que puedas necesitar
                                                     />
-
                                                     </FormControl>
                                                 </CardBody>
                                                 </> 
@@ -485,7 +509,7 @@ const Sales: React.FC = () => {
                                                             <Grid item xs={6}>
                                                                 <h6 style={{fontFamily:"SF Pro Display Bold"}}>Autor</h6>
                                                                 <TextField fullWidth 
-                                                                    style={{ color: "black", borderRadius: 20 }}
+                                                                    style={{ color: "black" }}
                                                                     id="author"
                                                                     className="mb-3 formulario"
                                                                     placeholder="Autor/a de la obra"
@@ -495,8 +519,6 @@ const Sales: React.FC = () => {
                                                                     InputLabelProps={{
                                                                         sx: { fontSize: "16px"} 
                                                                     }}
-                                                                    
-                                                                    sx={{ borderRadius: 20 }}
                                                                 />
                                                             </Grid>
                                                             {/* Categoría */}
@@ -507,7 +529,7 @@ const Sales: React.FC = () => {
                                                                     <Select 
                                                                         labelId="category-label"
                                                                         id="category"
-                                                                        sx={{ width: '100%', color: "black", borderRadius:"15px"}}
+                                                                        sx={{  color: "black"}}
                                                                         onChange={handleCategoryChange}
                                                                         value={selectedCategory.toString()}
                                                                         placeholder="Selecciona"
@@ -546,11 +568,10 @@ const Sales: React.FC = () => {
                                                                     id="year"
                                                                     className="mb-3 formulario"
                                                                     placeholder="Año"
-                                                                    type="text" // Cambiado de "year" a "text" para permitir la entrada de texto libre
-                                                                    value={year_book === 0 ? '' : year_book} // Si el valor es 0, muestra una cadena vacía
+                                                                    type="text" 
+                                                                    value={year_book === 0 ? '' : year_book} 
                                                                     onChange={e => {
                                                                         const value = e.target.value;
-                                                                        // Solo actualiza el estado si el valor ingresado es un número o está vacío
                                                                         setYearBook(value === '' ? 0 : !isNaN(Number(value)) ? Number(value) : year_book);
                                                                     }}
                                                                     InputLabelProps={{
@@ -578,10 +599,9 @@ const Sales: React.FC = () => {
                                                                 className="mb-3 formulario"
                                                                 placeholder="Precio"
                                                                 type="text"
-                                                                value={cost_book === 0 ? '' : cost_book} // Si el valor es 0, muestra una cadena vacía
+                                                                value={cost_book === 0 ? '' : cost_book}
                                                                 onChange={e => {
                                                                     const value = e.target.value;
-                                                                    // Si el valor es una cadena vacía o un número válido, actualiza el estado
                                                                     setCostBook(value === '' ? 0 : !isNaN(Number(value)) ? Number(value) : cost_book);
                                                                 }}
                                                                 InputLabelProps={{
@@ -604,7 +624,6 @@ const Sales: React.FC = () => {
                                                                 onChange={handleStatusChange}
                                                                 value={selectedStatus}
                                                                 labelId="status-label"
-                                                                sx={{ borderRadius: "15px" }}
                                                                 displayEmpty
                                                                 >
                                                                 <MenuItem value="">Selecciona una opción</MenuItem>
@@ -758,7 +777,6 @@ const Sales: React.FC = () => {
                                                                     )}
                                                                 </CardContent>
                                                             </Card>
-
                                                             {/* Portada Página (Fotografía) */}
                                                             <Card style={{ margin: "10px", alignContent: "center", height:"255px", width: "175px", borderRadius: "20px", textAlign: "center", position: 'relative'}} sx={{ maxWidth: 345, padding: "10px"}}>
                                                                 <CardContent style={{padding:"0px", position: "relative"}}>
@@ -793,7 +811,6 @@ const Sales: React.FC = () => {
                                                                     )}
                                                                 </CardContent>
                                                             </Card>
-
                                                             {/* Contraportada (Fotografía) */}
                                                             <Card style={{ margin: "10px", alignContent: "center", height:"255px", width: "175px", borderRadius: "20px", textAlign: "center", position: 'relative'}} sx={{ maxWidth: 345, padding: "10px"}}>
                                                                 <CardContent style={{padding:"0px", position: "relative"}}>
@@ -828,57 +845,56 @@ const Sales: React.FC = () => {
                                                                     )}
                                                                 </CardContent>
                                                             </Card>
-
-                                                    </Grid>
-                                                </div>
-                                            </>
-                                        )}            
-                                    </CardContent>
-                                </CardActionArea>
-                                <CardActions style={{ justifyContent: 'space-between', marginRight:"50%", marginLeft:"60%" }}>
-                                    {step > 1 && (
-                                        <div style={{justifyContent: "flex-end"}}>
-                                        <Button onClick={handlePrevious} style={{ backgroundColor:"#1eaeff", color: "#ffffff", borderRadius:"30px", textTransform: "none", marginRight:"30px", width:"130px", height:"50px", fontWeight:"bold"}} >
-                                            Anterior
-                                        </Button>
-                                        </div>
-                                    )}
-                                    {step === 1 ? (
-                                        <div style={{justifyContent: "flex-start"}}>
-                                        <Button onClick={handleNext} style={{ backgroundColor:"#1eaeff", color: "#ffffff", borderRadius:"30px", textTransform: "none", marginRight:"30px", width:"130px", height:"50px", fontWeight:"bold"}} >
-                                            Siguiente
-                                        </Button>
-                                        </div>
-                                    ) : step === 2 ? (
-                                        <div style={{justifyContent: "flex-start"}}>
-                                        <Button onClick={add_book}  style={{ backgroundColor:"#1eaeff", color: "#ffffff", borderRadius:"30px", textTransform: "none", marginRight:"30px", width:"130px", height:"50px", fontWeight:"bold"}} >
-                                            Siguiente
-                                        </Button>
-                                        <ToastContainer 
-                                        position="top-right"
-                                        autoClose={5000}
-                                        hideProgressBar={false}
-                                        newestOnTop={false}
-                                        closeOnClick
-                                        rtl={false}
-                                        pauseOnFocusLoss
-                                        draggable
-                                        pauseOnHover
-                                        />
-                                        </div>
-                                    ) : (
-                                        <div style={{ display: 'flex', justifyContent: 'flex-start' }}>
-                                        <Button onClick={handleAddAnother} style={{ backgroundColor:"#1eaeff", color: "#ffffff", borderRadius:"30px", textTransform: "none",  width:"130px", height:"50px", fontWeight:"bold"}} >
-                                            Agregar otro
-                                        </Button>
-                                        <Button onClick={handleSubmitPublication} style={{ backgroundColor:"#1eaeff", color: "#ffffff", borderRadius:"30px", textTransform: "none",  width:"130px", height:"50px", fontWeight:"bold"}} >
-                                            Completado
-                                        </Button>
-                                        </div>
-                                    )}
-                                </CardActions>
-                                    <CardContent style={{backgroundColor:"#002E5D"}}></CardContent>
-                            </Card> 
+                                                        </Grid>
+                                                    </div>
+                                                </>
+                                            )}            
+                                        </CardContent>
+                                    </CardActionArea>
+                                    <CardActions style={{ justifyContent: 'space-between', marginRight:"50%", marginLeft:"60%" }}>
+                                        {step > 1 && (
+                                            <div style={{justifyContent: "flex-end"}}>
+                                            <Button onClick={handlePrevious} style={{ backgroundColor:"#1eaeff", color: "#ffffff", borderRadius:"30px", textTransform: "none", marginRight:"30px", width:"130px", height:"50px", fontWeight:"bold"}} >
+                                                Anterior
+                                            </Button>
+                                            </div>
+                                        )}
+                                        {step === 1 ? (
+                                            <div style={{justifyContent: "flex-start"}}>
+                                            <Button onClick={handleNext} style={{ backgroundColor:"#1eaeff", color: "#ffffff", borderRadius:"30px", textTransform: "none", marginRight:"30px", width:"130px", height:"50px", fontWeight:"bold"}} >
+                                                Siguiente
+                                            </Button>
+                                            </div>
+                                        ) : step === 2 ? (
+                                            <div style={{justifyContent: "flex-start"}}>
+                                            <Button onClick={handleSubmitBook}  style={{ backgroundColor:"#1eaeff", color: "#ffffff", borderRadius:"30px", textTransform: "none", marginRight:"30px", width:"130px", height:"50px", fontWeight:"bold"}} >
+                                                Siguiente
+                                            </Button>
+                                            <ToastContainer 
+                                            position="top-right"
+                                            autoClose={5000}
+                                            hideProgressBar={false}
+                                            newestOnTop={false}
+                                            closeOnClick
+                                            rtl={false}
+                                            pauseOnFocusLoss
+                                            draggable
+                                            pauseOnHover
+                                            />
+                                            </div>
+                                        ) : (
+                                            <div style={{ display: 'flex', justifyContent: 'flex-start' }}>
+                                            <Button onClick={handleAddAnother} style={{ backgroundColor:"#1eaeff", color: "#ffffff", borderRadius:"30px", textTransform: "none",  width:"130px", height:"50px", fontWeight:"bold"}} >
+                                                Agregar otro
+                                            </Button>
+                                            <Button onClick={handleSubmitPublication} style={{ backgroundColor:"#1eaeff", color: "#ffffff", borderRadius:"30px", textTransform: "none",  width:"130px", height:"50px", fontWeight:"bold"}} >
+                                                Completado
+                                            </Button>
+                                            </div>
+                                        )}
+                                    </CardActions>
+                                        <CardContent style={{backgroundColor:"#002E5D"}}></CardContent>
+                            </Card>
                         </Box>
                     </div>
                 </ThemeProvider>

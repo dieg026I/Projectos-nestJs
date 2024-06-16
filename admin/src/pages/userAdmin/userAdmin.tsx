@@ -5,13 +5,10 @@ import { Box, Button, Card, CardActionArea, CardActions, CardContent, Checkbox, 
 import { useEffect, useState } from "react";
 import axios from "axios";
 
-const checkBook = { inputProps: { 'aria-label': 'Checkbox demo' } };
-
 interface Cities {
     id_city: number,
     name: string,
 }
-
 interface User {
     name_user: string,
     lastname_user: string,
@@ -32,7 +29,7 @@ const UserAdmin: React.FC = () => {
     useEffect(() => {
         const fetchUsers = async () => {
             try {
-                const response = await axios.get('http://localhost:3001/users/userCity'); // Ajusta la URL según tu backend
+                const response = await axios.get('http://localhost:3001/users/userCity');
                 console.log('response data' + response.data)
                 console.log('users'+users);
                 setUsers(response.data);
@@ -56,16 +53,6 @@ const UserAdmin: React.FC = () => {
         }
 
         setSelectedUsers(newSelectedUsers);
-    };
-
-    // Función para manejar la selección de todos los usuarios
-    const handleSelectAllClick = (event: React.ChangeEvent<HTMLInputElement>) => {
-        if (event.target.checked) {
-            const newSelecteds = users.map((n) => n.rut_user); // Asegúrate de que 'id_user' exista en la interfaz
-            setSelectedUsers(newSelecteds);
-            return;
-        }
-        setSelectedUsers([]);
     };
     
     // Eliminar usuarios seleccionados

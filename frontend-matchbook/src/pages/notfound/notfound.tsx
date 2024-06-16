@@ -17,7 +17,7 @@ const NotFoundPage: React.FC = () => {
       <Typography variant="body1" align="center" gutterBottom>
         Lo sentimos, la página que estás buscando no se encuentra.
       </Typography>
-      <Button variant="contained" component={Link} to="/home" color="primary">
+      <Button variant="contained" component={Link} to="/" color="primary">
         Volver a la página de inicio
       </Button>
     </Box>

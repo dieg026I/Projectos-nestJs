@@ -397,7 +397,7 @@ function handleClick(event: React.MouseEvent<HTMLDivElement, MouseEvent>) {
 
                 <br />
                 <Button 
-                    href="/" 
+                    href="/marketplace" 
                     variant="contained"  
                     style={{ 
                         textTransform: "none", 
