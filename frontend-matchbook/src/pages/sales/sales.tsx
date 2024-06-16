@@ -297,7 +297,6 @@ const Sales: React.FC = () => {
             return;
         }
 
-
         try {
             // Primero, guarda el autor y obtén su ID
             let id_author = uuidv4();
@@ -315,7 +314,6 @@ const Sales: React.FC = () => {
             const publisher_id = responsePublisher.data.id_publisher;
             const bookId = `${name_book}-${author_name.length}-${publisher_name.slice(0, 3)}`.toLowerCase();
 
-    
             // Finalmente, guarda el libro con los IDs del autor y la editorial
             const responseBook = await axios.post('http://localhost:3001/book', {
                 id_book: bookId,
@@ -369,7 +367,6 @@ const Sales: React.FC = () => {
             return;
         }
 
-        
         const formData = new FormData();
 
         const bookId = `${name_book}-${author_name.length}-${publisher_name.slice(0, 3)}`.toLowerCase()

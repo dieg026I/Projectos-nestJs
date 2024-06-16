@@ -39,31 +39,38 @@ export class PublicationService {
       .getMany();
 }
 
-findByFilters(region?: string, city?: string, category?: string, price?: number) {
+findByFilters(filters: { region?: string; city?: string; category?: string; price?: number }) {
   let query = this.publicationRepository.createQueryBuilder('publication')
   .innerJoinAndSelect('publication.users', 'users')
   .innerJoinAndSelect('publication.book', 'book')
-  .innerJoinAndSelect('publication.users.cities', 'cities')
-  .innerJoinAndSelect('publication.users.cities.region', 'regions')
-  .innerJoinAndSelect('publication.book.categories', 'category')
-  if (region) {
-    query = query.andWhere('region.name <= :region', { region });
+  .innerJoinAndSelect('users.cities', 'cities')
+  .innerJoinAndSelect('cities.region', 'region')
+  .innerJoinAndSelect('book.categories', 'categories')
+
+  if (filters.region) {
+    const region = filters.region
+    query = query.andWhere('region.name ILIKE :region', { region });
   }
 
-  if (city) {
-    query = query.andWhere("cities.name <= :city", { city });
+  if (filters.city) {
+    const city = filters.city
+    query = query.andWhere("cities.name ILIKE :city", { city });
   }
 
-  if (category) {
-    query = query.andWhere("category.name_category <= :category", { category });
+  if (filters.category) {
+    const category = filters.category
+    query = query.andWhere("categories.name_category = :categories", { category });
   }
 
-  if (price) {
+  if (filters.price) {
+    const price = filters.price
     query = query.andWhere("publication.cost_book <= :price", { price });
   }
 
   return query.getMany();
 }
+
+
   findAll(): Promise<Publication[]> {
     return this.publicationRepository.find();
   }

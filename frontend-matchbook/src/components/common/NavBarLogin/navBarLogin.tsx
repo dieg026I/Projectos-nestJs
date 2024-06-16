@@ -49,9 +49,10 @@ interface Users {
 export const NavBarLogin: React.FC<{}> = () => {
     const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = useState<null | HTMLElement>(null);
 
-
     {/* Nombre de usuario y correo */}
     const [users, setUsers] = React.useState<Users>();
+
+    const [term, setTerm] = React.useState('');
 
     useEffect(() => {
         const fetchPublications = async () => {
@@ -155,14 +156,22 @@ export const NavBarLogin: React.FC<{}> = () => {
     const navigate = useNavigate();
 
     const logout = () => {
-        // Elimina el token del almacenamiento local
         localStorage.removeItem('access_token');
-
-        // Redirige al usuario a la página de inicio de sesión
         navigate('/login');
     };
 
-
+    const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setTerm(event.target.value);
+    };
+    
+    const handleSearch = async () => {
+        try {
+            const response = await axios.get(`http://localhost:3001/publications/search/${term}`);
+            navigate('/marketplaceSearch', { state: { searchResults: response.data } });
+        } catch (error) {
+            console.error('Error fetching publications:', error);
+        }
+    };
 
     return (
         <div className="navbar">
@@ -172,8 +181,8 @@ export const NavBarLogin: React.FC<{}> = () => {
                         <Grid
                             direction="row"
                             alignItems="center"
-                            container  // Aumenta este valor para más espacio entre los elementos
-                            justifyContent="space-between" // Distribuye el espacio de manera uniforme entre los elementos
+                            container
+                            justifyContent="space-between"
                         >
                             <Grid item xs={2} sm={2} md={2} lg={2}>
                                 {isMobile ? (
@@ -201,9 +210,7 @@ export const NavBarLogin: React.FC<{}> = () => {
                                         edge="start"
                                         color="inherit"
                                         aria-label="open drawer"
-                                        
                                         onClick={handleMobileMenuOpen}
-                                        
                                     >
                                         <LuMenu style={{ width: "30px", height:"30px"}}  />
                                     </IconButton>
@@ -224,8 +231,8 @@ export const NavBarLogin: React.FC<{}> = () => {
                                     </IconButton>
                                 ) : (
                                     <div className="searchHome" >
-                                        <input className="search" placeholder="Buscar" />
-                                        <LuSearch id="search-icon" />
+                                        <input className="search" placeholder="Buscar" value={term} onChange={handleInputChange} />
+                                        <LuSearch id="search-icon" onClick={handleSearch} />
                                     </div>
                                 )}
                             </Grid>
@@ -243,12 +250,9 @@ export const NavBarLogin: React.FC<{}> = () => {
                                                 <Avatar style={{ backgroundColor: "#f05d16" }} src="/broken-image.jpg" />
                                                 <div style={{ marginLeft: '10px' }}>{users?.username}</div>
                                             </div>
-
-
                                         </>
                                     ) : (
                                         <>
-
                                             <Badge badgeContent={1} color="primary">
                                                 <LuShoppingCart style={{width: "30px", height:"30px", marginLeft:"40px", cursor: 'pointer'}} href="/cart" color="inherit" />
                                             </Badge>

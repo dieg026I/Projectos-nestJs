@@ -35,8 +35,18 @@ export class PublicationController {
   findOne(@Param('id') id: string): Promise<Publication> {
     return this.publicationService.findOne(id);
   }
-  
 
+  @Get('findByFilters')
+  async findByFilters(
+    @Query('region') region?: string,
+    @Query('city') city?: string,
+    @Query('category') category?: string,
+    @Query('price') price?: number
+  ) {
+    const filters = { region, city, category, price };
+    return await this.publicationService.findByFilters(filters);
+  }
+  
   @Delete(':id')
   remove(@Param('id') id: string): Promise<void> {
     return this.publicationService.remove(id);
