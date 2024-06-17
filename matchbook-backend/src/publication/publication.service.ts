@@ -43,6 +43,7 @@ findByFilters(filters: { region?: string; city?: string; category?: string; pric
   let query = this.publicationRepository.createQueryBuilder('publication')
   .innerJoinAndSelect('publication.users', 'users')
   .innerJoinAndSelect('publication.book', 'book')
+  .innerJoinAndSelect('book.author_id_author', 'author')
   .innerJoinAndSelect('users.cities', 'cities')
   .innerJoinAndSelect('cities.region', 'region')
   .innerJoinAndSelect('book.categories', 'categories')
@@ -69,7 +70,6 @@ findByFilters(filters: { region?: string; city?: string; category?: string; pric
 
   return query.getMany();
 }
-
 
   findAll(): Promise<Publication[]> {
     return this.publicationRepository.find();

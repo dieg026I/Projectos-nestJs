@@ -22,7 +22,6 @@ import axios from 'axios';
 import logo from "../../assents/img/logoMatch.png";
 import { useNavigate } from 'react-router-dom'; 
 
-
 interface Region  {
     id_region: number;
     name_region: string;
@@ -78,8 +77,6 @@ const RegisterPage: React.FC = () => {
     const handleCityChange = (event: { target: { value: React.SetStateAction<number>; }; }) => {
         setIdCity(event.target.value);
     };
-
-    
 
     {/*------------------------------------------ */}
     {/* Guardar Datos Registro */}

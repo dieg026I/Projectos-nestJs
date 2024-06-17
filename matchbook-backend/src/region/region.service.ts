@@ -18,7 +18,7 @@ export class RegionService {
   }
 
   findOne(id_region: number): Promise<Region | null> {
-    return this.regionRepository.findOneBy({id_region});
+    return this.regionRepository.findOne({where: {id_region}, relations: ['cities']} );
   }
   async update(id_region: number, user: Region): Promise<Region> {
     await this.regionRepository.update(id_region, user);

@@ -18,9 +18,9 @@ export class CitiesController {
     return this.citiesService.findAll();
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: number) {
-    return this.citiesService.findOne(id);
+  @Get('oneCity/:id_city')
+  findOne(@Param('id_city') id_city: number) {
+    return this.citiesService.findOne(id_city);
   }
 
   @Get('region/:regionId')
