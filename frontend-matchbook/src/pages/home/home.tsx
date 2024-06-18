@@ -14,7 +14,7 @@ import MenuIcon from '@mui/icons-material/Menu';
 import PlaceIcon from '@mui/icons-material/Place';
 import { FaHeart } from "react-icons/fa6";
 import axios from "axios";
-
+import { Link as RouterLink } from 'react-router-dom';
 
 interface HomeProps {
 }
@@ -184,33 +184,38 @@ export const HomePage: React.FC<HomeProps> = ({}: HomeProps) => {
             </div>
             
             <div>
-                <Carousel className="carousel" showThumbs={false}
-                    renderArrowPrev={(onClickHandler, hasPrev, label) => 
-                        hasPrev && (
-                            <button type="button" onClick={onClickHandler} title={label} style={{...arrowStyles, left: 15}}>
-                                &#10094;
-                            </button>
-                        )
-                    }
-                    renderArrowNext={(onClickHandler, hasNext, label) => 
-                        hasNext && (
-                            <button type="button" onClick={onClickHandler} title={label} style={{...arrowStyles, right: 15}}>
-                                &#10095;
-                            </button>
-                        )
-                    }
-                >
-                    <div>
-                        <img className="carousel" src={image1}  />
-
-                            <Button href="/readingClub" variant="contained" style={{ textTransform: "none", backgroundColor: '#f05d16', color: 'white', borderRadius: '30px', position: 'absolute', top: '75%', left: '11.3%', transform: 'translate(-50%, -50%)', width: 'auto', padding: '6px 16px' }}>
-                                Ir al Club
-                            </Button>
-                    </div>
-                    <div>
-                        <img className="carousel" src={image2} />
-                    </div>
-                </Carousel>
+            <Carousel
+                className="carousel"
+                showThumbs={false}
+                autoPlay={true}
+                interval={4000}
+                infiniteLoop={true}
+                renderArrowPrev={(onClickHandler, hasPrev, label) =>
+                    hasPrev && (
+                        <button type="button" onClick={onClickHandler} title={label} style={{ ...arrowStyles, left: 15 }}>
+                            ❮
+                        </button>
+                    )
+                }
+                renderArrowNext={(onClickHandler, hasNext, label) =>
+                    hasNext && (
+                        <button type="button" onClick={onClickHandler} title={label} style={{ ...arrowStyles, right: 15 }}>
+                            ❯
+                        </button>
+                    )
+                }
+            >
+                <div>
+                    <Link component={RouterLink} to="/login" style={{ display: 'block', width: '100%', height: '100%' }}>
+                        <img className="carousel" src={image1} alt="Ir a login" style={{ width: '100%', height: 'auto' }} />
+                    </Link>
+                </div>
+                <div>
+                    <Link component={RouterLink} to="/readingClub" style={{ display: 'block', width: '100%', height: '100%' }}>
+                        <img className="carousel" src={image2} alt="Ir a Reading Club" style={{ width: '100%', height: 'auto' }} />
+                    </Link>
+                </div>
+            </Carousel>
             </div>
             <br />
             <div style={{ textAlign: "center" , marginLeft: "80px" , marginRight: "80px" }}>
