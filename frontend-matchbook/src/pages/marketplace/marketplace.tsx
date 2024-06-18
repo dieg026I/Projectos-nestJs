@@ -214,15 +214,14 @@ export default function Marketplace() {
                 params.city = cityOne.name;
             }
 
-            // Agregar condicionalmente cada filtro al objeto de parámetros
+            // Categoria
             if (nameCategory) params.category = nameCategory;
+
+            // Precio
             if (price) params.price = price;
                 
-
-            // Realizar la solicitud al backend con los filtros aplicados
             const response = await axios.get('http://localhost:3001/publications/findByFilters', { params });
         
-            // Actualizar el estado con las publicaciones filtradas
             setFilteredPublications(response.data);
         } catch (error) {
             console.error('Error al obtener las publicaciones filtradas:', error);
