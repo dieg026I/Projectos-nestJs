@@ -18,6 +18,8 @@ import "../../App.css";
 import axios from "axios";
 
 
+import { Link as RouterLink } from 'react-router-dom';
+
 
 interface HomeProps {
 }
@@ -73,7 +75,6 @@ interface Book {
     description_book: string;
 }
 
-
 {/*-----------------------------------------------------------------------------*/}
 {/* Breadcrumbs*/}
 function handleClick(event: React.MouseEvent<HTMLDivElement, MouseEvent>) {
@@ -99,7 +100,6 @@ function handleClick(event: React.MouseEvent<HTMLDivElement, MouseEvent>) {
             const response = await axios.get('http://localhost:3001/publications/publication');
             const publicationResponse = response.data;
             setPublications(response.data);
-            console.log(JSON.stringify(response.data, null, 2))
         } catch (error) {
         console.error('Error fetching publications:', error);
         }
@@ -110,7 +110,6 @@ function handleClick(event: React.MouseEvent<HTMLDivElement, MouseEvent>) {
             const responseUser= await axios.get(`http://localhost:3001/users/rut/${users.rut_user}`);
             const userResponse = responseUser.data;
             setUsers(userResponse);
-            console.log(JSON.stringify(responseUser.data, null, 2))
         } catch (error) {
         console.error('error usuario local:', error);
         }
@@ -204,34 +203,39 @@ function handleClick(event: React.MouseEvent<HTMLDivElement, MouseEvent>) {
             </div>
             
             <div>
-                <Carousel className="carousel" showThumbs={false}
-                    renderArrowPrev={(onClickHandler, hasPrev, label) => 
-                        hasPrev && (
-                            <button type="button" onClick={onClickHandler} title={label} style={{...arrowStyles, left: 15}}>
-                                &#10094;
-                            </button>
-                        )
-                    }
-                    renderArrowNext={(onClickHandler, hasNext, label) => 
-                        hasNext && (
-                            <button type="button" onClick={onClickHandler} title={label} style={{...arrowStyles, right: 15}}>
-                                &#10095;
-                            </button>
-                        )
-                    }
-                >
-                    <div>
-                        <img className="carousel" src={image1}  />
+            <Carousel
+                className="carousel"
+                showThumbs={false}
+                autoPlay={true}
+                interval={4000}
+                infiniteLoop={true}
+                renderArrowPrev={(onClickHandler, hasPrev, label) =>
+                    hasPrev && (
+                        <button type="button" onClick={onClickHandler} title={label} style={{ ...arrowStyles, left: 15 }}>
+                            ❮
+                        </button>
+                    )
+                }
+                renderArrowNext={(onClickHandler, hasNext, label) =>
+                    hasNext && (
+                        <button type="button" onClick={onClickHandler} title={label} style={{ ...arrowStyles, right: 15 }}>
+                            ❯
+                        </button>
+                    )
+                }
+            >
+                <div>
+                    <Link component={RouterLink} to="/login" style={{ display: 'block', width: '100%', height: '100%' }}>
+                        <img className="carousel" src={image1} alt="Ir a login" style={{ width: '100%', height: 'auto' }} />
+                    </Link>
+                </div>
+                <div>
+                    <Link component={RouterLink} to="/readingClub" style={{ display: 'block', width: '100%', height: '100%' }}>
+                        <img className="carousel" src={image2} alt="Ir a Reading Club" style={{ width: '100%', height: 'auto' }} />
+                    </Link>
+                </div>
+            </Carousel>
 
-                            <Button href="/readingClub" variant="contained" style={{ textTransform: "none", backgroundColor: '#f05d16', color: 'white', borderRadius: '30px', position: 'absolute', top: '75%', left: '11.3%', transform: 'translate(-50%, -50%)', width: 'auto', padding: '6px 16px' }}>
-                                Ir al Club
-                            </Button>
-                    </div>
-                    <div>
-                        <img className="carousel" src={image2} />
-                        
-                    </div>
-                </Carousel>
             </div>
             <br />
             <div style={{ textAlign: "center" , marginLeft: "80px" , marginRight: "80px" }}>
