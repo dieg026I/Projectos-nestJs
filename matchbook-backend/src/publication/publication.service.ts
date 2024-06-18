@@ -67,4 +67,37 @@ findByFilters(filters: { region?: string; city?: string; categories?: string[]; 
   return query.getMany();
 }
 
+findAll(): Promise<Publication[]> {
+  return this.publicationRepository.find();
+}
+
+findOne(id_publication: string): Promise<Publication> {
+  return this.publicationRepository.findOne({where : {id_publication}, relations: ['book', 'book.author_id_author', 'book.publisher_id_publisher']});
+
+}
+
+async remove(id: string): Promise<void> {
+  await this.publicationRepository.delete(id);
+}
+
+findAllWithBooks(): Promise<Publication[]> {
+  return this.publicationRepository.find({ relations: ['book','book.author_id_author', 'book.publisher_id_publisher', 'users', 'users.cities'] })
+    .catch(error => {
+      console.error('Error fetching publications with books:', error);
+      throw error;
+    });
+}
+
+findAllWithUsers(user_rut_user: number): Promise<Publication[]> {
+  return this.publicationRepository.find({ where: {user_rut_user} , relations: ['book','book.author_id_author', 'book.publisher_id_publisher'] })
+    .catch(error => {
+      console.error('Error fetching publications with books:', error);
+      throw error;
+    });
+}
+
+update(id: string, publication: Publication) {
+  return this.publicationRepository.update(id, publication);
+}
+
 }
