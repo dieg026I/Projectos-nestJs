@@ -1,4 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn } from 'typeorm';
 import { Users } from '../../users/entities/user.entity';
 import { Publication } from '../../publication/entities/publication.entity';
 
@@ -8,10 +8,14 @@ export class ShoppingCart {
     id_shopping_cart: number;
 
     @ManyToOne(() => Users, user => user.shopping_carts)
-    @Column({ name: 'user_id_user' })
-    users: Users;
+    @JoinColumn({ name: 'user_id_user' })
+    users: Users; 
+    @Column()
+    user_id_user: number;
 
     @ManyToOne(() => Publication, publication => publication.shoppingCart)
-    @Column({ name: 'publication_id_publication' })
+    @JoinColumn({ name: 'publication_id_publication' })
     publication: Publication;
+    @Column()
+    publication_id_publication: string;
 }

@@ -72,7 +72,7 @@ interface Category {
 type FilterParams = {
     region?: string;
     city?: string;
-    category?: string;
+    category?: string[];
     price?: number;
 };
 
@@ -104,8 +104,9 @@ export default function Marketplace() {
     {/* Categoria */}
     const [category, setCategory] = React.useState<Category[]>([]);
     const [OneCategory, setOneCategory] = React.useState<Category>();
-    const [selectedCategory, setSelectedCategory] = useState('');
+    const [categoryList, setCategoryList] = React.useState<string[]>([]);
     const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
+
 
     const [priceRange, setPriceRange] = useState([0, 100000]);
     const [nameCategory, setNameCategory] = useState('');
@@ -176,16 +177,36 @@ export default function Marketplace() {
     {/*-----------------------------------------------------------------------------*/}
     
     {/* Category */}
-    const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>, categoryId: string) => {
+    const handleCheckboxChange = async (event: React.ChangeEvent<HTMLInputElement>, categoryId: string) => {
         const newSelectedCategories = [...selectedCategories];
         const currentIndex = newSelectedCategories.indexOf(categoryId);
     
+        try {
+            const response = await axios.get(`http://localhost:3001/categories/categoryOne/${categoryId}`);
+            console.log("categoryId: "+ categoryId);
+            const category: Category = response.data;
+            console.log("category: "+ category);
+            setOneCategory(category);
+            const nameCategory = category.name_category;
+            console.log("nameCategory: "+ nameCategory);
+            console.log("categoryList1: "+ categoryList);
+        
+            // Verificar si el nombre de la categoría ya está en la lista
+            if (!categoryList.includes(nameCategory)) {
+                // Si no está, agregarlo a la lista y actualizar el estado
+                setCategoryList(prevList => [...prevList, nameCategory]);
+                console.log("categoryList2: "+ categoryList);
+            }
+        } catch (error) {
+            console.error('Error al obtener las publicaciones filtradas:', error);
+        }
+        
     if (currentIndex === -1) {
 
-        if (newSelectedCategories.length < 3) {
+        if (newSelectedCategories.length < 10) {
         newSelectedCategories.push(categoryId);
         } else {
-        alert('Solo puedes seleccionar hasta 3 categorías.');
+        alert('Solo puedes seleccionar hasta 10 categorías.');
         }
     } else {
         newSelectedCategories.splice(currentIndex, 1);
@@ -215,10 +236,17 @@ export default function Marketplace() {
             }
 
             // Categoria
-            if (nameCategory) params.category = nameCategory;
-
+            if (categoryList) { 
+                params.category = categoryList;
+            } else{
+                console.log("No hay ni una wea");
+                alert("no pasa naaaaaaaaa")
+            }
+            
             // Precio
-            if (price) params.price = price;
+            if (price) { 
+                params.price = price;
+            }
                 
             const response = await axios.get('http://localhost:3001/publications/findByFilters', { params });
         
@@ -330,19 +358,19 @@ export default function Marketplace() {
                             <AccordionDetails style={{ overflow: 'auto', maxHeight: '160px' }}> {/* Ajusta el maxHeight según necesites */}
                                 <FormControl component="fieldset" fullWidth>
                                 <FormGroup>
-                                {category.map((categoryItem) => (
-                                    <FormControlLabel
-                                    control={
-                                        <Checkbox
-                                        checked={selectedCategories.includes(categoryItem.id_category)}
-                                        onChange={(e) => handleCheckboxChange(e, categoryItem.id_category)}
-                                        value={categoryItem.id_category}
+                                    {category.map((categoryItem) => (
+                                        <FormControlLabel
+                                        control={
+                                            <Checkbox
+                                            checked={selectedCategories.includes(categoryItem.id_category)}
+                                            onChange={(e) => handleCheckboxChange(e, categoryItem.id_category)}
+                                            value={categoryItem.id_category}
+                                            />
+                                        }
+                                        label={categoryItem.name_category}
+                                        key={categoryItem.id_category}
                                         />
-                                    }
-                                    label={categoryItem.name_category}
-                                    key={categoryItem.id_category}
-                                    />
-                                ))}
+                                    ))}
                                 </FormGroup>
                                 </FormControl>
                             </AccordionDetails>

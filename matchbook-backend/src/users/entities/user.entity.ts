@@ -44,7 +44,7 @@ export class Users {
   publication: Publication[];
 
   @OneToMany(() => ShoppingCart, shoppingCart => shoppingCart.users)
-shopping_carts: ShoppingCart[];
+  shopping_carts: ShoppingCart[];
 
 
 }
