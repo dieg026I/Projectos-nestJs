@@ -16,7 +16,7 @@ export class RegionController {
     return this.regionService.findAll();
   }
 
-  @Get(':id_region')
+  @Get('oneRegion/:id_region')
   findOne(@Param('id_region') id: number) {
     return this.regionService.findOne(id);
   }

@@ -155,7 +155,7 @@ export default function Profile() {
                                 
                                     <Grid container spacing={4} justifyContent="center" style={{padding: "20px", marginTop:"20px"}}>
                                     
-                                    {users && Array.isArray(users.publication) && users.publication.slice((page - 1) * 2, page * 2).reverse().map((publication) => (
+                                    {users && Array.isArray(users.publication) && users.publication.slice((page - 1) * 3, page * 3).reverse().map((publication) => (
                                             <Card 
                                                 key={publication.id_publication} 
                                                 style={{ margin: "10px", width: "150px",height:"auto" ,borderRadius: "20px", textAlign: "left", position: 'relative', padding:"22px"}} 

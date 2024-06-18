@@ -19,7 +19,7 @@ export class CitiesService {
   }
 
   findOne(id_city: number): Promise<Cities | null> {
-    return this.communeRepository.findOneBy({id_city});
+    return this.communeRepository.findOne({where: {id_city}});
   }
 
   async getCitiesByRegion(regionId: number): Promise<Cities[]> {

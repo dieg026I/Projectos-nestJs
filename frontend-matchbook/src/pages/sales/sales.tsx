@@ -46,10 +46,6 @@ interface BookSuggestion {
 }
 
 
-{/*-----------------------------------------------------------------------------*/}
-{/* Sugerencia */}
-
-
 const Sales: React.FC = () => {
 
     {/* Book */}
@@ -85,8 +81,8 @@ const Sales: React.FC = () => {
     const [open, setOpen] = useState(false);
     const [options, setOptions] = useState<BookSuggestion[]>([]);
     const [selectedBook, setSelectedBook] = useState<BookSuggestion | null>(null); 
-
     {/*-----------------------------------------------------------------------------*/}
+
     {/* Eliminar Animaciones */}
     const theme = createTheme({
         palette: {
@@ -124,10 +120,9 @@ const Sales: React.FC = () => {
         },
         },
     });
-    
     {/*-----------------------------------------------------------------------------*/}
-    {/* Título */}
 
+    {/* Título */}
     const handleInputChange = async (
         event: React.SyntheticEvent<Element, Event>,
         value: string,
@@ -162,9 +157,8 @@ const Sales: React.FC = () => {
             setNameBook('');
         }
     };
-    
-
     {/*-----------------------------------------------------------------------------*/}
+
     {/* Step and Scroll */}
     const contentRef = useRef<HTMLDivElement>(null);
     const [step, setStep] = useState(1);
@@ -184,8 +178,8 @@ const Sales: React.FC = () => {
         margin: "15px",
         overflowY: step === 2 ? 'scroll' : 'hidden'
     };
-    
     {/*-----------------------------------------------------------------------------*/}
+
     {/* Imagenes */}
     const [imageShowcase, setImageShowcase] = useState<string | null>(null);
     const [imageCover, setImageCover] = useState<string | null>(null);
@@ -194,9 +188,8 @@ const Sales: React.FC = () => {
 
     const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.files) {
-            const file = e.target.files[0];
-            setPhotoShowcase(file); 
-            setImageShowcase(file.name); 
+            setPhotoShowcase(e.target.files[0]); 
+            setImageShowcase(URL.createObjectURL(e.target.files[0])); 
         }
     };
     
@@ -220,8 +213,8 @@ const Sales: React.FC = () => {
             setImageBack(URL.createObjectURL(e.target.files[0]));
         }
     };
-
     {/*-----------------------------------------------------------------------------*/}
+
     {/* Category */}
 
     //llamar categorias
@@ -249,25 +242,23 @@ const Sales: React.FC = () => {
             setDescriptionBook(description_book);
         }
     }
-
     {/*-----------------------------------------------------------------------------*/}
+
     {/* Status */}
-    
     const handleStatusChange = (event: SelectChangeEvent) => {
     setSelectedStatus(event.target.value);
     };
-
     {/*-----------------------------------------------------------------------------*/}
+
     {/* Checkbox mas libros */}
     const [isChecked, setIsChecked] = useState(false);
 
     const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setIsChecked(event.target.checked);
     };
-    
     {/*-----------------------------------------------------------------------------*/}
+
     {/* Subir Libro */}
-    
     const handleSubmitBook = async (event: React.FormEvent) => {
         event.preventDefault();
     
@@ -334,10 +325,9 @@ const Sales: React.FC = () => {
         }
         const userString = localStorage.getItem('user');
     };
-    
     {/*-----------------------------------------------------------------------------*/}
+
     {/* Publicación */}
-    
     const handleSubmitPublication = async (event: React.FormEvent) => {
         event.preventDefault();
 
@@ -411,8 +401,8 @@ const Sales: React.FC = () => {
         console.error('Hubo un error al registrar el libro:', error);
         }
     };
-
     {/*-----------------------------------------------------------------------------*/}
+
     {/* Agregar mas publicaciones */}
     const handleAddAnother = () => {
         // Aquí puedes agregar la lógica para guardar el libro actual
