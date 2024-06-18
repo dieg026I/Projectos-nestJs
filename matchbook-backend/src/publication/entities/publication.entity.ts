@@ -2,6 +2,7 @@ import { Entity, Column, ManyToOne, PrimaryColumn, JoinColumn, OneToMany } from 
 import { Users } from '../../users/entities/user.entity';
 import { Book } from '../../book/entities/book.entity';
 import { Buy } from 'src/buy/entities/buy.entity';
+import { ShoppingCart } from 'src/shopping_cart/entities/shopping_cart.entity';
 
 @Entity('publication')
 export class Publication {
@@ -42,4 +43,8 @@ export class Publication {
   
   @OneToMany(() => Buy, buy => buy.publication)
   buy: Buy[];
+
+  @OneToMany(() => ShoppingCart, shoppingCart => shoppingCart.publication)
+  shoppingCart: ShoppingCart[];
+
 }
