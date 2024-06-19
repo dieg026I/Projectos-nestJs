@@ -39,14 +39,14 @@ export class PublicationService {
       .getMany();
   }
 
-  findByFilters(filters: { region?: string; city?: string; categories?: string[]; minPrice?: number; maxPrice?: number }) {
+  findByFilters(filters: { region?: string; city?: string; category?: string[]; minPrice?: number; maxPrice?: number }) {
     let query = this.publicationRepository.createQueryBuilder('publication')
       .innerJoinAndSelect('publication.users', 'users')
       .innerJoinAndSelect('publication.book', 'book')
       .innerJoinAndSelect('book.author_id_author', 'author')
       .innerJoinAndSelect('users.cities', 'cities')
       .innerJoinAndSelect('cities.region', 'region')
-      .innerJoinAndSelect('book.categories', 'categories');
+      .innerJoinAndSelect('book.categories', 'category');
 
     if (filters.region) {
       query = query.andWhere('region.name ILIKE :region', { region: filters.region });
@@ -56,8 +56,8 @@ export class PublicationService {
       query = query.andWhere('cities.name ILIKE :city', { city: filters.city });
     }
 
-    if (filters.categories) {
-      query = query.andWhere('categories.name_category = ANY(:categories)', { categories: filters.categories });
+    if (filters.category) {
+      query = query.andWhere('category.name_category = ANY(:category)', { category: filters.category });
     }
 
     if (filters.minPrice && filters.maxPrice) {

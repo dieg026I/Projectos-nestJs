@@ -1,5 +1,5 @@
 import React, { useState, ChangeEvent, useEffect } from "react";
-import { Grid, Card , Accordion, AccordionSummary, AccordionDetails, Typography, Select, MenuItem, FormControl, FormControlLabel, Checkbox, Slider, Button, CardMedia, CardContent, Box, Stack, Pagination, SelectChangeEvent, FormHelperText, FormLabel, FormGroup} from '@mui/material'; // Asegúrate de tener MUI instalado
+import { Grid, Card , Accordion, AccordionSummary, AccordionDetails, Typography, Select, MenuItem, FormControl, FormControlLabel, Checkbox, Slider, Button, CardMedia, CardContent, Box, Stack, Pagination, SelectChangeEvent, FormHelperText, FormLabel, FormGroup} from '@mui/material'; 
 import banner from "../../assents/img/banner-marketplace.png";
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import NavBarLogin from "../../components/common/NavBarLogin/navBarLogin";
@@ -73,15 +73,16 @@ type FilterParams = {
     region?: string;
     city?: string;
     category?: string[];
-    price?: number;
+    minPrice?: number;
+    maxPrice?: number;
 };
 
 export default function Marketplace() {
 
     {/* Accordion */}
-    const [openRegion, setOpenRegion] = useState(true);
-    const [openCategory, setOpenCategory] = useState(true);
-    const [openPrice, setOpenPrice] = useState(true);
+    const [openRegion, setOpenRegion] = useState(false);
+    const [openCategory, setOpenCategory] = useState(false);
+    const [openPrice, setOpenPrice] = useState(false);
 
     {/* Region y City */}
     const [region , setRegion] = React.useState<Region[]>([]);
@@ -108,9 +109,10 @@ export default function Marketplace() {
     const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
 
 
-    const [priceRange, setPriceRange] = useState([0, 100000]);
+    const [priceRange, setPriceRange] = useState([500, 100000]);
     const [nameCategory, setNameCategory] = useState('');
-    const [price, setPrice] = useState(0);
+    const [minPrice, setMinPrice] = useState(0);
+    const [maxPrice, setMaxPrice] = useState(0);
 
     const [filteredPublications, setFilteredPublications] = useState<Publication[]>([]);
 
@@ -181,26 +183,6 @@ export default function Marketplace() {
         const newSelectedCategories = [...selectedCategories];
         const currentIndex = newSelectedCategories.indexOf(categoryId);
     
-        try {
-            const response = await axios.get(`http://localhost:3001/categories/categoryOne/${categoryId}`);
-            console.log("categoryId: "+ categoryId);
-            const category: Category = response.data;
-            console.log("category: "+ category);
-            setOneCategory(category);
-            const nameCategory = category.name_category;
-            console.log("nameCategory: "+ nameCategory);
-            console.log("categoryList1: "+ categoryList);
-        
-            // Verificar si el nombre de la categoría ya está en la lista
-            if (!categoryList.includes(nameCategory)) {
-                // Si no está, agregarlo a la lista y actualizar el estado
-                setCategoryList(prevList => [...prevList, nameCategory]);
-                console.log("categoryList2: "+ categoryList);
-            }
-        } catch (error) {
-            console.error('Error al obtener las publicaciones filtradas:', error);
-        }
-        
     if (currentIndex === -1) {
 
         if (newSelectedCategories.length < 10) {
@@ -210,6 +192,32 @@ export default function Marketplace() {
         }
     } else {
         newSelectedCategories.splice(currentIndex, 1);
+    }
+
+    try {
+        const response = await axios.get(`http://localhost:3001/categories/categoryOne/${categoryId}`);
+        console.log("categoryId: "+ categoryId);
+        const category: Category = response.data;
+        console.log("category: "+ category);
+        setOneCategory(category);
+        const nameCategory = category.name_category;
+        console.log("nameCategory: "+ nameCategory);
+        console.log("categoryList1: "+ categoryList);
+    
+        if (!event.target.checked) {
+            if (!categoryList.includes(nameCategory)) {
+                const updatedCategoryList = [...categoryList, nameCategory];
+                setCategoryList(updatedCategoryList);
+                console.log("categoryList2: ", updatedCategoryList);
+                console.log("Categoria marcada")
+            }
+        } else {
+            console.log("Categoria desmarcada")
+
+            setCategoryList(prevList => prevList.filter(item => item !== nameCategory));
+        }
+    } catch (error) {
+        console.error('Error al obtener las publicaciones filtradas:', error);
     }
     
     setSelectedCategories(newSelectedCategories);
@@ -235,30 +243,49 @@ export default function Marketplace() {
                 params.city = cityOne.name;
             }
 
+            console.log("categorylist: "+ categoryList)
             // Categoria
             if (categoryList) { 
                 params.category = categoryList;
+                console.log("categorylist: "+ categoryList)
             } else{
-                console.log("No hay ni una wea");
-                alert("no pasa naaaaaaaaa")
+                
             }
             
             // Precio
-            if (price) { 
-                params.price = price;
+            if (minPrice && maxPrice) { 
+                params.minPrice = minPrice;
+                params.maxPrice = maxPrice;
             }
                 
             const response = await axios.get('http://localhost:3001/publications/findByFilters', { params });
         
             setFilteredPublications(response.data);
+            // Si no se encuentran publicaciones, muestra un mensaje
+            if (response.data.length === 0) {
+                // Puedes establecer un estado para manejar el mensaje o usar una variable
+                console.log("No se encontraron publicaciones con los filtros aplicados.");
+            }
         } catch (error) {
             console.error('Error al obtener las publicaciones filtradas:', error);
         }
     };
 
     const handlePriceChange = (event: Event, newValue: number | number[]) => {
-        setPriceRange(newValue as number[]);
+        const newPriceRange = newValue as number[];
+        const priceMin = newPriceRange[0];
+        const priceMax = newPriceRange[1];
+    
+        setPriceRange(newPriceRange);
+    
+        setMinPrice(priceMin);
+        setMaxPrice(priceMax);
+    
+        console.log("price range: ", priceRange);
+        console.log("minPrice: ", minPrice);
+        console.log("maxPrice: ", maxPrice);
     };
+    
     
     const getAriaValueText = (value: number) => `${value} CLP`;
     
@@ -290,11 +317,14 @@ export default function Marketplace() {
                     Quiero Vender
                 </Button>
                 </div>
-                <Grid container spacing={2} columnSpacing={{ xs: 1, sm: 2, md: 3 }} alignItems="center">
-                    <Grid className="text-center" item xs={12} sm={6} md={6} lg={6}>
-                        <h2 style={{marginLeft:"190px"}}>Novedades</h2>
+                <Grid container spacing={3} columnSpacing={{ xs: 1, sm: 2, md: 3 }} alignItems="center">
+                    <Grid className="text-center" item xs={12} sm={3} md={3} lg={3}>
+                        <h2 style={{marginBottom:"0px", }}>Filtros</h2>
                     </Grid>
-                    <Grid className="text-center" item xs={12} sm={6} md={6} lg={6}>
+                    <Grid className="text-center" item xs={12} sm={5} md={5} lg={5}>
+                        <h2 style={{marginRight:"490px"}}>Novedades</h2>
+                    </Grid>
+                    <Grid className="text-center" item xs={12} sm={4} md={4} lg={4}>
                     <div style={{ display: "flex", justifyContent: "right", alignItems: "center" , marginRight:"20px"}}>
                         <span style={{ paddingRight:"10px"}}>Ordenar Por </span>
                         <select style={{ borderRadius:"10px" , width:"160px", height:"30px"}}>
@@ -307,10 +337,11 @@ export default function Marketplace() {
                 </Grid>
 
                 <Grid container spacing={2} columnSpacing={{ xs: 1, sm: 2, md: 3 }} >
+                    
                     <Grid className="text-center" item xs={12} sm={6} md={3} lg={3}>
-                        <Accordion style={{ margin:"10px", boxShadow: '0px 3px 6px rgba(0, 0, 0, 0.36)', borderRadius:"20px",minHeight:"65px",  alignContent:"center"}} expanded={openRegion} onChange={() => setOpenRegion(!openRegion)} >
-                            <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                                <Typography style={{fontFamily:"SF Pro Text Bold"}}>Región</Typography>
+                        <Accordion style={{ margin:"10px", boxShadow: '0px 3px 6px rgba(0, 0, 0, 0.36)', borderRadius:"20px", minHeight:"65px",  alignContent:"center"}} expanded={openRegion} onChange={() => setOpenRegion(!openRegion)} >
+                            <AccordionSummary expandIcon={<ExpandMoreIcon />} classes={{ content: 'custom-accordion-summary' }}>
+                                <Typography style={{fontFamily:"SF Pro Text Bold", marginBottom:"0"}}>Región</Typography>
                             </AccordionSummary>
                             <AccordionDetails style={{overflow: 'auto'}}>
                                 <FormControl fullWidth>       
@@ -322,7 +353,7 @@ export default function Marketplace() {
                                         value: Number(event.target.value),
                                     },
                                     })}
-                                    value={selectedRegion}
+                                    value={selectedRegion || ""}
                                     displayEmpty
                                 >
                                     <MenuItem value="" disabled>Elige una región</MenuItem>
@@ -335,28 +366,26 @@ export default function Marketplace() {
                                 <Typography style={{ fontFamily: "SF Pro Text Bold", alignItems: "flex-start", paddingTop: "10px", paddingBottom: "10px", display: "flex" }}>Comuna</Typography>
                                 <Select
                                     id="city"
-                                    value={id_city ?? ''} 
+                                    value={id_city || ''} 
                                     sx={{ width: '100%', color: "black" }}
                                     onChange={handleCityChange}
                                     displayEmpty
                                     >
-                                    <MenuItem value="" disabled></MenuItem>
+                                    <MenuItem value="" disabled>Elige una ciudad</MenuItem>
                                     {cities.map((city) => (
                                         <MenuItem key={city.id_city} value={city.id_city}>{city.name}</MenuItem>
                                     ))}
                                 </Select>
-                                
                                 </FormControl>
                             </AccordionDetails>
                         </Accordion>
 
-                        
-                        <Accordion style={{ margin: "10px", boxShadow: '0px 3px 6px rgba(0, 0, 0, 0.36)', borderRadius: "20px", minHeight: "65px", alignContent: "center" }} expanded={openCategory} onChange={() => setOpenCategory(!openCategory)}>
-                            <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                        <Accordion style={{ margin: "10px", boxShadow: '0px 3px 6px rgba(0, 0, 0, 0.36)', borderRadius: "20px", minHeight: "65px", alignContent: "center"}} expanded={openCategory} onChange={() => setOpenCategory(!openCategory)}>
+                            <AccordionSummary className="AccordionSummary-root" expandIcon={<ExpandMoreIcon />}>
                                 <Typography style={{ fontFamily: "SF Pro Text Bold" }}>Categoría</Typography>
                             </AccordionSummary>
-                            <AccordionDetails style={{ overflow: 'auto', maxHeight: '160px' }}> {/* Ajusta el maxHeight según necesites */}
-                                <FormControl component="fieldset" fullWidth>
+                            <AccordionDetails className="AccordionDetails-root custom-scroll" style={{ overflow: 'auto', maxHeight: '260px'}}>
+                                <FormControl fullWidth>
                                 <FormGroup>
                                     {category.map((categoryItem) => (
                                         <FormControlLabel
@@ -377,23 +406,23 @@ export default function Marketplace() {
                         </Accordion>
                         
                         <Accordion style={{ margin: "10px", boxShadow: '0px 3px 6px rgba(0, 0, 0, 0.36)', borderRadius: "20px", minHeight: "65px", alignContent: "center" }} expanded={openPrice} onChange={() => setOpenPrice(!openPrice)}>
-                            <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                            <AccordionSummary className="AccordionSummary-root" expandIcon={<ExpandMoreIcon />}>
                                 <Typography style={{ fontFamily: "SF Pro Text Bold" }}>Precio</Typography>
                             </AccordionSummary>
-                            <AccordionDetails >
+                            <AccordionDetails className="AccordionDetails-root" >
                             <Slider
                                 value={priceRange}
                                 onChange={handlePriceChange}
                                 valueLabelDisplay="auto"
-                                min={0}
+                                min={500}
                                 max={100000}
                                 step={1000}
                                 aria-labelledby="range-slider"
                                 getAriaValueText={(value) => `${value} CLP`}
                                 marks={[
                                     {
-                                    value: 0,
-                                    label: <span style={{ marginRight: '-100%' }}>0 CLP</span>,
+                                    value: 500,
+                                    label: <span style={{ marginRight: '-100%' }}>500 CLP</span>,
                                     },
                                     {
                                     value: 100000,
@@ -404,7 +433,7 @@ export default function Marketplace() {
                             </AccordionDetails>
                         </Accordion>
                         <Card style={{borderRadius:"20px", marginTop:"15px",margin:"10px", boxShadow: '0px 3px 6px rgba(0, 0, 0, 0.36)'}}>
-                            <Button onClick={fetchFilteredPublications} fullWidth >Filtrar</Button>
+                            <Button onClick={fetchFilteredPublications}  fullWidth >Filtrar</Button>
                         </Card>
                     </Grid>
 
@@ -500,6 +529,13 @@ export default function Marketplace() {
                                         
                                     </Card>
                                     ))}
+                                    {filteredPublications.length === 0 && (
+                                        <Grid item xs={12}>
+                                            <Typography variant="h6" style={{ textAlign: 'center' }}>
+                                            Publicaciones no encontradas
+                                            </Typography>
+                                        </Grid>
+                                    )}
 
                                 </Grid>
                                 <Grid container justifyContent="center" alignItems="center" style={{padding: "20px"}}>
