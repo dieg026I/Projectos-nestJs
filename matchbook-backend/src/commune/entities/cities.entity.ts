@@ -3,6 +3,7 @@ import { Entity, Column, PrimaryGeneratedColumn, OneToOne, OneToMany, ManyToOne,
 import { Region } from '../../region/entities/region.entity';
 import { Users } from 'src/users/entities/user.entity';
 import { clear } from 'console';
+import { Address } from 'src/address/entities/address.entity';
 
 @Entity('cities')
 export class Cities {
@@ -20,6 +21,8 @@ export class Cities {
   @JoinColumn({ name: 'id_region' })
   region: Region;
   
+  @OneToMany(() => Address, (address) => address.city)
+  addresses: Address[];
 
 }
 

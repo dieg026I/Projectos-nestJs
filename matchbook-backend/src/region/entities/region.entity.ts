@@ -1,3 +1,4 @@
+import { Address } from 'src/address/entities/address.entity';
 import { Cities } from 'src/commune/entities/cities.entity';
 import { Entity, Column, PrimaryGeneratedColumn, OneToMany, PrimaryColumn } from 'typeorm';
 
@@ -11,4 +12,8 @@ export class Region {
 
   @OneToMany(() => Cities, (city) => city.region)
   cities: Cities[];
+
+  @OneToMany(() => Address, (address) => address.region)
+  addresses: Address[];
+  
 }

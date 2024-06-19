@@ -2,6 +2,7 @@ import { Entity, Column, ManyToOne, JoinColumn, PrimaryColumn, OneToMany } from 
 import { Cities } from 'src/commune/entities/cities.entity';
 import { Publication } from 'src/publication/entities/publication.entity';
 import { ShoppingCart } from 'src/shopping_cart/entities/shopping_cart.entity';
+import { Address } from 'src/address/entities/address.entity';
 
 
 @Entity('users')
@@ -44,8 +45,10 @@ export class Users {
   publication: Publication[];
 
   @OneToMany(() => ShoppingCart, shoppingCart => shoppingCart.users)
-shopping_carts: ShoppingCart[];
+  shopping_carts: ShoppingCart[];
 
+  @OneToMany(() => Address, address => address.user)
+  addresses: Address[];
 
 }
 

@@ -31,6 +31,10 @@ import { StatusSend } from './status_send/entities/status_send.entity';
 import { ReadingClub } from './reading_club/entities/reading_club.entity';
 import { ShoppingCartModule } from './shopping_cart/shopping_cart.module';
 import { ShoppingCart } from './shopping_cart/entities/shopping_cart.entity';
+import { AddressModule } from './address/address.module';
+import { CountryModule } from './country/country.module';
+import { Country } from './country/entities/country.entity';
+import { Address } from './address/entities/address.entity';
 
 @Module({
   imports: [
@@ -42,7 +46,7 @@ import { ShoppingCart } from './shopping_cart/entities/shopping_cart.entity';
     password: '222648',
     database: 'Matchbook_DB',
     entities: [Users, Cities, Region, Book, Author, Publisher,
-    Publication, Category, Buy, ShipmentType, StatusSend, ReadingClub, ShoppingCart ],
+    Publication, Category, Buy, ShipmentType, StatusSend, ReadingClub, ShoppingCart, Country, Address ],
     synchronize: false, // Solo para entornos de desarrollo
     autoLoadEntities: false,
     logging: true
@@ -60,7 +64,9 @@ import { ShoppingCart } from './shopping_cart/entities/shopping_cart.entity';
     StatusSendModule,
     ShipmentTypeModule,
     ReadingClubModule,
-    ShoppingCartModule ],
+    ShoppingCartModule,
+    AddressModule,
+    CountryModule ],
   controllers: [AppController],
   providers: [AppService],
 })
