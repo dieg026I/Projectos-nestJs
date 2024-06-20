@@ -5,6 +5,7 @@ import { Publication } from './entities/publication.entity';
 import { Users } from 'src/users/entities/user.entity';
 import { Book } from 'src/book/entities/book.entity';
 import { Cities } from 'src/commune/entities/cities.entity';
+import { Category } from 'src/category/entities/category.entity';
 
 @Injectable()
 export class PublicationService {
@@ -72,8 +73,7 @@ export class PublicationService {
   }
 
   findOne(id_publication: string): Promise<Publication> {
-    return this.publicationRepository.findOne({where : {id_publication}, relations: ['book', 'book.author_id_author', 'book.publisher_id_publisher']});
-
+    return this.publicationRepository.findOne({where : {id_publication}, relations: ['book', 'book.author_id_author', 'book.publisher_id_publisher', 'users', 'users.cities', 'book.categories' ]});
   }
 
   async remove(id: string): Promise<void> {

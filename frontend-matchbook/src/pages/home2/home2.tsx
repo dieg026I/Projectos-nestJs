@@ -18,7 +18,7 @@ import "../../App.css";
 import axios from "axios";
 
 
-import { Link as RouterLink } from 'react-router-dom';
+import { Link as RouterLink, useNavigate } from 'react-router-dom';
 
 
 interface HomeProps {
@@ -89,11 +89,13 @@ function handleClick(event: React.MouseEvent<HTMLDivElement, MouseEvent>) {
     const handleChange = (event: React.ChangeEvent<unknown>, value: number) => {
         setPage(value);
     };
+    const navigate = useNavigate();
 
     {/*-----------------------------------------------------------------------------*/}
     {/* Mostrar Publicacion */}
     const [publications, setPublications] = React.useState<Publication[]>([]);
     const [users, setUsers] = React.useState<Users>();
+
     useEffect(() => {
         const fetchPublications = async () => {
         try {
@@ -114,7 +116,6 @@ function handleClick(event: React.MouseEvent<HTMLDivElement, MouseEvent>) {
         console.error('error usuario local:', error);
         }
         }   
-        
     };
 
     fetchPublications();
@@ -339,12 +340,12 @@ function handleClick(event: React.MouseEvent<HTMLDivElement, MouseEvent>) {
                                                 display: 'flex', 
                                                 flexDirection: 'column',
                                                 justifyContent: 'center',
-                                                width: '80%', // Añade esta línea
+                                                width: '80%',
                                             }}>
                                                 <Button type="button" style={{textTransform: "none", color:"#ffffff", backgroundColor:"#00a9e0", marginTop:"5px", textAlign: 'center', justifyContent:"center"}}>
                                                     Agregar al carro
                                                 </Button>
-                                                <Button type="button" style={{textTransform: "none", color:"#ffffff", backgroundColor:"#00a9e0", marginTop:"5px", textAlign: 'center', justifyContent:"center"}}>
+                                                <Button onClick={() => navigate('/publicationDetail', { state: { publicationId: publication.id_publication } })} type="button" style={{textTransform: "none", color:"#ffffff", backgroundColor:"#00a9e0", marginTop:"5px", textAlign: 'center', justifyContent:"center"}}>
                                                     Ir al Detalle
                                                 </Button>
                                             </div>

@@ -14,7 +14,7 @@ import MenuIcon from '@mui/icons-material/Menu';
 import PlaceIcon from '@mui/icons-material/Place';
 import { FaHeart } from "react-icons/fa6";
 import axios from "axios";
-import { Link as RouterLink } from 'react-router-dom';
+import { Link as RouterLink, useNavigate } from 'react-router-dom';
 
 interface HomeProps {
 }
@@ -78,6 +78,8 @@ function handleClick(event: React.MouseEvent<HTMLDivElement, MouseEvent>) {
 
 export const HomePage: React.FC<HomeProps> = ({}: HomeProps) => {
 
+    const navigate = useNavigate();
+
     const arrowStyles: React.CSSProperties = {
         position: 'absolute',
         zIndex: 2,
@@ -128,8 +130,7 @@ export const HomePage: React.FC<HomeProps> = ({}: HomeProps) => {
             console.log(JSON.stringify(response.data, null, 2))
         } catch (error) {
         console.error('Error fetching publications:', error);
-        }
-        
+        }  
     };
     fetchPublications();
     }, []);
@@ -324,7 +325,7 @@ export const HomePage: React.FC<HomeProps> = ({}: HomeProps) => {
                                                 <Button type="button" style={{textTransform: "none", color:"#ffffff", backgroundColor:"#00a9e0", marginTop:"5px", textAlign: 'center', justifyContent:"center"}}>
                                                     Agregar al carro
                                                 </Button>
-                                                <Button type="button" style={{textTransform: "none", color:"#ffffff", backgroundColor:"#00a9e0", marginTop:"5px", textAlign: 'center', justifyContent:"center"}}>
+                                                <Button onClick={() => navigate('/publicationDetail', { state: { publicationId: publication.id_publication } })} type="button" style={{textTransform: "none", color:"#ffffff", backgroundColor:"#00a9e0", marginTop:"5px", textAlign: 'center', justifyContent:"center"}}>
                                                     Ir al Detalle
                                                 </Button>
                                             </div>

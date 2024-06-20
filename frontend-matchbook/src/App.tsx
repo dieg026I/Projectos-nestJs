@@ -17,6 +17,7 @@ import BookManagement from './pages/bookManagement/bookManagement';
 import Wallet from './pages/wallet/wallet';
 import MarketplaceSearch from './pages/marketplaceSearch/marketplaceSearch';
 import PublicationDetail from './pages/publicationDetail/publicationDetail';
+import ProfileUsers from './pages/profileUsers/profileUsers';
 
 
 
@@ -61,6 +62,7 @@ function App() {
         <Route path="/home2" element={<ProtectedRoute><HomePageLogin /></ProtectedRoute>} />
         <Route path="/sales" element={<ProtectedRoute><Sales /></ProtectedRoute>} />
         <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
+        <Route path="/profileUsers" element={<ProtectedRoute><ProfileUsers /></ProtectedRoute>} />
         <Route path="/marketplace" element={<Marketplace />} />
         <Route path="/marketplaceSearch" element={<MarketplaceSearch />} />
         <Route path="/publicationDetail" element={<PublicationDetail />} />

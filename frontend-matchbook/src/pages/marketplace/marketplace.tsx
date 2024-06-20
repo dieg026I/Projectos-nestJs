@@ -9,6 +9,7 @@ import { FaHeart } from "react-icons/fa6";
 import PlaceIcon from '@mui/icons-material/Place';
 import { registerContainer } from "react-toastify/dist/core/store";
 import { Category } from "@mui/icons-material";
+import { useNavigate } from "react-router-dom";
 
 interface Publication {
     id_publication: string;
@@ -115,6 +116,8 @@ export default function Marketplace() {
     const [maxPrice, setMaxPrice] = useState(0);
 
     const [filteredPublications, setFilteredPublications] = useState<Publication[]>([]);
+
+    const navigate = useNavigate();
 
     {/*-----------------------------------------------------------------------------*/}
 
@@ -270,7 +273,9 @@ export default function Marketplace() {
             console.error('Error al obtener las publicaciones filtradas:', error);
         }
     };
-
+    {/*-----------------------------------------------------------------------------*/}
+    
+    {/* Seleccionar rango de precio */}
     const handlePriceChange = (event: Event, newValue: number | number[]) => {
         const newPriceRange = newValue as number[];
         const priceMin = newPriceRange[0];
@@ -441,13 +446,13 @@ export default function Marketplace() {
                         <Card style={{ height:"auto", marginRight:"20px", marginBottom:"20px", borderRadius:"20px"}}> 
                                 <Grid container spacing={4} justifyContent="center" style={{padding: "20px", marginTop:"15px"}}>
                                 {(filteredPublications.length > 0 ? filteredPublications : publications).slice((page - 1) * 12, page * 12).reverse().map((publication) => (
-                                        <Card 
-                                            key={publication.id_publication} 
-                                            style={{ margin: "10px", width: "230px", borderRadius: "20px", textAlign: "left", position: 'relative', padding:"22px"}} 
-                                            sx={{ maxWidth: 345, padding: "10px"}}
-                                            onMouseEnter={() => setActiveCard(publication.id_publication)}
-                                            onMouseLeave={() => setActiveCard(null)}
-                                        >
+                                    <Card 
+                                        key={publication.id_publication} 
+                                        style={{ margin: "10px", width: "230px", borderRadius: "20px", textAlign: "left", position: 'relative', padding:"22px"}} 
+                                        sx={{ maxWidth: 345, padding: "10px"}}
+                                        onMouseEnter={() => setActiveCard(publication.id_publication)}
+                                        onMouseLeave={() => setActiveCard(null)}
+                                    >
                                         {/* Imagen libros */}
                                         <CardMedia
                                             sx={{ height: 140, position: 'relative' }}
@@ -497,7 +502,7 @@ export default function Marketplace() {
                                                     <Button type="button" style={{textTransform: "none", color:"#ffffff", backgroundColor:"#00a9e0", marginTop:"5px", textAlign: 'center', justifyContent:"center"}}>
                                                         Agregar al carro
                                                     </Button>
-                                                    <Button type="button" style={{textTransform: "none", color:"#ffffff", backgroundColor:"#00a9e0", marginTop:"5px", textAlign: 'center', justifyContent:"center"}}>
+                                                    <Button onClick={() => navigate('/publicationDetail', { state: { publicationId: publication.id_publication } })} type="button" style={{textTransform: "none", color:"#ffffff", backgroundColor:"#00a9e0", marginTop:"5px", textAlign: 'center', justifyContent:"center"}}>
                                                         Ir al Detalle
                                                     </Button>
                                                 </div>
@@ -528,14 +533,15 @@ export default function Marketplace() {
                                         </CardContent>
                                         
                                     </Card>
-                                    ))}
-                                    {filteredPublications.length === 0 && (
-                                        <Grid item xs={12}>
-                                            <Typography variant="h6" style={{ textAlign: 'center' }}>
-                                            Publicaciones no encontradas
-                                            </Typography>
-                                        </Grid>
-                                    )}
+                                ))}
+                                
+                                {filteredPublications.length === 0 && (
+                                    <Grid item xs={12}>
+                                        <Typography variant="h6" style={{ textAlign: 'center' }}>
+                                        Publicaciones no encontradas
+                                        </Typography>
+                                    </Grid>
+                                )}
 
                                 </Grid>
                                 <Grid container justifyContent="center" alignItems="center" style={{padding: "20px"}}>

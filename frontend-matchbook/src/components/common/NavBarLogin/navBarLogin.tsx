@@ -9,6 +9,7 @@ import {
     Badge,
     Box,
     Button,
+    Card,
     Container,
     Dialog,
     DialogActions,
@@ -48,6 +49,13 @@ interface Users {
 
 export const NavBarLogin: React.FC<{}> = () => {
     const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = useState<null | HTMLElement>(null);
+
+    const [isOpen, setIsOpen] = useState(false);
+
+    const togglePopup = () => {
+        setIsOpen(!isOpen);
+        console.log("Entro al popup")
+    };
 
     {/* Nombre de usuario y correo */}
     const [users, setUsers] = React.useState<Users>();
@@ -94,7 +102,6 @@ export const NavBarLogin: React.FC<{}> = () => {
         setOpen(false);
     };
 
- 
     {/* Colores Boton Perfil */}
     const [bgColorProfile, setBgColorProfile] = useState('transparent');
     const [textColorProfile, setTextColorProfile] = useState('#f05d16');
@@ -240,9 +247,12 @@ export const NavBarLogin: React.FC<{}> = () => {
                                 <Box className="space" >
                                     {isMobile ? (
                                         <>
-                                            <Badge badgeContent={1} color="primary">  
+                                            <Badge badgeContent={1} color="primary" onClick={togglePopup}>  
                                                 <LuShoppingCart style={{width: "30px", height:"30px", cursor: 'pointer'}} href="/cart" color="inherit" />
                                             </Badge>
+
+                                            
+
                                             <IconButton href="/sales" color="inherit"  >
                                                 <LuDollarSign style={{ width: "35px", height:"35px", cursor: 'pointer'}} />
                                             </IconButton>
@@ -254,7 +264,7 @@ export const NavBarLogin: React.FC<{}> = () => {
                                     ) : (
                                         <>
                                             <Badge badgeContent={1} color="primary">
-                                                <LuShoppingCart style={{width: "30px", height:"30px", marginLeft:"40px", cursor: 'pointer'}} href="/cart" color="inherit" />
+                                                <LuShoppingCart onClick={togglePopup} style={{width: "30px", height:"30px", marginLeft:"40px", cursor: 'pointer'}} href="/cart" color="inherit" />
                                             </Badge>
 
                                             <Button style={{ backgroundColor: '#f05d16' , textTransform: "none", color: "#ffff", fontSize: "16px", marginLeft: "10px", borderRadius:"20px", width:"90px", padding:"6px" }} href="/sales">Vender</Button>
@@ -271,6 +281,17 @@ export const NavBarLogin: React.FC<{}> = () => {
                     </Container>
                 </Toolbar>
             </AppBar>
+            {isOpen && (
+                <div style={{ position: 'absolute', top: '140%', right: '20.7%', transform: 'translateX(0%)', marginTop: '10px', padding: '10px', border: '1px solid #ccc', borderRadius: '10px', textAlign: 'center', backgroundColor: '#fff'}}>
+                
+                    <div style={{ position: 'absolute', top: '-10px', left: '80%', transform: 'translateX(-50%) rotate(45deg)', width: '20px', height: '20px', backgroundColor: '#fff', border: '1px solid #ccc', borderColor: ' #ccc transparent transparent #ccc  ' }} />
+                        <Card>
+                            <Typography> Titulo </Typography>
+                
+                        </Card>
+                    </div>
+                
+            )}
 
             <div>
                 <Dialog open={open} onClose={handleClose} PaperProps={{ style: { width: '360px', maxHeight: '90vh' ,margin: 'auto', borderRadius:"20px"}, }}  >

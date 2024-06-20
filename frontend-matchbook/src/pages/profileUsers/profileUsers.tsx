@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import NavBarLogin from "../../components/common/NavBarLogin/navBarLogin";
 import Footer from "../../components/common/Footer/footer";
 import { Box, Grid, Card, Button, Avatar, Typography, Stack, Pagination, CardContent, PaginationItem, CardMedia, useColorScheme } from "@mui/material";
-import { RiPencilFill } from "react-icons/ri";
 import "../../App.css";
 import axios from "axios";
 import PlaceIcon from '@mui/icons-material/Place';
@@ -61,10 +60,10 @@ interface Book {
     description_book: string;
 }
 
-export default function Profile() {
-    
-    const location = useLocation();
+export default function ProfileUsers() {
+
     const navigate = useNavigate();
+    const location = useLocation();
     const { UserId } = location.state || {};
     const [users, setUsers] = React.useState<Users>();
 
@@ -90,15 +89,12 @@ export default function Profile() {
         } catch (error) {
         console.error('Error fetching publications:', error);
         }
-        const userString = localStorage.getItem("user");
-        
         
         try {
             const formData = new FormData();
-            const userString = localStorage.getItem("user");
-            if (userString !== null){
-            const users : Users = JSON.parse(userString);
-            const responseUser= await axios.get(`http://localhost:3001/users/publication/${users.rut_user}`);
+
+            if (UserId !== null){
+            const responseUser= await axios.get(`http://localhost:3001/users/publication/${UserId}`);
             const userResponse = responseUser.data;
             setUsers(userResponse);
             }
@@ -112,7 +108,6 @@ export default function Profile() {
     
 
 
-    
     {/*-----------------------------------------------------------------------------*/}
 
 
@@ -126,24 +121,7 @@ export default function Profile() {
                         <Card sx={{ borderRadius:"20px", padding: "20px", height:"440px", textAlign:"center", marginRight:"20px" }}>
                             
                             <div style={{ display: "flex", justifyContent: "center", alignItems: "center", paddingTop:"30px", paddingBottom:"30px", position:"relative"  }}>
-                            
                                 <Avatar style={{backgroundColor: "#f05d16", width:"170px", height:"170px"}} src="/broken-image.jpg" />
-                                <div style={{ 
-                                    width: '35px', 
-                                    height: '35px', 
-                                    backgroundColor: '#188bcc', 
-                                    borderRadius: '50%', 
-                                    display: 'flex', 
-                                    justifyContent: 'center', 
-                                    alignItems: 'center',
-                                    position: 'relative', 
-                                    top: '80px', 
-                                    left: '2px', 
-                                    transform: 'translate(-50%, -50%)',
-                                    boxShadow: '0px 3px 6px rgba(0, 0, 0, 0.36)'
-                                }}>
-                                    <RiPencilFill style={{ color: "#ffffff", width:"33px", height:"25px"}} /> {/* Icono de lápiz */}
-                                </div>
                             </div>
                             {users && (
                                 <>

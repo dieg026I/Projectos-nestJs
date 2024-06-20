@@ -229,11 +229,10 @@ const Sales: React.FC = () => {
         const selectedValue = (event.target.value);
         setSelectedCategory(selectedValue);
         let id_category = selectedValue
-        axios.get(`http://localhost:3001/categories/${id_category}`)
+        axios.get(`http://localhost:3001/categories/categoryOne/${id_category}`)
             .then(response => {
             setOneCategory(response.data);
-            });
-
+        });
     };
     
     const handleDescriptionChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
