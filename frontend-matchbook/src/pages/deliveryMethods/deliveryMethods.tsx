@@ -104,10 +104,7 @@ const DeliveryMethods: React.FC = () => {
             return;
         }
 
-
         try {
-
-
             const address  =  {
                 name: name,
                 street: street,
@@ -115,10 +112,10 @@ const DeliveryMethods: React.FC = () => {
                 extra_details: extra_details,
                 postal_code: postal_code,
                 phone_number: phone_number,
-
+                
             };
         
-            const response = await axios.post('http://localhost:3001/users', address);
+            const response = await axios.post('http://localhost:3001/addresses', address);
             console.log(response.data);
             alert('Dirección Agregada');
             closeModalAddress();

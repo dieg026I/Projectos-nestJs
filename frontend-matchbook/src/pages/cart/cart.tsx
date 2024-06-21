@@ -41,7 +41,7 @@ const Cart: React.FC = () => {
                                 </TableRow>
 
                                 <TableRow style={{marginBottom:"20px"}}  >
-                                    <TableCell > 
+                                    <TableCell style={{border: 'none'}}> 
                                         
                                         <Card style={{ margin: "10px", display: 'flex', borderRadius: "20px", textAlign: "left", position: 'relative', padding: "22px" , width:"350px" }} >
                                             {/* Imagen del libro */}
@@ -100,8 +100,8 @@ const Cart: React.FC = () => {
                                             </CardContent>
                                         </Card>  
                                     </TableCell>
-                                    <TableCell align="center" style={{ marginRight: '20px' }} >$2000</TableCell>
-                                    <TableCell align="center" style={{ marginRight: '20px' }}>
+                                    <TableCell align="center" style={{ marginRight: '20px', border: 'none' }} >$2000</TableCell>
+                                    <TableCell align="center" style={{ marginRight: '20px', border: 'none' }}>
                                     <Select
                                         labelId="demo-simple-select-filled-label"
                                         id="demo-simple-select-filled"
@@ -115,10 +115,21 @@ const Cart: React.FC = () => {
                                         <MenuItem value={3}>3</MenuItem>
                                     </Select>
                                     </TableCell>
-                                    <TableCell align="center" style={{ marginRight: '20px' }}>$7000</TableCell>
-                                    <TableCell align="center" style={{ marginRight: '20px' }}><LuTrash2 /></TableCell>
+                                    <TableCell align="center" style={{ marginRight: '20px', border: 'none' }}>$7000</TableCell>
+                                    <TableCell align="center" style={{ marginRight: '20px', border: 'none' }}><LuTrash2 /></TableCell>
                                 </TableRow>
+                                <TableRow >
+                                    <TableCell colSpan={5} >
+                                        <Card style={{padding:"10px", margin:"15px", width:"150px", textAlign:"center"}}>
+                                            <Typography>SubTotal</Typography>
+                                            <Typography style={{fontFamily:"SF Pro Display Bold"}}>$40000</Typography>
+                                            <Button style={{textTransform: "none", backgroundColor:"#00A9E0", color:"#ffffff"}}>Pagar</Button>
+                                        </Card>
+                                    </TableCell>
+                                </TableRow>
+                                
                             </TableBody>
+                            
                         </Table>
                     </TableContainer>
                 </div>
