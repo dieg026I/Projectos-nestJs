@@ -1,4 +1,4 @@
-import { Entity, Column, ManyToOne, JoinColumn, PrimaryColumn, OneToMany } from 'typeorm';
+import { Entity, Column, ManyToOne, JoinColumn, PrimaryColumn, OneToMany, OneToOne } from 'typeorm';
 import { Cities } from 'src/commune/entities/cities.entity';
 import { Publication } from 'src/publication/entities/publication.entity';
 import { ShoppingCart } from 'src/shopping_cart/entities/shopping_cart.entity';
@@ -43,8 +43,8 @@ export class Users {
   @OneToMany(() => Publication, publication => publication.users)
   publication: Publication[];
 
-  @OneToMany(() => ShoppingCart, shoppingCart => shoppingCart.users)
-  shopping_carts: ShoppingCart[];
+  @OneToOne(() => ShoppingCart, shoppingCart => shoppingCart.users)
+  shopping_carts: ShoppingCart;
 
 
 }

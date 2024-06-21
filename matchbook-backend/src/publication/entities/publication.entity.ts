@@ -44,7 +44,9 @@ export class Publication {
   @OneToMany(() => Buy, buy => buy.publication)
   buy: Buy[];
 
-  @OneToMany(() => ShoppingCart, shoppingCart => shoppingCart.publication)
-  shoppingCart: ShoppingCart[];
+  @ManyToOne(() => ShoppingCart, ShoppingCart => ShoppingCart.publication)
+  shoppingCart: ShoppingCart;
+
+  
 
 }

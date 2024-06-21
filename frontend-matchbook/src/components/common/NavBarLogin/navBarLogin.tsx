@@ -33,7 +33,7 @@ import { LuShoppingCart, LuSearch, LuMenu, LuDollarSign, LuLogOut } from "react-
 import  Logo from "../../../assents/img/logoMatch.png";
 import { deepOrange } from '@mui/material/colors';
 import axios from 'axios';
-
+import Book1 from "../../../assents/img/book1.jpeg";
 
 interface Users {
     name_user: string,
@@ -49,6 +49,10 @@ interface Users {
 
 export const NavBarLogin: React.FC<{}> = () => {
     const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = useState<null | HTMLElement>(null);
+
+
+    const [count, setCount] = useState(0);
+
 
     const [isOpen, setIsOpen] = useState(false);
 
@@ -281,16 +285,28 @@ export const NavBarLogin: React.FC<{}> = () => {
                     </Container>
                 </Toolbar>
             </AppBar>
+
             {isOpen && (
-                <div style={{ position: 'absolute', top: '140%', right: '20.7%', transform: 'translateX(0%)', marginTop: '10px', padding: '10px', border: '1px solid #ccc', borderRadius: '10px', textAlign: 'center', backgroundColor: '#fff'}}>
-                
-                    <div style={{ position: 'absolute', top: '-10px', left: '80%', transform: 'translateX(-50%) rotate(45deg)', width: '20px', height: '20px', backgroundColor: '#fff', border: '1px solid #ccc', borderColor: ' #ccc transparent transparent #ccc  ' }} />
-                        <Card>
-                            <Typography> Titulo </Typography>
-                
-                        </Card>
-                    </div>
-                
+                <div style={{ position: 'absolute', top: '140%', right: '20.7%', transform: 'translateX(0%)', marginTop: '10px', padding: '14px', border: '1px solid #ccc', borderRadius: '10px', textAlign: 'center', backgroundColor: '#fff', width:"340px", height:"220px"}}>
+    
+                    <div style={{ position: 'absolute', top: '-10px', left: '90%', transform: 'translateX(-50%) rotate(45deg)', width: '20px', height: '20px', backgroundColor: '#fff', border: '1px solid #ccc', borderColor: ' #ccc transparent transparent #ccc ' }} />
+                    <Typography variant="h5" style={{ textAlign: 'left', fontFamily:"SF Pro Display Bold", fontSize:"20px", marginBottom:"20px" }}>Alicia en el país de las maravillas</Typography>
+                        <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'flex-start' }}>
+                            <img 
+                                src={Book1}
+                                alt="Imagen del libro"
+                                style={{ height: '100px', width: 'auto', maxWidth: '100%', float: 'left' }}
+                            />
+                            <div style={{ display: 'flex', flexDirection: 'column', marginLeft: '18%', textAlign: 'left', marginBottom:"10px" }}>
+                                <Typography style={{fontFamily:"SF Pro Display Bold", fontSize:"17px", marginTop:"20px"}}>$10990</Typography>
+                                <Typography style={{}}>Arnold Lobel</Typography>
+                            </div>
+                            
+                        </div>
+                        <Card style={{backgroundColor:"#00a9e0", marginTop:"10px"}}>
+                            <Button fullWidth href='/cart' style={{ textAlign:"center", color:"#ffffff" }}>Ir al Carro</Button>
+                        </Card>  
+                </div>   
             )}
 
             <div>

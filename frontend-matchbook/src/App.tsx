@@ -18,6 +18,7 @@ import Wallet from './pages/wallet/wallet';
 import MarketplaceSearch from './pages/marketplaceSearch/marketplaceSearch';
 import PublicationDetail from './pages/publicationDetail/publicationDetail';
 import ProfileUsers from './pages/profileUsers/profileUsers';
+import DeliveryMethods from './pages/deliveryMethods/deliveryMethods';
 
 
 
@@ -66,6 +67,7 @@ function App() {
         <Route path="/marketplace" element={<Marketplace />} />
         <Route path="/marketplaceSearch" element={<MarketplaceSearch />} />
         <Route path="/publicationDetail" element={<PublicationDetail />} />
+        <Route path="/deliveryMethods" element={<DeliveryMethods />} />
         <Route path="/bookManagement" element={<ProtectedRoute><BookManagement /></ProtectedRoute>} />
         <Route path="/wallet" element={<ProtectedRoute><Wallet /></ProtectedRoute>} />
 

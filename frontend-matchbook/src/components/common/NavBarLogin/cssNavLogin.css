@@ -1,5 +1,8 @@
 /* cssNav.css */
-.navbar {
+
+
+
+/*.navbar {
     width: 100%;
     height: 50px;
     background: #1e1e1e;
@@ -8,7 +11,22 @@
     align-items: center;
     justify-content: flex-start;
     z-index: 1300;
+}*/
+
+.navbar {
+    position: fixed !important; /* Cambiado de 'static' a 'fixed' */
+    top: 0; /* Alinea la barra de navegación en la parte superior del viewport */
+    left: 0; /* Alinea la barra de navegación en la parte izquierda del viewport */
+    width: 100%;
+    height: 50px;
+    background: #1e1e1e;
+    border-bottom: 1px solid #555;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    z-index: 1300; /* Asegúrate de que el z-index sea suficiente para mantener la barra sobre otros elementos */
 }
+
 
 .space {
     display: flex;
@@ -92,3 +110,10 @@
     font-size: 16px;
 }
 
+.navbar-login {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1000; /* Asegúrate de que la barra de navegación se muestre por encima de otros contenidos */
+}
