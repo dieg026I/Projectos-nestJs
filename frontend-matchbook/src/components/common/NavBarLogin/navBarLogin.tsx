@@ -1,7 +1,7 @@
 
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import "../../common/NavBar/cssNav.css";
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 import {
     AppBar,
@@ -46,6 +46,44 @@ interface Users {
     username: string
 }
 
+interface Publication {
+    id_publication: string;
+    date_publication: Date;
+    users: Users;
+    book: Book;
+    photo_showcase: string;
+    photo_cover: string;
+    photo_first_page: string;
+    photo_back_cover: string;
+    cost_book: number;
+}
+interface Author {
+    id_author: string;
+    name_author: string;
+}
+interface Publisher {
+    id_publisher: string;
+    name_publisher: string;
+}
+interface Book {
+    id_book: string;
+    name_book: string;
+    format_book: string;
+    author_id_author: Author;
+    publisher_name: string; 
+    publisher_id_publisher: Publisher;
+    category: string;
+    year_book: number;
+    status_book: string;
+    stock_book: number;
+    description_book: string;
+}
+interface ShoppingCart {
+    id_shopping_card: number,
+    user: Users,
+    publication: Publication[],
+}
+
 
 export const NavBarLogin: React.FC<{}> = () => {
     const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = useState<null | HTMLElement>(null);
@@ -76,7 +114,6 @@ export const NavBarLogin: React.FC<{}> = () => {
             const responseUser= await axios.get(`http://localhost:3001/users/rut/${users.rut_user}`);
             const userResponse = responseUser.data;
             setUsers(userResponse);
-            console.log(JSON.stringify(responseUser.data, null, 2))
         } catch (error) {
         console.error('Error fetching publications:', error);
         }
@@ -184,6 +221,86 @@ export const NavBarLogin: React.FC<{}> = () => {
         }
     };
 
+    const location = useLocation();
+    const { publicationCart } = location.state;
+
+    const [publicacion, setPublicacion] = useState(null);
+    const [cart, setCart] = useState<ShoppingCart>();
+
+    const idUsuario = users?.rut_user;
+    // Función para obtener el carro de un usuario
+    async function obtenerCarroPorUsuario(idUsuario: number) {
+    
+        
+        // Intenta obtener el carro del usuario desde el backend
+        if (users) {
+            let carro;
+            try {
+            const response = await axios.get(`http://localhost:3001/shopping-cart/userCart/${idUsuario}`);
+            carro = response.data;
+            } catch (error) {
+            console.error('No se pudo obtener el carro del usuario', error);
+            } 
+
+            // Si el usuario no tiene un carro, crea uno
+            if (!carro) {
+                carro = await crearCarro(idUsuario);
+            }
+            return carro;
+        }
+    }
+
+    // Función para crear un carro para un usuario
+    async function crearCarro(idUsuario: number) {
+        // Genera un id_cart aleatorio
+        const id_cart = Math.random().toString(36).substring(2, 15);
+    
+        // Crea un nuevo carro en la base de datos y asócialo al usuario
+        try {
+            const response = await axios.post('http://localhost:3001/shopping-cart', {
+            id_cart,
+            user_id_user: idUsuario,
+            publication: publicationCart
+            });
+            return response.data;
+        } catch (error) {
+            console.error('No se pudo crear el carro', error);
+        }
+    }
+    
+    // Función para agregar una publicación al carro
+    async function agregarAlCarro(publicationCart: Publication) {
+        if (users) {
+            const carro = await obtenerCarroPorUsuario(users.rut_user);
+        
+            const IdPublication = publicationCart.id_publication;
+        
+    
+        // Si el carro existe, agrega la publicación al carro
+        if (carro) {
+            const allCart: Publication[]= carro.publication;
+            for (let i = 0; i < allCart.length; i++) {
+                // Si el ID de la publicación coincide con el ID que estamos buscando...
+                if (allCart[i].id_publication === publicationCart.id_publication) {
+                  // Muestra un mensaje de alerta
+                    alert('Ya existe este libro en tu carro');
+                    break; // Sal del bucle for, ya que encontramos una coincidencia
+                }
+            }
+            try {
+            const response = await axios.post(`http://localhost:3001/shopping-cart/publicationCart/${carro.id_shopping_card}/publications/${carro.IdPublication}`);
+            if(response){    
+                const cartResponse: ShoppingCart = response.data; 
+                setCart(cartResponse);
+                setIsOpen(true)
+            }
+            } catch (error) {
+                console.error('No se pudo agregar la publicación al carro', error);
+            }
+        }
+        }
+    }
+
     return (
         <div className="navbar">
             <AppBar position="static" sx={{backgroundColor: "#1e1e1e"}}>
@@ -247,6 +364,30 @@ export const NavBarLogin: React.FC<{}> = () => {
                                     </div>
                                 )}
                             </Grid>
+
+                            {isOpen && (
+                                <div style={{ position: 'absolute', top: '140%', right: '20.7%', transform: 'translateX(0%)', marginTop: '10px', padding: '14px', border: '1px solid #ccc', borderRadius: '10px', textAlign: 'center', backgroundColor: '#fff', width:"340px", height:"220px"}}>
+
+                                    <div style={{ position: 'absolute', top: '-10px', left: '90%', transform: 'translateX(-50%) rotate(45deg)', width: '20px', height: '20px', backgroundColor: '#fff', border: '1px solid #ccc', borderColor: ' #ccc transparent transparent #ccc ' }} />
+                                    <Typography variant="h5" style={{ textAlign: 'left', fontFamily:"SF Pro Display Bold", fontSize:"20px", marginBottom:"20px" }}>Alicia en el país de las maravillas</Typography>
+                                        <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'flex-start' }}>
+                                            <img 
+                                                src={Book1}
+                                                alt="Imagen del libro"
+                                                style={{ height: '100px', width: 'auto', maxWidth: '100%', float: 'left' }}
+                                            />
+                                            <div style={{ display: 'flex', flexDirection: 'column', marginLeft: '18%', textAlign: 'left', marginBottom:"10px" }}>
+                                                <Typography style={{fontFamily:"SF Pro Display Bold", fontSize:"17px", marginTop:"20px"}}>$10990</Typography>
+                                                <Typography style={{}}>Arnold Lobel</Typography>
+                                            </div>
+                                            
+                                        </div>
+                                        <Card style={{backgroundColor:"#00a9e0", marginTop:"10px"}}>
+                                            <Button fullWidth href='/cart' style={{ textAlign:"center", color:"#ffffff" }}>Ir al Carro</Button>
+                                        </Card>  
+                                </div>   
+                            )}
+
                             <Grid item xs={3} sm={3} md={3} lg={3}>
                                 <Box className="space" >
                                     {isMobile ? (
@@ -286,28 +427,7 @@ export const NavBarLogin: React.FC<{}> = () => {
                 </Toolbar>
             </AppBar>
 
-            {isOpen && (
-                <div style={{ position: 'absolute', top: '140%', right: '20.7%', transform: 'translateX(0%)', marginTop: '10px', padding: '14px', border: '1px solid #ccc', borderRadius: '10px', textAlign: 'center', backgroundColor: '#fff', width:"340px", height:"220px"}}>
-    
-                    <div style={{ position: 'absolute', top: '-10px', left: '90%', transform: 'translateX(-50%) rotate(45deg)', width: '20px', height: '20px', backgroundColor: '#fff', border: '1px solid #ccc', borderColor: ' #ccc transparent transparent #ccc ' }} />
-                    <Typography variant="h5" style={{ textAlign: 'left', fontFamily:"SF Pro Display Bold", fontSize:"20px", marginBottom:"20px" }}>Alicia en el país de las maravillas</Typography>
-                        <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'flex-start' }}>
-                            <img 
-                                src={Book1}
-                                alt="Imagen del libro"
-                                style={{ height: '100px', width: 'auto', maxWidth: '100%', float: 'left' }}
-                            />
-                            <div style={{ display: 'flex', flexDirection: 'column', marginLeft: '18%', textAlign: 'left', marginBottom:"10px" }}>
-                                <Typography style={{fontFamily:"SF Pro Display Bold", fontSize:"17px", marginTop:"20px"}}>$10990</Typography>
-                                <Typography style={{}}>Arnold Lobel</Typography>
-                            </div>
-                            
-                        </div>
-                        <Card style={{backgroundColor:"#00a9e0", marginTop:"10px"}}>
-                            <Button fullWidth href='/cart' style={{ textAlign:"center", color:"#ffffff" }}>Ir al Carro</Button>
-                        </Card>  
-                </div>   
-            )}
+            
 
             <div>
                 <Dialog open={open} onClose={handleClose} PaperProps={{ style: { width: '360px', maxHeight: '90vh' ,margin: 'auto', borderRadius:"20px"}, }}  >

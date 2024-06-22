@@ -15,9 +15,6 @@ export class ShoppingCart {
     user_id_user: number;
 
     @OneToMany(() => Publication, publication => publication.shoppingCart)
-    @JoinColumn({ name: 'publication_id_publication' })
     publication: Publication[];
     
-    @Column()
-    publication_id_publication: string;
 }

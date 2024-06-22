@@ -91,6 +91,7 @@ function handleClick(event: React.MouseEvent<HTMLDivElement, MouseEvent>) {
     };
     const navigate = useNavigate();
 
+
     {/*-----------------------------------------------------------------------------*/}
     {/* Mostrar Publicacion */}
     const [publications, setPublications] = React.useState<Publication[]>([]);
@@ -164,6 +165,9 @@ function handleClick(event: React.MouseEvent<HTMLDivElement, MouseEvent>) {
     {/*-----------------------------------------------------------------------------*/}
     {/* Mostrar boton "agregar al carro y ver detalle" */}
     const [activeCard, setActiveCard] = useState<string | null>(null);
+
+    const [publicationId, setPublicationId] = useState(null);
+    const [cartId, setCartId] = useState(null);
 
     return (
     <>
@@ -342,7 +346,7 @@ function handleClick(event: React.MouseEvent<HTMLDivElement, MouseEvent>) {
                                                 justifyContent: 'center',
                                                 width: '80%',
                                             }}>
-                                                <Button type="button" style={{textTransform: "none", color:"#ffffff", backgroundColor:"#00a9e0", marginTop:"5px", textAlign: 'center', justifyContent:"center"}}>
+                                                <Button  onClick={() => navigate('/navBarLogin', { state: { publicationCart: publication } })}  type="button" style={{textTransform: "none", color:"#ffffff", backgroundColor:"#00a9e0", marginTop:"5px", textAlign: 'center', justifyContent:"center"}}>
                                                     Agregar al carro
                                                 </Button>
                                                 <Button onClick={() => navigate('/publicationDetail', { state: { publicationId: publication.id_publication } })} type="button" style={{textTransform: "none", color:"#ffffff", backgroundColor:"#00a9e0", marginTop:"5px", textAlign: 'center', justifyContent:"center"}}>

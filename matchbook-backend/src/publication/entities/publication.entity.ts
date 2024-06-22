@@ -45,7 +45,12 @@ export class Publication {
   buy: Buy[];
 
   @ManyToOne(() => ShoppingCart, ShoppingCart => ShoppingCart.publication)
+  @JoinColumn({ name: 'id_cart' })
   shoppingCart: ShoppingCart;
+
+  @Column()
+  id_cart: number;
+
 
   
 
