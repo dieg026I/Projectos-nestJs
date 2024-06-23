@@ -1,37 +1,11 @@
 
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import "../../common/NavBar/cssNav.css";
-import { useLocation, useNavigate } from 'react-router-dom';
-
-import {
-    AppBar,
-    Avatar,
-    Badge,
-    Box,
-    Button,
-    Card,
-    Container,
-    Dialog,
-    DialogActions,
-    DialogContent,
-    DialogTitle,
-    Grid,
-    IconButton,
-    InputBase,
-    Link,
-    Menu,
-    MenuItem,
-    Stack,
-    Toolbar,
-    Typography,
-    useMediaQuery,
-    useTheme,
-} from "@mui/material"; 
-
+import { useNavigate } from 'react-router-dom';
+import {AppBar, Avatar, Badge,Box,Button, Container, Dialog, DialogActions, DialogContent, DialogTitle, Grid,IconButton, Link, Menu, MenuItem,Toolbar,Typography, useMediaQuery} from "@mui/material"; 
 import { PiPencilSimpleBold } from "react-icons/pi";
 import { LuShoppingCart, LuSearch, LuMenu, LuDollarSign, LuLogOut } from "react-icons/lu";
 import  Logo from "../../../assents/img/logoMatch.png";
-import { deepOrange } from '@mui/material/colors';
 import axios from 'axios';
 import Book1 from "../../../assents/img/book1.jpeg";
 
@@ -45,7 +19,6 @@ interface Users {
     password_users: string,
     username: string
 }
-
 interface Publication {
     id_publication: string;
     date_publication: Date;
@@ -84,20 +57,8 @@ interface ShoppingCart {
     publication: Publication[],
 }
 
-
 export const NavBarLogin: React.FC<{}> = () => {
     const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = useState<null | HTMLElement>(null);
-
-
-    const [count, setCount] = useState(0);
-
-
-    const [isOpen, setIsOpen] = useState(false);
-
-    const togglePopup = () => {
-        setIsOpen(!isOpen);
-        console.log("Entro al popup")
-    };
 
     {/* Nombre de usuario y correo */}
     const [users, setUsers] = React.useState<Users>();
@@ -221,86 +182,6 @@ export const NavBarLogin: React.FC<{}> = () => {
         }
     };
 
-    const location = useLocation();
-    const { publicationCart } = location.state;
-
-    const [publicacion, setPublicacion] = useState(null);
-    const [cart, setCart] = useState<ShoppingCart>();
-
-    const idUsuario = users?.rut_user;
-    // Función para obtener el carro de un usuario
-    async function obtenerCarroPorUsuario(idUsuario: number) {
-    
-        
-        // Intenta obtener el carro del usuario desde el backend
-        if (users) {
-            let carro;
-            try {
-            const response = await axios.get(`http://localhost:3001/shopping-cart/userCart/${idUsuario}`);
-            carro = response.data;
-            } catch (error) {
-            console.error('No se pudo obtener el carro del usuario', error);
-            } 
-
-            // Si el usuario no tiene un carro, crea uno
-            if (!carro) {
-                carro = await crearCarro(idUsuario);
-            }
-            return carro;
-        }
-    }
-
-    // Función para crear un carro para un usuario
-    async function crearCarro(idUsuario: number) {
-        // Genera un id_cart aleatorio
-        const id_cart = Math.random().toString(36).substring(2, 15);
-    
-        // Crea un nuevo carro en la base de datos y asócialo al usuario
-        try {
-            const response = await axios.post('http://localhost:3001/shopping-cart', {
-            id_cart,
-            user_id_user: idUsuario,
-            publication: publicationCart
-            });
-            return response.data;
-        } catch (error) {
-            console.error('No se pudo crear el carro', error);
-        }
-    }
-    
-    // Función para agregar una publicación al carro
-    async function agregarAlCarro(publicationCart: Publication) {
-        if (users) {
-            const carro = await obtenerCarroPorUsuario(users.rut_user);
-        
-            const IdPublication = publicationCart.id_publication;
-        
-    
-        // Si el carro existe, agrega la publicación al carro
-        if (carro) {
-            const allCart: Publication[]= carro.publication;
-            for (let i = 0; i < allCart.length; i++) {
-                // Si el ID de la publicación coincide con el ID que estamos buscando...
-                if (allCart[i].id_publication === publicationCart.id_publication) {
-                  // Muestra un mensaje de alerta
-                    alert('Ya existe este libro en tu carro');
-                    break; // Sal del bucle for, ya que encontramos una coincidencia
-                }
-            }
-            try {
-            const response = await axios.post(`http://localhost:3001/shopping-cart/publicationCart/${carro.id_shopping_card}/publications/${carro.IdPublication}`);
-            if(response){    
-                const cartResponse: ShoppingCart = response.data; 
-                setCart(cartResponse);
-                setIsOpen(true)
-            }
-            } catch (error) {
-                console.error('No se pudo agregar la publicación al carro', error);
-            }
-        }
-        }
-    }
-
     return (
         <div className="navbar">
             <AppBar position="static" sx={{backgroundColor: "#1e1e1e"}}>
@@ -365,39 +246,13 @@ export const NavBarLogin: React.FC<{}> = () => {
                                 )}
                             </Grid>
 
-                            {isOpen && (
-                                <div style={{ position: 'absolute', top: '140%', right: '20.7%', transform: 'translateX(0%)', marginTop: '10px', padding: '14px', border: '1px solid #ccc', borderRadius: '10px', textAlign: 'center', backgroundColor: '#fff', width:"340px", height:"220px"}}>
-
-                                    <div style={{ position: 'absolute', top: '-10px', left: '90%', transform: 'translateX(-50%) rotate(45deg)', width: '20px', height: '20px', backgroundColor: '#fff', border: '1px solid #ccc', borderColor: ' #ccc transparent transparent #ccc ' }} />
-                                    <Typography variant="h5" style={{ textAlign: 'left', fontFamily:"SF Pro Display Bold", fontSize:"20px", marginBottom:"20px" }}>Alicia en el país de las maravillas</Typography>
-                                        <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'flex-start' }}>
-                                            <img 
-                                                src={Book1}
-                                                alt="Imagen del libro"
-                                                style={{ height: '100px', width: 'auto', maxWidth: '100%', float: 'left' }}
-                                            />
-                                            <div style={{ display: 'flex', flexDirection: 'column', marginLeft: '18%', textAlign: 'left', marginBottom:"10px" }}>
-                                                <Typography style={{fontFamily:"SF Pro Display Bold", fontSize:"17px", marginTop:"20px"}}>$10990</Typography>
-                                                <Typography style={{}}>Arnold Lobel</Typography>
-                                            </div>
-                                            
-                                        </div>
-                                        <Card style={{backgroundColor:"#00a9e0", marginTop:"10px"}}>
-                                            <Button fullWidth href='/cart' style={{ textAlign:"center", color:"#ffffff" }}>Ir al Carro</Button>
-                                        </Card>  
-                                </div>   
-                            )}
-
                             <Grid item xs={3} sm={3} md={3} lg={3}>
                                 <Box className="space" >
                                     {isMobile ? (
                                         <>
-                                            <Badge badgeContent={1} color="primary" onClick={togglePopup}>  
-                                                <LuShoppingCart style={{width: "30px", height:"30px", cursor: 'pointer'}} href="/cart" color="inherit" />
+                                            <Badge badgeContent={1} color="primary" >  
+                                                <LuShoppingCart onClick={() => navigate('/cart')} style={{width: "30px", height:"30px", cursor: 'pointer'}} href="/cart" color="inherit" />
                                             </Badge>
-
-                                            
-
                                             <IconButton href="/sales" color="inherit"  >
                                                 <LuDollarSign style={{ width: "35px", height:"35px", cursor: 'pointer'}} />
                                             </IconButton>
@@ -409,7 +264,7 @@ export const NavBarLogin: React.FC<{}> = () => {
                                     ) : (
                                         <>
                                             <Badge badgeContent={1} color="primary">
-                                                <LuShoppingCart onClick={togglePopup} style={{width: "30px", height:"30px", marginLeft:"40px", cursor: 'pointer'}} href="/cart" color="inherit" />
+                                                <LuShoppingCart onClick={() => navigate('/cart')} style={{width: "30px", height:"30px", marginLeft:"40px", cursor: 'pointer'}} href="/cart" color="inherit" />
                                             </Badge>
 
                                             <Button style={{ backgroundColor: '#f05d16' , textTransform: "none", color: "#ffff", fontSize: "16px", marginLeft: "10px", borderRadius:"20px", width:"90px", padding:"6px" }} href="/sales">Vender</Button>
@@ -426,8 +281,6 @@ export const NavBarLogin: React.FC<{}> = () => {
                     </Container>
                 </Toolbar>
             </AppBar>
-
-            
 
             <div>
                 <Dialog open={open} onClose={handleClose} PaperProps={{ style: { width: '360px', maxHeight: '90vh' ,margin: 'auto', borderRadius:"20px"}, }}  >

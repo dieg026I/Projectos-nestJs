@@ -27,10 +27,10 @@ export class ShoppingCartService {
     }
 
     async findOneCart(user_id_user: number): Promise<ShoppingCart> {
-        return this.shoppingCartRepository.findOne({where: {user_id_user}, relations: ['publication']});
+        return this.shoppingCartRepository.findOne({where: {user_id_user}, relations: ['publication','publication.users.cities',  'publication.book', 'publication.book.author_id_author', 'publication.book.publisher_id_publisher']});
     }
 
-    async update(id_shopping_cart: number, updateData: Partial<ShoppingCart>): Promise<ShoppingCart> {
+    async update(id_shopping_cart: number, updateData: Partial<ShoppingCart>): Promise<ShoppingCart> { 
         await this.shoppingCartRepository.update(id_shopping_cart, updateData);
         return this.shoppingCartRepository.findOne({where: {id_shopping_cart}});
     }
@@ -46,7 +46,7 @@ export class ShoppingCartService {
     
         // Si el carro o la publicación no existen, lanza un error
         if (!cart || !publication) {
-          throw new Error('El carro o la publicación no existen');
+            throw new Error('El carro o la publicación no existen');
         }
     
         // Agrega la publicación al carro
@@ -54,5 +54,5 @@ export class ShoppingCartService {
     
         // Guarda el carro actualizado en la base de datos
         return this.shoppingCartRepository.save(cart);
-      }
+    }
 }

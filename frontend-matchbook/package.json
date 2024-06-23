@@ -60,7 +60,13 @@
   },
   "devDependencies": {
     "@babel/plugin-transform-private-property-in-object": "^7.24.1",
+    "@eslint/compat": "^1.1.0",
+    "@eslint/js": "^9.5.0",
     "@types/react-slick": "^0.23.13",
-    "@types/uuid": "^9.0.8"
+    "@types/uuid": "^9.0.8",
+    "eslint": "^9.5.0",
+    "eslint-plugin-react": "^7.34.3",
+    "globals": "^15.6.0",
+    "typescript-eslint": "^7.13.1"
   }
 }

@@ -68,15 +68,16 @@ function App() {
         <Route path="/marketplaceSearch" element={<MarketplaceSearch />} />
         <Route path="/publicationDetail" element={<PublicationDetail />} />
         <Route path="/deliveryMethods" element={<DeliveryMethods />} />
-        <Route path="/navBarLogin" element={<NavBarLogin />} />
         <Route path="/bookManagement" element={<ProtectedRoute><BookManagement /></ProtectedRoute>} />
         <Route path="/wallet" element={<ProtectedRoute><Wallet /></ProtectedRoute>} />
 
         {/* Ruta para la página NotFound */}
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
+      
     
     </BrowserRouter>
+
 
   );
 }

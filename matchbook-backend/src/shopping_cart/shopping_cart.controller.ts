@@ -23,7 +23,7 @@ export class ShoppingCartController {
 
     @Get('userCart/:id')
     async findOneCart(@Param('id') id: number): Promise<ShoppingCart> {
-        return this.shoppingCartService.findOne(id);
+        return this.shoppingCartService.findOneCart(id);
     }
 
     @Put(':id')
