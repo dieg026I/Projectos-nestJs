@@ -1,13 +1,13 @@
 
-import React, { useEffect } from "react";
-import {  Card ,  Typography, Select, MenuItem,  Button,  CardContent, TableContainer, Paper, TableHead, Table, TableCell, TableRow, TableBody} from '@mui/material';
+import React, { useEffect, useState } from "react";
+import {  Card , Grid ,  Typography, Select, MenuItem,  Button,  CardContent, TableContainer, Paper, TableHead, Table, TableCell, TableRow, TableBody} from '@mui/material';
 import Footer from "../../components/common/Footer/footer";
 import NavBarLogin from "../../components/common/NavBarLogin/navBarLogin";
 import { LuTrash2 } from "react-icons/lu";
 import axios from "axios";
 
 interface Cities {
-    id_city: string;
+    id_city: number;
     name: string;
 }
 interface Users {
@@ -66,6 +66,8 @@ const Cart: React.FC = () => {
     {/* Mostrar Publicacion en el carro*/}
     const [publicationsCart, setPublicationsCart] = React.useState<GroupedPublications>({});
 
+
+
     type GroupedPublications = {
         [seller: string]: Publication[];
     };
@@ -107,6 +109,9 @@ const Cart: React.FC = () => {
     fetchPublicationsCart();
     }, []);
     
+    // Dentro de tu componente
+    const [selectedQuantity, setSelectedQuantity] = useState(1);
+    
 
     
     return (
@@ -124,22 +129,21 @@ const Cart: React.FC = () => {
                         <Table sx={{ minWidth: 650,  }} aria-label="simple table">
                             <TableHead>
                                 <TableRow>
-                                    <TableCell align="center" style={{paddingRight:"300px"}}>Detalle</TableCell>
-                                    <TableCell align="center">Precio</TableCell>
-                                    <TableCell align="center">Cantidad</TableCell>
-                                    <TableCell align="center">Subtotal</TableCell>
-                                    <TableCell align="center">Quitar</TableCell>
+                                    <TableCell  style={{paddingRight:"100px"}}> <div style={{ textAlign: "center", fontSize:"18px", fontFamily:"SF Pro Display Bold", color:"#f05d16" }}>Detalle</div></TableCell>
+                                    <TableCell  style={{paddingRight:"60px"}}><div style={{ textAlign: "center" , fontSize:"18px", fontFamily:"SF Pro Display Bold", color:"#f05d16"}}>Precio</div></TableCell>
+                                    <TableCell style={{paddingRight:"60px"}}><div style={{ textAlign: "center" , fontSize:"18px", fontFamily:"SF Pro Display Bold", color:"#f05d16"}}>Cantidad</div></TableCell>
+                                    <TableCell  style={{paddingRight:"60px"}}><div style={{ textAlign: "center" , fontSize:"18px", fontFamily:"SF Pro Display Bold", color:"#f05d16"}}>Subtotal</div></TableCell>
+                                    <TableCell style={{paddingRight:"90px"}}><div style={{ textAlign: "center" , fontSize:"18px", fontFamily:"SF Pro Display Bold", color:"#f05d16"}}>Quitar</div></TableCell>
                                 </TableRow>
                             </TableHead>
                             
                             <TableBody>
                             {Object.entries(publicationsCart).map(([seller, publications]) => {
 
-                                    let subtotal = 0;
-                                    publications.forEach(publication => {
-                                    subtotal += publication.cost_book;
-                                    });
-
+                                        let subtotal = 0;
+                                        publications.forEach(publication => {
+                                        subtotal += publication.cost_book;
+                                        });
                                 return (
                                     <React.Fragment key={seller}>
                                         <TableRow >
@@ -150,18 +154,18 @@ const Cart: React.FC = () => {
                                                 </div>
                                             </TableCell>
                                         </TableRow>
-                                        {publications.map((publication) => (
+                                        {publications.map((publication) =>  (
                                             <>
-                                                <TableRow style={{marginBottom:"20px"}}>
+                                                <TableRow style={{marginBottom:"3px"}}>
                                                     <TableCell style={{border: 'none'}}> 
-                                                        <Card style={{ margin: "10px", display: 'flex', borderRadius: "20px", textAlign: "left", position: 'relative', padding: "22px" , width:"350px" }} >
+                                                        <Card style={{ marginLeft: "10px", display: 'flex', borderRadius: "20px", textAlign: "left", position: 'relative', padding: "22px" , width:"600px" }} >
                                                             {/* Imagen del libro */}
                                                             <div style={{ flex: '1 1 auto', padding: '10px' }}>
                                                                 <img 
                                                                     src={`http://localhost:3001/images/${publication.photo_showcase}`}
                                                                     alt="Imagen del libro" 
                                                                     style={{ 
-                                                                        height: '180px', 
+                                                                        height: '200px', 
                                                                         width: 'auto', 
                                                                         maxWidth: '100%', 
                                                                         display: 'block', 
@@ -180,7 +184,7 @@ const Cart: React.FC = () => {
                                                                     component="div" 
                                                                     style={{
                                                                         fontSize: "17px",  
-                                                                        fontFamily: "SF Pro Display Medium",
+                                                                        fontFamily: "SF Pro Display Bold",
                                                                         overflow: 'hidden' 
                                                                     }}
                                                                 >
@@ -210,41 +214,44 @@ const Cart: React.FC = () => {
                                                                 
                                                             </CardContent>
                                                         </Card>  
-                                                        
                                                     </TableCell>
                                                     
-                                                    <TableCell align="center" style={{ marginRight: '20px', border: 'none' }} >${publication.cost_book}</TableCell>
-                                                    <TableCell align="center" style={{ marginRight: '20px', border: 'none' }}>
+                                                    <TableCell align="center" style={{ border: 'none', paddingRight:"60px", fontSize:"15px", fontFamily:"SF Pro Display Regular" }} >${publication.cost_book}</TableCell>
+                                                    <TableCell align="center" style={{  border: 'none', paddingRight:"60px", fontSize:"15px", fontFamily:"SF Pro Display Regular" }}>
                                                     <Select
                                                         labelId="demo-simple-select-filled-label"
                                                         id="demo-simple-select-filled"
                                                         style={{width:"90px", borderRadius:"30px", height:"40px", textAlign:"center"}}
+                                                        value={selectedQuantity}
+                                                        onChange={(event) => setSelectedQuantity(Number(event.target.value))}
+                                                        disabled={publication.book.stock_book === 1}
                                                         > 
-                                                        <MenuItem value="">
-                                                            <em>Nothing</em>
-                                                        </MenuItem>
-                                                        <MenuItem value={1}>1</MenuItem>
-                                                        <MenuItem value={2}>2</MenuItem>
-                                                        <MenuItem value={3}>3</MenuItem>
+                                                        {[...Array(publication.book.stock_book)].map((_, index) => (
+                                                            <MenuItem value={index + 1}>{index + 1}</MenuItem>
+                                                        ))}
                                                     </Select>
                                                     </TableCell>
-                                                    <TableCell align="center" style={{ marginRight: '20px', border: 'none' }}>$7000</TableCell>
-                                                    <TableCell align="center" style={{ marginRight: '20px', border: 'none' }}><LuTrash2 /></TableCell>
-                                                    
-                                                    
+                                                    <TableCell align="center" style={{  border: 'none', paddingRight:"60px", fontSize:"15px", fontFamily:"SF Pro Display Regular" }}>${publication.cost_book}</TableCell>
+                                                    <TableCell align="center" style={{  border: 'none' , paddingRight:"60px" }}><LuTrash2 style={{width:"28px", height:"28px"}} /></TableCell>
                                                 </TableRow>
-                                                </>
+                                            </>
                                         ))}
-                                                <TableRow >
-                                                    <TableCell colSpan={5} >
-                                                        <Card style={{padding:"10px", margin:"15px", width:"150px", textAlign:"center"}}>
-                                                            <Typography>SubTotal</Typography>
-                                                            <Typography style={{fontFamily:"SF Pro Display Bold"}}>${subtotal}</Typography>
-                                                            <Button style={{textTransform: "none", backgroundColor:"#00A9E0", color:"#ffffff"}}>Pagar</Button>
+                                        <TableRow>
+                                            <TableCell colSpan={2} />
+                                            <TableCell colSpan={3}>
+                                                <Grid container>
+                                                    <Grid item xs={2} />
+                                                    <Grid item xs={8} style={{ display: 'flex', justifyContent: 'center' }}>
+                                                        <Card style={{ height:"150px",padding: '10px', width:"300px",maxWidth: '300px', textAlign: 'center', marginBottom:"20px" }}>
+                                                            <Typography style={{paddingBottom:"10px"}} >SubTotal</Typography>
+                                                            <Typography style={{ fontSize:"25px", fontFamily:"SF Pro Display Bold" , paddingBottom:"20px"}}>${subtotal}</Typography>
+                                                            <Button  fullWidth href="/deliveryMethods" style={{ textTransform: 'none', backgroundColor: '#00A9E0', color: '#ffffff' }}>Pagar</Button>
                                                         </Card>
-                                                    </TableCell>
-                                                </TableRow>
-                                            
+                                                    </Grid>
+                                                    <Grid item xs={2} />
+                                                </Grid>
+                                            </TableCell>
+                                        </TableRow>
                                     </React.Fragment>
                                 );
                             })}
@@ -252,10 +259,6 @@ const Cart: React.FC = () => {
                         </Table>
                     </TableContainer>
                 </div>
-            </div>
-
-            <div>
-
             </div>
             <br />
             <Footer/>

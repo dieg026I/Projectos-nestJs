@@ -23,8 +23,8 @@ export class ReadingClubController {
     const imageName = await this.readingClubService.saveImage(file.buffer, file.mimetype);
     readingClubData.image_club = imageName;
     return this.readingClubService.create(readingClubData);
+  }
   
-}
   @Put(':id')
   update(@Param('id') id: string, @Body() readingClubData: Partial<ReadingClub>): Promise<ReadingClub> {
     return this.readingClubService.update(id, readingClubData);

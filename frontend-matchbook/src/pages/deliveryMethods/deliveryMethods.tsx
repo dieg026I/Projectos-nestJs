@@ -4,7 +4,7 @@ import { Autocomplete, Box, Button, Card, CardActionArea, CardActions, CardConte
 import Book1 from "../../assents/img/book1.jpeg";
 import { TbTruckDelivery } from "react-icons/tb";
 import { MdOutlinePlace } from "react-icons/md";
-import { ChangeEvent, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 import { MdClose } from "react-icons/md";
 import React from "react";
 import axios from "axios";
@@ -125,6 +125,38 @@ const DeliveryMethods: React.FC = () => {
         }
     };
 
+            {/* Cargar Todas Las Regiones */}
+            useEffect(() => {
+                axios.get('http://localhost:3001/region')
+                    .then(response => {
+                    setRegion(response.data);
+                    console.log('Mostrar Regiones'+response.data);
+                    });
+            }, []);
+        
+            {/*------------------------------------------ */}
+            {/* Seleccion de la Region */}
+            const handleRegionChange = (event: { target: { value: React.SetStateAction<number>; }; }) => {
+                setSelectedRegion(event.target.value);
+                const numberRegion = event.target.value;
+                console.log('region seleccionada: ' + event.target.value);
+                axios.get(`http://localhost:3001/cities/region/${numberRegion}`)
+                    .then(response => {
+                    setCities(response.data);
+                    console.log(response.data);
+                });
+            };
+            
+            {/*------------------------------------------ */}
+            {/* Seleccion de la Comuna */}
+            const handleCityChange = (event: { target: { value: React.SetStateAction<number>; }; }) => {
+                setIdCity(event.target.value);
+            };
+    
+
+
+
+
 
     return (
         <>
@@ -179,15 +211,21 @@ const DeliveryMethods: React.FC = () => {
                                         <Grid item xs={6}>
                                             <h6 style={{fontFamily:"SF Pro Display Bold", fontSize:"18px" , margin:"0", marginBottom:"20px"}}>Región</h6>
                                             <FormControl fullWidth>
+                                                <InputLabel id="region-label">Elige una región</InputLabel>
                                                 <Select 
                                                     labelId="region-label"
                                                     id="region"
-                                                    sx={{ width: '100%', color: "black", borderRadius:"15px"}}
-                                                    placeholder="Selecciona una region"
-                                                    displayEmpty
+                                                    value={selectedRegion || ''}
+                                                    placeholder="Elige una región"
+                                                    onChange={(event) => handleRegionChange({
+                                                        target: {
+                                                            value: Number(event.target.value),
+                                                        },
+                                                    })}
                                                 >
-                                                <MenuItem value="" disabled sx={{ color: "black" }}>Selecciona una region</MenuItem> 
-                                                <MenuItem  sx={{ color: "black" }}>opcionies</MenuItem>
+                                                    {region.map(region => (
+                                                        <MenuItem key={region.id_region} value={region.id_region}>{region.name_region}</MenuItem>
+                                                    ))}
                                                 </Select>
                                             </FormControl>
                                         </Grid>
@@ -196,15 +234,21 @@ const DeliveryMethods: React.FC = () => {
                                         <Grid item xs={6}>
                                             <h6 style={{fontFamily:"SF Pro Display Bold", fontSize:"18px" , margin:"0", marginBottom:"20px"}}>Comuna</h6>
                                             <FormControl fullWidth>
+                                                <InputLabel id="city-label">Elige una ciudad</InputLabel>
                                                 <Select 
-                                                    labelId="comuna-label"
-                                                    id="comuna"
-                                                    sx={{ width: '100%', color: "black", borderRadius:"15px"}}
-                                                    placeholder="Selecciona"
-                                                    displayEmpty
+                                                    labelId="city-label"
+                                                    id="city"
+                                                    value={id_city || ''}
+                                                    placeholder="Elige una ciudad"
+                                                    onChange={(event) => handleCityChange({
+                                                        target: {
+                                                            value: Number(event.target.value),
+                                                        },
+                                                    })}
                                                 >
-                                                <MenuItem value="" disabled sx={{ color: "black" }}>Selecciona una comuna</MenuItem>
-                                                <MenuItem   sx={{ color: "black" }}>opcionies</MenuItem>
+                                                    {cities.map((city: Cities) => (
+                                                        <MenuItem key={city.id_city} value={city.id_city}>{city.name}</MenuItem>
+                                                    ))}
                                                 </Select>
                                             </FormControl>
                                         </Grid>
@@ -303,61 +347,68 @@ const DeliveryMethods: React.FC = () => {
                         {delivery === 1 && (
                             <form style={{paddingTop:"35px", marginRight:"35px", marginLeft:"55px"}}>
                                 <div style={{display: 'flex', justifyContent: 'space-between'}}>
-                                    <Select>
-                                        <MenuItem value={10}>Opción 1</MenuItem>
-                                        <MenuItem value={20}>Opción 2</MenuItem>
-                                    </Select>
-                                    <Select>
-                                        <MenuItem value={10}>Opción 1</MenuItem>
-                                        <MenuItem value={20}>Opción 2</MenuItem>
-                                    </Select>
+                                    <div>
+                                        <h6 style={{fontFamily:"SF Pro Display Bold", fontSize:"18px" , margin:"0", marginBottom:"20px", marginTop:"10px"}}>Región</h6>
+                                        <FormControl style={{marginRight: '10px'}}>
+                                            <Select>
+                                                {/* Llena este Select con las regiones obtenidas de la API */}
+                                            </Select>
+                                        </FormControl>
+                                    </div>
+                                    <div>
+                                        <h6 style={{fontFamily:"SF Pro Display Bold", fontSize:"18px" , margin:"0", marginBottom:"20px", marginTop:"10px"}}>Comuna</h6>
+                                        <FormControl style={{marginLeft: '10px'}}>
+                                            <Select>
+                                                {/* Llena este Select con las comunas obtenidas de la API */}
+                                            </Select>
+                                        </FormControl>
+                                    </div>
                                 </div>
-                                <TextField label="Campo 1" style={{margin: '10px 0'}} />
-                                <TextField label="Campo 2" style={{margin: '10px 0'}} />
+                                <div style={{display: 'flex', justifyContent: 'space-between', marginTop: '10px'}}>
+                                    <div>
+                                        <h6 style={{fontFamily:"SF Pro Display Bold", fontSize:"18px" , margin:"0", marginBottom:"20px", marginTop:"10px"}}>Sucursal</h6>
+                                        <FormControl style={{marginRight: '10px'}}>
+                                            <Select>
+                                                {/* Llena este Select con las sucursales obtenidas de la API */}
+                                            </Select>
+                                        </FormControl>
+                                    </div>
+                                    <div>
+                                        <h6 style={{fontFamily:"SF Pro Display Bold", fontSize:"18px" , margin:"0", marginBottom:"20px", marginTop:"10px"}}>Teléfono</h6>
+                                        <TextField style={{marginLeft: '10px'}} />
+                                    </div>
+                                </div>
+                                <div>
+                                    <h6 style={{fontFamily:"SF Pro Display Bold", fontSize:"18px" , margin:"0", marginBottom:"20px", marginTop:"10px"}}>Nombre de quien retira</h6>
+                                    <TextField style={{margin: '10px 0'}} />
+                                </div>
                             </form>
                         )}
                     </div>
                 </Grid>
 
-            <Grid className="text-center" item xs={12} sm={12} md={12} lg={5} xl={5}>
+                <Grid className="text-center" item xs={12} sm={12} md={12} lg={5} xl={5}>
 
-                <Card style={{marginRight:"20px", padding:"20px"}}>
-                    <Typography>Resumen</Typography>
-                    <Typography>s productos</Typography>
-                        <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'flex-start' }}>
-                            <img 
-                                src={Book1}
-                                alt="Imagen del libro"
-                                style={{ height: '100px', width: 'auto', maxWidth: '100%', float: 'left' }}
-                            />
-                            <div style={{ display: 'flex', flexDirection: 'column', marginLeft: '18%', textAlign: 'left', marginBottom:"10px" }}>
-                                <Typography style={{fontFamily:"SF Pro Display Bold", fontSize:"17px", marginTop:"20px"}}>$10990</Typography>
-                                <Typography style={{}}>Arnold Lobel</Typography>
-                            </div>  
-                        </div>
-                        <Card style={{backgroundColor:"#00a9e0", marginTop:"10px"}}>
-                            <Button fullWidth href='/cart' style={{ textAlign:"center", color:"#ffffff" }}>Ir al Carro</Button>
-                        </Card> 
-                </Card>
-
+                    <Card style={{marginRight:"20px", padding:"20px"}}>
+                        <Typography>Resumen</Typography>
+                        <Typography>s productos</Typography>
+                            <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'flex-start' }}>
+                                <img 
+                                    src={Book1}
+                                    alt="Imagen del libro"
+                                    style={{ height: '100px', width: 'auto', maxWidth: '100%', float: 'left' }}
+                                />
+                                <div style={{ display: 'flex', flexDirection: 'column', marginLeft: '18%', textAlign: 'left', marginBottom:"10px" }}>
+                                    <Typography style={{fontFamily:"SF Pro Display Bold", fontSize:"17px", marginTop:"20px"}}>$10990</Typography>
+                                    <Typography style={{}}>Arnold Lobel</Typography>
+                                </div>  
+                            </div>
+                            <Card style={{backgroundColor:"#00a9e0", marginTop:"10px"}}>
+                                <Button fullWidth href='/cart' style={{ textAlign:"center", color:"#ffffff" }}>Ir al Carro</Button>
+                            </Card> 
+                    </Card>
+                </Grid>
             </Grid>
-                
-                
-
-            </Grid>
-            {/*                     <br />
-                    <div>
-                        <h6>Correo electrónico</h6>
-                        <TextField fullWidth 
-                            id="email"
-                            className="mb-3 formulario"
-                            placeholder="Ingrese su correo electrónico"
-                            type="email"  
-                                
-                        />
-                    </div> */}
-
-            
         </>
     );
 };

@@ -27,4 +27,7 @@ import { Book } from '../../book/entities/book.entity';
     @ManyToOne(() => Book, (book) => book.reading_club)
     @JoinColumn({ name: 'id_book_club' })
     book: Book;
+
+    @Column()
+    id_book_club: string;
   }
