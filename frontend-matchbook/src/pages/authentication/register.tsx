@@ -426,7 +426,6 @@ const RegisterPage: React.FC = () => {
                                                     labelId="city-label"
                                                     id="city"
                                                     value={id_city}
-                                                    label="Comuna"
                                                     sx={{ width: '100%', color: "black" }}
                                                     onChange={(event) => handleCityChange({
                                                         target: {
@@ -438,7 +437,6 @@ const RegisterPage: React.FC = () => {
                                                     <MenuItem key={city.id_city} value={city.id_city}>{city.name}</MenuItem>
                                                     ))}
                                                 </Select>
-                                                
                                             </FormControl>
                                         </Grid>
                                     </Grid>

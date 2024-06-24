@@ -15,7 +15,7 @@ export class BookService {
   }
 
   findAll() {
-    return this.bookRepository.find();
+    return this.bookRepository.find({ relations: ['categories', 'publisher_id_publisher' , 'author_id_author'] });
   }
 
   findOnebyid(id_book: string): Promise<Book> {

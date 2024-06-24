@@ -10,7 +10,7 @@ export class CategoryController {
     return this.categoryService.findAll();
   }
 
-  @Get(':id_category')
+  @Get('categoryOne/:id_category')
   findOne(@Param('id_category') id: string) {
     return this.categoryService.findOne(id);
   }

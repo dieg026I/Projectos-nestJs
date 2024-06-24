@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Box, Breadcrumbs, Button, Card, CardActions, CardContent, CardMedia, Grid, Link, Pagination, Stack, Typography } from "@mui/material";
+import { Box, Breadcrumbs, Button, Card, CardContent, CardMedia, Grid, Link, Pagination, Stack, Typography } from "@mui/material";
 import PaginationItem from '@mui/material/PaginationItem';
 import NavBarLogin from "../../components/common/NavBarLogin/navBarLogin";
 import Footer from "../../components/common/Footer/footer";
@@ -17,16 +17,17 @@ import { FaHeart } from "react-icons/fa6";
 import "../../App.css";
 import axios from "axios";
 
-
+import { Link as RouterLink, useNavigate } from 'react-router-dom';
+import { toast } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
+import { ToastContainer } from 'react-toastify';
 
 interface HomeProps {
 }
-
 interface Cities {
     id_city: string;
     name: string;
 }
-
 interface Users {
     name_user: string,
     lastname_user: string,
@@ -39,7 +40,6 @@ interface Users {
     username: string,
     publication: Publication[]
 }
-
 interface Publication {
     id_publication: string;
     date_publication: Date;
@@ -73,10 +73,10 @@ interface Book {
     stock_book: number;
     description_book: string;
 }
-
-interface BookAndPublication {
-    book: Book;
-    publication: Publication;
+interface ShoppingCart {
+    id_shopping_cart: number,
+    user: Users,
+    publication: Publication[],
 }
 
 {/*-----------------------------------------------------------------------------*/}
@@ -93,18 +93,18 @@ function handleClick(event: React.MouseEvent<HTMLDivElement, MouseEvent>) {
     const handleChange = (event: React.ChangeEvent<unknown>, value: number) => {
         setPage(value);
     };
-
+    const navigate = useNavigate();
     {/*-----------------------------------------------------------------------------*/}
+
     {/* Mostrar Publicacion */}
     const [publications, setPublications] = React.useState<Publication[]>([]);
     const [users, setUsers] = React.useState<Users>();
+
     useEffect(() => {
         const fetchPublications = async () => {
         try {
             const response = await axios.get('http://localhost:3001/publications/publication');
-            const publicationResponse = response.data;
             setPublications(response.data);
-            console.log(JSON.stringify(response.data, null, 2))
         } catch (error) {
         console.error('Error fetching publications:', error);
         }
@@ -115,19 +115,16 @@ function handleClick(event: React.MouseEvent<HTMLDivElement, MouseEvent>) {
             const responseUser= await axios.get(`http://localhost:3001/users/rut/${users.rut_user}`);
             const userResponse = responseUser.data;
             setUsers(userResponse);
-            console.log(JSON.stringify(responseUser.data, null, 2))
         } catch (error) {
         console.error('error usuario local:', error);
         }
         }   
-        
     };
 
     fetchPublications();
     }, []);
-    
-
     {/*-----------------------------------------------------------------------------*/}
+
     {/* Flechas Carrousel */}
     const arrowStyles: React.CSSProperties = {
         position: 'absolute',
@@ -142,8 +139,8 @@ function handleClick(event: React.MouseEvent<HTMLDivElement, MouseEvent>) {
         borderRadius: '50%',
         color: 'rgb(0, 169, 224)',
     };
-
     {/*-----------------------------------------------------------------------------*/}
+
     {/* Animación y diseño Buttons */}
     const [bgColor, setBgColor] = useState('transparent');
     const [textColor, setTextColor] = useState('#000000');
@@ -157,22 +154,132 @@ function handleClick(event: React.MouseEvent<HTMLDivElement, MouseEvent>) {
         setBgColor('transparent');
         setTextColor('#000000'); 
     };
-
     {/*-----------------------------------------------------------------------------*/}
+
     {/* Novedades scroll */}
     const novedadesRef = useRef(null);
 
     const handleLinkClick = (ref: React.RefObject<HTMLElement>) => {
         ref.current?.scrollIntoView({ behavior: 'smooth' });
     };
-
     {/*-----------------------------------------------------------------------------*/}
+
     {/* Mostrar boton "agregar al carro y ver detalle" */}
     const [activeCard, setActiveCard] = useState<string | null>(null);
+
+{/* ---------------------------------------------------------------------------------- */}
+
+    const [publicationCart, setPublicationCart] = useState<Publication>();
+    const [cart, setCart] = useState<ShoppingCart>();
+
+    async function obtenerCarroPorUsuario(idUsuario: number) {
+        
+        // Intenta obtener el carro del usuario desde el backend
+        if (users) {
+            let carro: ShoppingCart;
+
+            try {
+                const response = await axios.get(`http://localhost:3001/shopping-cart/userCart/${idUsuario}`);
+                carro = response.data;
+                setCart(carro);
+                console.log("carro"+ carro)
+
+                if (!carro) {
+                    console.log("se va a crear un carro nuevo")
+                    carro = await crearCarro(idUsuario);
+                } 
+                return carro;
+            } catch (error) {
+            console.error('No se pudo obtener el carro del usuario', error);
+            } 
+        } else {
+            console.log("usuario no encontrado")
+        }
+    }
+
+    // Función para crear un carro para un usuario
+    async function crearCarro(idUsuario: number) {
+
+        try {
+            const response = await axios.post('http://localhost:3001/shopping-cart', {
+            user_id_user: idUsuario,
+            publication: publicationCart
+            });
+            console.log("Carro creado")
+            return response.data;
+        } catch (error) {
+            console.error('No se pudo crear el carro', error);
+        }
+    }
+
+    // Función para agregar una publicación al carro
+    async function agregarAlCarro(publicationCart: Publication) {
+        if (users) {
+            const carro = await obtenerCarroPorUsuario(users.rut_user);
+            if (carro) {
+                console.log("id carro: "+ carro.id_shopping_cart);
+                console.log("id publicacion: "+ publicationCart.id_publication);
+                const allCart: Publication[]= carro.publication;
+                console.log("allCart: "+ allCart)
+                if(allCart.length > 0){
+
+                    for (let i = 0; i < allCart.length; i++) {
+                        if (allCart[i].id_publication === publicationCart.id_publication) {
+                        
+                            alert('Ya existe este libro en tu carro');
+                            break;
+                        } else{
+                            try {
+                                const response = await axios.post(`http://localhost:3001/shopping-cart/publicationCart/${carro.id_shopping_cart}/publications/${publicationCart.id_publication}`);
+                                console.log("publicacion guardada en el carro: "+ response.data)
+                                if(response.data){    
+                                    const cartResponse: ShoppingCart = response.data; 
+                                    setCart(cartResponse);
+                                }
+                            } catch (error) {
+                                console.error('No se pudo agregar la publicación al carro', error);
+                            }
+                        }
+                    }
+                } else {
+                    try {
+                        const response = await axios.post(`http://localhost:3001/shopping-cart/publicationCart/${carro.id_shopping_cart}/publications/${publicationCart.id_publication}`);
+                        console.log("publicacion guardada en el carro: "+ response.data)
+                        if(response.data){    
+                            const cartResponse: ShoppingCart = response.data; 
+                            setCart(cartResponse);
+                        }
+                    } catch (error) {
+                        console.error('No se pudo agregar la publicación al carro', error);
+                    }
+                }
+            } else {
+                console.log('carro.publication es undefined');
+            }
+        }
+    }
+
+    const notify = () => {
+        toast(
+            <div>
+                <p>📖 Publicacion agregada al carro</p>
+            </div>, 
+            {
+                position: "top-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+            }
+        );
+    }
 
     return (
     <>
         <NavBarLogin />
+        <ToastContainer />
         <div style={{justifyContent: "center", alignItems: "center", textAlign: "center", alignContent: "center", marginTop: "44px"}}>
             <div style={{color: "black", paddingRight: "5px", paddingLeft: "20px", marginBottom: "15px"}} role="presentation" onClick={handleClick}>
                 <Breadcrumbs separator=" " aria-label="breadcrumb">
@@ -209,34 +316,39 @@ function handleClick(event: React.MouseEvent<HTMLDivElement, MouseEvent>) {
             </div>
             
             <div>
-                <Carousel className="carousel" showThumbs={false}
-                    renderArrowPrev={(onClickHandler, hasPrev, label) => 
-                        hasPrev && (
-                            <button type="button" onClick={onClickHandler} title={label} style={{...arrowStyles, left: 15}}>
-                                &#10094;
-                            </button>
-                        )
-                    }
-                    renderArrowNext={(onClickHandler, hasNext, label) => 
-                        hasNext && (
-                            <button type="button" onClick={onClickHandler} title={label} style={{...arrowStyles, right: 15}}>
-                                &#10095;
-                            </button>
-                        )
-                    }
-                >
-                    <div>
-                        <img className="carousel" src={image1}  />
+            <Carousel
+                className="carousel"
+                showThumbs={false}
+                autoPlay={true}
+                interval={4000}
+                infiniteLoop={true}
+                renderArrowPrev={(onClickHandler, hasPrev, label) =>
+                    hasPrev && (
+                        <button type="button" onClick={onClickHandler} title={label} style={{ ...arrowStyles, left: 15 }}>
+                            ❮
+                        </button>
+                    )
+                }
+                renderArrowNext={(onClickHandler, hasNext, label) =>
+                    hasNext && (
+                        <button type="button" onClick={onClickHandler} title={label} style={{ ...arrowStyles, right: 15 }}>
+                            ❯
+                        </button>
+                    )
+                }
+            >
+                <div>
+                    <Link component={RouterLink} to="/login" style={{ display: 'block', width: '100%', height: '100%' }}>
+                        <img className="carousel" src={image1} alt="Ir a login" style={{ width: '100%', height: 'auto' }} />
+                    </Link>
+                </div>
+                <div>
+                    <Link component={RouterLink} to="/readingClub" style={{ display: 'block', width: '100%', height: '100%' }}>
+                        <img className="carousel" src={image2} alt="Ir a Reading Club" style={{ width: '100%', height: 'auto' }} />
+                    </Link>
+                </div>
+            </Carousel>
 
-                            <Button href="/readingClub" variant="contained" style={{ textTransform: "none", backgroundColor: '#f05d16', color: 'white', borderRadius: '30px', position: 'absolute', top: '75%', left: '11.3%', transform: 'translate(-50%, -50%)', width: 'auto', padding: '6px 16px' }}>
-                                Ir al Club
-                            </Button>
-                    </div>
-                    <div>
-                        <img className="carousel" src={image2} />
-                        
-                    </div>
-                </Carousel>
             </div>
             <br />
             <div style={{ textAlign: "center" , marginLeft: "80px" , marginRight: "80px" }}>
@@ -340,12 +452,12 @@ function handleClick(event: React.MouseEvent<HTMLDivElement, MouseEvent>) {
                                                 display: 'flex', 
                                                 flexDirection: 'column',
                                                 justifyContent: 'center',
-                                                width: '80%', // Añade esta línea
+                                                width: '80%',
                                             }}>
-                                                <Button type="button" style={{textTransform: "none", color:"#ffffff", backgroundColor:"#00a9e0", marginTop:"5px", textAlign: 'center', justifyContent:"center"}}>
+                                                <Button  onClick={() => {setPublicationCart(publication); agregarAlCarro(publication); notify()}} type="button" style={{textTransform: "none", color:"#ffffff", backgroundColor:"#00a9e0", marginTop:"5px", textAlign: 'center', justifyContent:"center"}}>
                                                     Agregar al carro
                                                 </Button>
-                                                <Button type="button" style={{textTransform: "none", color:"#ffffff", backgroundColor:"#00a9e0", marginTop:"5px", textAlign: 'center', justifyContent:"center"}}>
+                                                <Button onClick={() => navigate('/publicationDetail', { state: { publicationId: publication.id_publication } })} type="button" style={{textTransform: "none", color:"#ffffff", backgroundColor:"#00a9e0", marginTop:"5px", textAlign: 'center', justifyContent:"center"}}>
                                                     Ir al Detalle
                                                 </Button>
                                             </div>
@@ -420,6 +532,7 @@ function handleClick(event: React.MouseEvent<HTMLDivElement, MouseEvent>) {
                 >
                     Revisa todos los libros
                 </Button>
+                <Button onClick={() => notify()}>Provar</Button>
             </div>
         </div>
         <Footer />

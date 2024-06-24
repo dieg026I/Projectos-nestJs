@@ -16,9 +16,14 @@ export class ShoppingCartController {
         return this.shoppingCartService.findAll();
     }
 
-    @Get(':id')
+    @Get('oneCart/:id')
     async findOne(@Param('id') id: number): Promise<ShoppingCart> {
         return this.shoppingCartService.findOne(id);
+    }
+
+    @Get('userCart/:id')
+    async findOneCart(@Param('id') id: number): Promise<ShoppingCart> {
+        return this.shoppingCartService.findOneCart(id);
     }
 
     @Put(':id')
@@ -29,5 +34,10 @@ export class ShoppingCartController {
     @Delete(':id')
     async remove(@Param('id') id: number): Promise<void> {
         return this.shoppingCartService.remove(id);
+    }
+
+    @Post('publicationCart/:idCart/publications/:idPublication')
+    async addPublicationToCart(@Param('idCart') id_shopping_cart: number, @Param('idPublication') id_publication: string) {
+        return this.shoppingCartService.addPublicationToCart(id_shopping_cart, id_publication);
     }
 }

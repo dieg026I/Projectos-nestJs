@@ -14,12 +14,13 @@ export class ReadingClubService {
 
   async saveImage(imageBuffer: Buffer, mimetype: string): Promise<string> {
     const imageName = uuidv4(); // Genera un nombre único para la imagen
-    const path = `../../../images/${imageName}`;
+    const path = `C:\\Projectos-nestJs\\images\\${imageName}`;
 
     // Guarda la imagen en el almacenamiento local
     fs.writeFileSync(path, imageBuffer);
       return imageName;
   }
+  
   async updateImage(id_club: string, imageBuffer: Buffer, mimetype: string): Promise<ReadingClub> {
     const imageName = await this.saveImage(imageBuffer, mimetype);
 
@@ -30,11 +31,11 @@ export class ReadingClubService {
   }
 
   async findAll(): Promise<ReadingClub[]> {
-    return this.readingClubRepository.find({ relations: ['books'] });
+    return this.readingClubRepository.find({ relations: ['book','book.author_id_author', 'book.publisher_id_publisher', 'book.categories'] });
   }
 
   async findOne(id_club: string): Promise<ReadingClub> {
-    return this.readingClubRepository.findOne({ where: { id_club }, relations: ['books'] });
+    return this.readingClubRepository.findOne({ where: { id_club }, relations: ['book'] });
   }
   async create(readingClubData: Partial<ReadingClub>): Promise<ReadingClub> {
     const readingClub = this.readingClubRepository.create(readingClubData);

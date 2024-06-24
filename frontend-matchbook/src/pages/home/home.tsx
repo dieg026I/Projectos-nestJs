@@ -14,7 +14,7 @@ import MenuIcon from '@mui/icons-material/Menu';
 import PlaceIcon from '@mui/icons-material/Place';
 import { FaHeart } from "react-icons/fa6";
 import axios from "axios";
-
+import { Link as RouterLink, useNavigate } from 'react-router-dom';
 
 interface HomeProps {
 }
@@ -78,6 +78,8 @@ function handleClick(event: React.MouseEvent<HTMLDivElement, MouseEvent>) {
 
 export const HomePage: React.FC<HomeProps> = ({}: HomeProps) => {
 
+    const navigate = useNavigate();
+
     const arrowStyles: React.CSSProperties = {
         position: 'absolute',
         zIndex: 2,
@@ -128,8 +130,7 @@ export const HomePage: React.FC<HomeProps> = ({}: HomeProps) => {
             console.log(JSON.stringify(response.data, null, 2))
         } catch (error) {
         console.error('Error fetching publications:', error);
-        }
-        
+        }  
     };
     fetchPublications();
     }, []);
@@ -184,33 +185,38 @@ export const HomePage: React.FC<HomeProps> = ({}: HomeProps) => {
             </div>
             
             <div>
-                <Carousel className="carousel" showThumbs={false}
-                    renderArrowPrev={(onClickHandler, hasPrev, label) => 
-                        hasPrev && (
-                            <button type="button" onClick={onClickHandler} title={label} style={{...arrowStyles, left: 15}}>
-                                &#10094;
-                            </button>
-                        )
-                    }
-                    renderArrowNext={(onClickHandler, hasNext, label) => 
-                        hasNext && (
-                            <button type="button" onClick={onClickHandler} title={label} style={{...arrowStyles, right: 15}}>
-                                &#10095;
-                            </button>
-                        )
-                    }
-                >
-                    <div>
-                        <img className="carousel" src={image1}  />
-
-                            <Button href="/readingClub" variant="contained" style={{ textTransform: "none", backgroundColor: '#f05d16', color: 'white', borderRadius: '30px', position: 'absolute', top: '75%', left: '11.3%', transform: 'translate(-50%, -50%)', width: 'auto', padding: '6px 16px' }}>
-                                Ir al Club
-                            </Button>
-                    </div>
-                    <div>
-                        <img className="carousel" src={image2} />
-                    </div>
-                </Carousel>
+            <Carousel
+                className="carousel"
+                showThumbs={false}
+                autoPlay={true}
+                interval={4000}
+                infiniteLoop={true}
+                renderArrowPrev={(onClickHandler, hasPrev, label) =>
+                    hasPrev && (
+                        <button type="button" onClick={onClickHandler} title={label} style={{ ...arrowStyles, left: 15 }}>
+                            ❮
+                        </button>
+                    )
+                }
+                renderArrowNext={(onClickHandler, hasNext, label) =>
+                    hasNext && (
+                        <button type="button" onClick={onClickHandler} title={label} style={{ ...arrowStyles, right: 15 }}>
+                            ❯
+                        </button>
+                    )
+                }
+            >
+                <div>
+                    <Link component={RouterLink} to="/login" style={{ display: 'block', width: '100%', height: '100%' }}>
+                        <img className="carousel" src={image1} alt="Ir a login" style={{ width: '100%', height: 'auto' }} />
+                    </Link>
+                </div>
+                <div>
+                    <Link component={RouterLink} to="/readingClub" style={{ display: 'block', width: '100%', height: '100%' }}>
+                        <img className="carousel" src={image2} alt="Ir a Reading Club" style={{ width: '100%', height: 'auto' }} />
+                    </Link>
+                </div>
+            </Carousel>
             </div>
             <br />
             <div style={{ textAlign: "center" , marginLeft: "80px" , marginRight: "80px" }}>
@@ -319,7 +325,7 @@ export const HomePage: React.FC<HomeProps> = ({}: HomeProps) => {
                                                 <Button type="button" style={{textTransform: "none", color:"#ffffff", backgroundColor:"#00a9e0", marginTop:"5px", textAlign: 'center', justifyContent:"center"}}>
                                                     Agregar al carro
                                                 </Button>
-                                                <Button type="button" style={{textTransform: "none", color:"#ffffff", backgroundColor:"#00a9e0", marginTop:"5px", textAlign: 'center', justifyContent:"center"}}>
+                                                <Button onClick={() => navigate('/publicationDetail', { state: { publicationId: publication.id_publication } })} type="button" style={{textTransform: "none", color:"#ffffff", backgroundColor:"#00a9e0", marginTop:"5px", textAlign: 'center', justifyContent:"center"}}>
                                                     Ir al Detalle
                                                 </Button>
                                             </div>

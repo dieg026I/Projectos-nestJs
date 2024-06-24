@@ -40,10 +40,12 @@ export class PublicationController {
   async findByFilters(
     @Query('region') region?: string,
     @Query('city') city?: string,
-    @Query('category') category?: string,
-    @Query('price') price?: number
+    @Query('category') category?: string[],
+    @Query('minPrice') minPrice?: number,
+    @Query('maxPrice') maxPrice?: number
+
   ) {
-    const filters = { region, city, category, price };
+    const filters = { region, city, category, minPrice, maxPrice };
     return await this.publicationService.findByFilters(filters);
   }
   

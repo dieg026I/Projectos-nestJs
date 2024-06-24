@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from "react";
 import NavBarLogin from "../../components/common/NavBarLogin/navBarLogin";
 import Footer from "../../components/common/Footer/footer";
-import { Box, Grid, Card, Button, Avatar, Typography, Stack, Pagination, CardContent, PaginationItem, CardMedia } from "@mui/material";
+import { Box, Grid, Card, Button, Avatar, Typography, Stack, Pagination, CardContent, PaginationItem, CardMedia, useColorScheme } from "@mui/material";
 import { RiPencilFill } from "react-icons/ri";
 import "../../App.css";
 import axios from "axios";
 import PlaceIcon from '@mui/icons-material/Place';
 import { FaHeart } from "react-icons/fa6";
-
+import { useLocation, useNavigate } from 'react-router-dom';
 
 interface Cities {
     id_city: string;
@@ -24,6 +24,7 @@ interface Users {
     password_users: string,
     cities: Cities,
     publication: Publication[]
+    username: string;
 }
 
 interface Publication {
@@ -61,7 +62,10 @@ interface Book {
 }
 
 export default function Profile() {
-
+    
+    const location = useLocation();
+    const navigate = useNavigate();
+    const { UserId } = location.state || {};
     const [users, setUsers] = React.useState<Users>();
 
     {/* Mostrar Publicacion */}
@@ -76,14 +80,13 @@ export default function Profile() {
         setPage(value);
     };
 
-
+    
     useEffect(() => {
         const fetchPublications = async () => {
         try {
             const response = await axios.get('http://localhost:3001/publications/publication');
             const publicationResponse = response.data;
             setPublications(response.data);
-            console.log(JSON.stringify(response.data, null, 2))
         } catch (error) {
         console.error('Error fetching publications:', error);
         }
@@ -98,18 +101,21 @@ export default function Profile() {
             const responseUser= await axios.get(`http://localhost:3001/users/publication/${users.rut_user}`);
             const userResponse = responseUser.data;
             setUsers(userResponse);
-            console.log(JSON.stringify(responseUser.data, null, 2))
             }
         } catch (error) {
         console.error('Error fetching publications:', error);
         }
-        
     };
 
     fetchPublications();
     }, []);
     
+
+
+    
     {/*-----------------------------------------------------------------------------*/}
+
+
 
     return (
         <>
@@ -118,7 +124,9 @@ export default function Profile() {
                 <Grid container spacing={2} justifyContent="center">
                     <Grid item xs={12} sm={10} md={5} lg={3}>
                         <Card sx={{ borderRadius:"20px", padding: "20px", height:"440px", textAlign:"center", marginRight:"20px" }}>
+                            
                             <div style={{ display: "flex", justifyContent: "center", alignItems: "center", paddingTop:"30px", paddingBottom:"30px", position:"relative"  }}>
+                            
                                 <Avatar style={{backgroundColor: "#f05d16", width:"170px", height:"170px"}} src="/broken-image.jpg" />
                                 <div style={{ 
                                     width: '35px', 
@@ -137,9 +145,13 @@ export default function Profile() {
                                     <RiPencilFill style={{ color: "#ffffff", width:"33px", height:"25px"}} /> {/* Icono de lápiz */}
                                 </div>
                             </div>
-                            <Typography variant="h2" style={{ fontSize: "23px", fontFamily: "SF Pro Display Bold", paddingBottom:"32px"}}>Na.rubilark</Typography> {/*{username} */}
-                            <Typography variant="body1" style={{ fontSize: "15px", fontFamily: "SF Pro Display Regular", paddingBottom:"35px"}}>sin comentarios</Typography> {/*{email_user} */}
-                            <Button style={{borderRadius:"20px", textTransform: "none", fontSize:"17px"}} fullWidth variant="contained">Valparaiso</Button>
+                            {users && (
+                                <>
+                                    <Typography variant="h2" style={{ fontSize: "23px", fontFamily: "SF Pro Display Bold", paddingBottom:"32px"}}>{users.username}</Typography> 
+                                    <Typography variant="body1" style={{ fontSize: "15px", fontFamily: "SF Pro Display Regular", paddingBottom:"35px"}}>sin comentarios</Typography> 
+                                    <Button style={{borderRadius:"20px", textTransform: "none", fontSize:"17px"}} fullWidth variant="contained">{users.cities.name}</Button>
+                                </>
+                            )}
                         </Card>
                     </Grid>
                     <Grid item xs={12} sm={10} md={7} lg={6}>

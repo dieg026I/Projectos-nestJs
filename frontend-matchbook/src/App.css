@@ -123,6 +123,108 @@
   flex-direction: 'column';
 }
 
+.carousel-container {
+  display: flex;
+  justify-content: center; /* Centra el .thumbs-wrapper horizontalmente */
+}
+
+
+.carouselDetail .control-arrow {
+  visibility: visible; 
+}
+
+.carouselDetail .control-arrow:hover {
+  background: rgba(0, 0, 0, 0.2); 
+}
+
+.carouselDetail .thumbs-wrapper {
+  justify-content: center;
+  align-items: center;
+}
+
+.carouselDetail .thumb {
+  background-color: #fff;
+  overflow: hidden;
+  justify-content: center;
+  align-items: center;
+}
+
+.carouselDetail .thumb img {
+  max-width: 100%; 
+  max-height: 75px; 
+  object-fit: contain;
+}
+
+.thumbs-wrapper {
+  display: flex; /* Establece el contenedor como un flex container */
+  flex-direction: column; /* Alinea los hijos verticalmente */
+  align-items: center; /* Centra los hijos horizontalmente */
+  justify-content: center; /* Centra los hijos verticalmente si hay espacio adicional */
+}
+
+
+.card-container {
+  position: relative; /* Contenedor relativo para el Card y las vistas previas */
+}
+
+.card-preview {
+  position: absolute; /* Posicionamiento absoluto para las vistas previas */
+  top: -10px; /* Ajusta según sea necesario para mover las vistas previas fuera del Card */
+  left: 50%; /* Centra las vistas previas horizontalmente respecto al Card */
+  transform: translateX(-50%); /* Alineación precisa de las vistas previas */
+  z-index: 10; /* Asegura que las vistas previas se muestren sobre el Card */
+}
+
+
+/* Estilos para todos los navegadores */
+::-webkit-scrollbar {
+  width: 12px; /* Ancho de la barra de desplazamiento */
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1; /* Color de fondo de la pista de la barra de desplazamiento */
+}
+
+::-webkit-scrollbar-thumb {
+  background: #888; /* Color de fondo del control deslizante de la barra de desplazamiento */
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #555; /* Color de fondo del control deslizante al pasar el mouse */
+}
+
+/* Estilos para Firefox */
+* {
+  scrollbar-width: thin; /* Ancho de la barra de desplazamiento */
+  scrollbar-color: #888 #f1f1f1; /* Color del control deslizante y color de fondo de la pista */
+}
+
+.custom-scroll::-webkit-scrollbar {
+  width: 12px; /* Ancho de la barra de desplazamiento */
+}
+
+.custom-scroll::-webkit-scrollbar-track {
+  background: #e0e0e0; 
+  border-radius: 6px; 
+}
+
+.custom-scroll::-webkit-scrollbar-thumb {
+  background: #5b5b5b; 
+  border-radius: 6px; 
+}
+
+.custom-scroll::-webkit-scrollbar-thumb:hover {
+  background: #3d3d3d;
+}
+
+.css-1086bdv-MuiPaper-root-MuiAccordion-root::before {
+  background-color: transparent !important;
+}
+
+.custom-accordion-summary.Mui-expanded {
+  margin-bottom: 0 !important;
+}
+
 /* Media queries para pantallas más grandes */
 @media (min-width: 600px) {
   .gestion .fondoVenta .card {
@@ -132,16 +234,14 @@
 
 @media (min-width: 900px) {
   .gestion .fondoVenta .card {
-    width: '70%'; /* Ajusta el ancho al 70% para pantallas grandes */
+    width: '70%'; 
   }
 }
 
 /* Estilos para las pestañas */
 .gestion .fondoVenta .box {
-  /* Asumiendo que 'box' es la clase para las pestañas */
-  position: 'absolute';
-  bottom: '100%'; /* Posiciona las pestañas encima del card */
-  width: 'calc(100% / 3)'; /* Divide el ancho disponible entre el número de pestañas */
+  bottom: '100%'; 
+  width: 'calc(100% / 3)';
 }
 
 /* Media queries para ajustar las pestañas en pantallas más grandes */

@@ -2,37 +2,12 @@
 import React, { useEffect, useState } from 'react';
 import "../../common/NavBar/cssNav.css";
 import { useNavigate } from 'react-router-dom';
-
-import {
-    AppBar,
-    Avatar,
-    Badge,
-    Box,
-    Button,
-    Container,
-    Dialog,
-    DialogActions,
-    DialogContent,
-    DialogTitle,
-    Grid,
-    IconButton,
-    InputBase,
-    Link,
-    Menu,
-    MenuItem,
-    Stack,
-    Toolbar,
-    Typography,
-    useMediaQuery,
-    useTheme,
-} from "@mui/material"; 
-
+import {AppBar, Avatar, Badge,Box,Button, Container, Dialog, DialogActions, DialogContent, DialogTitle, Grid,IconButton, Link, Menu, MenuItem,Toolbar,Typography, useMediaQuery} from "@mui/material"; 
 import { PiPencilSimpleBold } from "react-icons/pi";
 import { LuShoppingCart, LuSearch, LuMenu, LuDollarSign, LuLogOut } from "react-icons/lu";
 import  Logo from "../../../assents/img/logoMatch.png";
-import { deepOrange } from '@mui/material/colors';
 import axios from 'axios';
-
+import Book1 from "../../../assents/img/book1.jpeg";
 
 interface Users {
     name_user: string,
@@ -44,7 +19,43 @@ interface Users {
     password_users: string,
     username: string
 }
-
+interface Publication {
+    id_publication: string;
+    date_publication: Date;
+    users: Users;
+    book: Book;
+    photo_showcase: string;
+    photo_cover: string;
+    photo_first_page: string;
+    photo_back_cover: string;
+    cost_book: number;
+}
+interface Author {
+    id_author: string;
+    name_author: string;
+}
+interface Publisher {
+    id_publisher: string;
+    name_publisher: string;
+}
+interface Book {
+    id_book: string;
+    name_book: string;
+    format_book: string;
+    author_id_author: Author;
+    publisher_name: string; 
+    publisher_id_publisher: Publisher;
+    category: string;
+    year_book: number;
+    status_book: string;
+    stock_book: number;
+    description_book: string;
+}
+interface ShoppingCart {
+    id_shopping_card: number,
+    user: Users,
+    publication: Publication[],
+}
 
 export const NavBarLogin: React.FC<{}> = () => {
     const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = useState<null | HTMLElement>(null);
@@ -64,7 +75,6 @@ export const NavBarLogin: React.FC<{}> = () => {
             const responseUser= await axios.get(`http://localhost:3001/users/rut/${users.rut_user}`);
             const userResponse = responseUser.data;
             setUsers(userResponse);
-            console.log(JSON.stringify(responseUser.data, null, 2))
         } catch (error) {
         console.error('Error fetching publications:', error);
         }
@@ -94,7 +104,6 @@ export const NavBarLogin: React.FC<{}> = () => {
         setOpen(false);
     };
 
- 
     {/* Colores Boton Perfil */}
     const [bgColorProfile, setBgColorProfile] = useState('transparent');
     const [textColorProfile, setTextColorProfile] = useState('#f05d16');
@@ -236,12 +245,13 @@ export const NavBarLogin: React.FC<{}> = () => {
                                     </div>
                                 )}
                             </Grid>
+
                             <Grid item xs={3} sm={3} md={3} lg={3}>
                                 <Box className="space" >
                                     {isMobile ? (
                                         <>
-                                            <Badge badgeContent={1} color="primary">  
-                                                <LuShoppingCart style={{width: "30px", height:"30px", cursor: 'pointer'}} href="/cart" color="inherit" />
+                                            <Badge badgeContent={1} color="primary" >  
+                                                <LuShoppingCart onClick={() => navigate('/cart')} style={{width: "30px", height:"30px", cursor: 'pointer'}} href="/cart" color="inherit" />
                                             </Badge>
                                             <IconButton href="/sales" color="inherit"  >
                                                 <LuDollarSign style={{ width: "35px", height:"35px", cursor: 'pointer'}} />
@@ -254,7 +264,7 @@ export const NavBarLogin: React.FC<{}> = () => {
                                     ) : (
                                         <>
                                             <Badge badgeContent={1} color="primary">
-                                                <LuShoppingCart style={{width: "30px", height:"30px", marginLeft:"40px", cursor: 'pointer'}} href="/cart" color="inherit" />
+                                                <LuShoppingCart onClick={() => navigate('/cart')} style={{width: "30px", height:"30px", marginLeft:"40px", cursor: 'pointer'}} href="/cart" color="inherit" />
                                             </Badge>
 
                                             <Button style={{ backgroundColor: '#f05d16' , textTransform: "none", color: "#ffff", fontSize: "16px", marginLeft: "10px", borderRadius:"20px", width:"90px", padding:"6px" }} href="/sales">Vender</Button>

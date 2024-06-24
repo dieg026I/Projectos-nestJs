@@ -16,6 +16,9 @@ import Marketplace from './pages/marketplace/marketplace';
 import BookManagement from './pages/bookManagement/bookManagement';
 import Wallet from './pages/wallet/wallet';
 import MarketplaceSearch from './pages/marketplaceSearch/marketplaceSearch';
+import PublicationDetail from './pages/publicationDetail/publicationDetail';
+import ProfileUsers from './pages/profileUsers/profileUsers';
+import DeliveryMethods from './pages/deliveryMethods/deliveryMethods';
 
 
 
@@ -60,16 +63,21 @@ function App() {
         <Route path="/home2" element={<ProtectedRoute><HomePageLogin /></ProtectedRoute>} />
         <Route path="/sales" element={<ProtectedRoute><Sales /></ProtectedRoute>} />
         <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
+        <Route path="/profileUsers" element={<ProtectedRoute><ProfileUsers /></ProtectedRoute>} />
         <Route path="/marketplace" element={<Marketplace />} />
         <Route path="/marketplaceSearch" element={<MarketplaceSearch />} />
+        <Route path="/publicationDetail" element={<PublicationDetail />} />
+        <Route path="/deliveryMethods" element={<DeliveryMethods />} />
         <Route path="/bookManagement" element={<ProtectedRoute><BookManagement /></ProtectedRoute>} />
         <Route path="/wallet" element={<ProtectedRoute><Wallet /></ProtectedRoute>} />
 
         {/* Ruta para la página NotFound */}
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
+      
     
     </BrowserRouter>
+
 
   );
 }
