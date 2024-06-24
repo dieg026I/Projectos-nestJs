@@ -47,7 +47,7 @@ export const NavBar: React.FC<{}> = () => {
             onClose={() => setMobileMoreAnchorEl(null)}
         >
             <MenuItem>
-                <Link underline="hover" href="/clubdelectura">Club de Lectura</Link>
+                <Link underline="hover" href="/readingClub">Club de Lectura</Link>
             </MenuItem>
             <MenuItem>
                 <Link underline="hover" href="/marketplace">Marketplace</Link>
@@ -101,7 +101,7 @@ export const NavBar: React.FC<{}> = () => {
                             ) : (
                                 <Grid  item xs={3} sm={3} md={3} lg={3} >
                                     <Box className="links-container text">
-                                        <Link underline="hover" style={{color: "white"}} href="/clubdelectura">Club de Lectura</Link>
+                                        <Link underline="hover" style={{color: "white"}} href="/readingClub">Club de Lectura</Link>
                                         <Link underline="hover" style={{color: "white"}} href="/marketplace">Marketplace</Link>
                                     </Box>
                                 </Grid>

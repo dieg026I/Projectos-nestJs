@@ -22,8 +22,8 @@ export class BookService {
     return this.bookRepository.findOne({ where: { id_book } });
   }
 
-  update(id: number, book: Book) {
-    return this.bookRepository.update(id, book);
+  update(id_book: string, book: Book) {
+    return this.bookRepository.update(id_book, book);
   }
 
   remove(id: number) {

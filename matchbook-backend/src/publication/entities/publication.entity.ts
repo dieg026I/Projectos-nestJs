@@ -1,8 +1,10 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, PrimaryColumn, JoinColumn } from 'typeorm';
+import { Entity, Column, ManyToOne, PrimaryColumn, JoinColumn, OneToMany } from 'typeorm';
 import { Users } from '../../users/entities/user.entity';
 import { Book } from '../../book/entities/book.entity';
+import { Buy } from 'src/buy/entities/buy.entity';
+import { ShoppingCart } from 'src/shopping_cart/entities/shopping_cart.entity';
 
-@Entity('publications')
+@Entity('publication')
 export class Publication {
   @PrimaryColumn()
   id_publication: string;
@@ -10,11 +12,14 @@ export class Publication {
   @Column()
   date_publication: Date;
 
-  @ManyToOne(() => Users, (user) => user.publications)
+  @ManyToOne(() => Users, (user) => user.publication)
   @JoinColumn({ name: 'user_rut_user' })
+  users: Users;
+  
+  @Column()
   user_rut_user: number;
   
-  @ManyToOne(() => Book, (book) => book.publications)
+  @ManyToOne(() => Book, (book) => book.publication)
   @JoinColumn({ name: 'book_id_book' })
   book_id_book: string;
 
@@ -29,7 +34,14 @@ export class Publication {
 
   @Column()
   photo_back_cover: string;
-
-  @Column({name: 'cost_book'})
+  
+  @Column()
   cost_book: number;
+  
+  @OneToMany(() => Buy, buy => buy.publication)
+  buy: Buy[];
+
+  @OneToMany(() => ShoppingCart, shoppingCart => shoppingCart.publication)
+  shoppingCart: ShoppingCart[];
+
 }

@@ -21,9 +21,9 @@ export class AuthorController {
     return this.authorService.findOne(id_author);
   }
 
-  @Put(':id')
-  update(@Param('id') id: string, @Body() author: Author) {
-    return this.authorService.update(id, author);
+  @Put(':id_author')
+  update(@Param('id_author') id_author: string, @Body() author: Author) {
+    return this.authorService.update(id_author, author);
   }
 
   @Delete(':id')

@@ -16,9 +16,19 @@ export class UsersController {
     return this.usersService.findAll();
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.usersService.findOne(id);
+  @Get('userCity')
+  findAllWithCity() {
+    return this.usersService.findAllWithCity();
+  }
+
+  @Get('rut/:id')
+  findOne(@Param('id') rut_user: number) {
+    return this.usersService.findOne(rut_user);
+  }
+
+  @Get('publication/:rut_user')
+  findOnePublication(@Param('rut_user') rut_user: number) {
+    return this.usersService.findOneWithPublications(rut_user);
   }
 
   @Put(':id')
@@ -30,5 +40,4 @@ export class UsersController {
   remove(@Param('id') id: string) {
     return this.usersService.remove(id);
   }
-  
 }

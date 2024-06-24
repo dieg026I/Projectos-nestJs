@@ -18,11 +18,9 @@ import { useNavigate } from 'react-router-dom';
 import logo from "../../assents/img/logoMatch.png";
 import React, { useContext, useState } from "react";
 
-
 type FormValue = {
   email: string,
   password: string
-
 }
 
 interface User {
@@ -33,15 +31,18 @@ interface User {
   phone_user: number,
   email_user: string,
   password_users: string,
-  city_id: number,
+  cities: Cities,
 }
 
+interface Cities {
+  id_city: number;
+  name: string;
+}
 const LoginPage: React.FC = () => {
 
   const [email_user, setEmail] = React.useState('');
   const [password_users, setPassword] = React.useState('');
   const navigate = useNavigate();
-  const [user, setUser] = useState<User | null>(null);
 
   {/*-----------------------------------------------------------------------------*/}
   {/* Login */}

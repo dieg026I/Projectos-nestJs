@@ -22,7 +22,6 @@ import axios from 'axios';
 import logo from "../../assents/img/logoMatch.png";
 import { useNavigate } from 'react-router-dom'; 
 
-
 interface Region  {
     id_region: number;
     name: string;
@@ -78,8 +77,6 @@ const RegisterPage: React.FC = () => {
     const handleCityChange = (event: { target: { value: React.SetStateAction<number>; }; }) => {
         setIdCity(event.target.value);
     };
-
-    
 
     {/*------------------------------------------ */}
     {/* Guardar Datos Registro */}
@@ -193,7 +190,9 @@ const RegisterPage: React.FC = () => {
         }
 
         try {
-            
+
+            const username = `${name_user.charAt(0).toUpperCase()}.${lastname_user.charAt(0).toUpperCase()}${lastname_user.slice(1).toLowerCase()}${String(rut_user).slice(-2)}`;
+
             const user  =  {
                 name_user: name_user,
                 lastname_user: lastname_user,
@@ -202,6 +201,7 @@ const RegisterPage: React.FC = () => {
                 phone_user: phone_user,
                 email_user: email_user,
                 password_users: password_users,
+                username: username,
                 city_id: id_city,
             };
         

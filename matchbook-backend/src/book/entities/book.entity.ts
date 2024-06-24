@@ -3,6 +3,7 @@ import { Author } from '../../author/entities/author.entity';
 import { Publisher } from '../../publisher/entities/publisher.entity';
 import { Publication } from 'src/publication/entities/publication.entity';
 import { Category } from 'src/category/entities/category.entity';
+import { ReadingClub } from 'src/reading_club/entities/reading_club.entity';
 
 @Entity('book')
 export class Book {
@@ -41,10 +42,13 @@ export class Book {
   @Column()
   publisher_id_publisher: string;
 
-  @OneToMany(() => Publication, publication => publication.book_id_book)
-  publications: Publication[]
+  @OneToMany(() => Publication, publication => publication.book)
+  publication: Publication[]
 
   @ManyToMany(() => Category, (category) => category.books)
   categories: Category[];
+
+  @OneToMany(() => ReadingClub, readingClub => readingClub.book)
+  reading_club: ReadingClub[]
 
 }

@@ -1,6 +1,6 @@
-import { Autocomplete, Box, Button, Card, CardActionArea, CardActions, CardContent, CardMedia, Checkbox, FormControl, FormControlLabel, FormGroup, FormLabel, Grid, InputLabel, MenuItem, NoSsr, Radio, RadioGroup, Select, SelectChangeEvent, TextField, ThemeProvider, Typography, createTheme } from "@mui/material";
+import { Autocomplete, Box, Button, Card, CardActionArea, CardActions, CardContent, CardMedia, Checkbox, FormControl, FormControlLabel, FormGroup, FormLabel, Grid, InputLabel, MenuItem, NoSsr, Popper, Radio, RadioGroup, Select, SelectChangeEvent, TextField, ThemeProvider, Typography, createTheme } from "@mui/material";
 import { CardBody, CardFooter } from "react-bootstrap";
-import { useContext, useEffect, useRef, useState } from 'react';
+import { ChangeEvent, useContext, useEffect, useRef, useState } from 'react';
 import AddIcon from '@mui/icons-material/Add';
 import React from "react";
 import axios from "axios";
@@ -14,6 +14,7 @@ import { UserContext } from "../UserContext";
 import { Navigate, useNavigate } from "react-router-dom";
 import { Console } from "console";
 import Footer from "../../components/common/Footer/footer";
+import { AutocompleteInputChangeReason } from '@mui/material/Autocomplete';
 
 interface Author {
     id_author: string;
@@ -39,7 +40,7 @@ interface Book {
     stock_book: number;
     description_book: string;
 }
-interface User {
+interface Users {
     name_user: string,
     lastname_user: string,
     rut_user: number,
@@ -50,20 +51,13 @@ interface User {
     city_id: number,
 }
 
-{/*-----------------------------------------------------------------------------*/}
-{/* Sugerencia */}
-const SuggestionsBox = ({ suggestions, onSelect }: { suggestions: { title: string; authors: string[] }[], onSelect: (selectedTitle: string) => void }) => {
-    return (
-        <div style={{ position: 'absolute', top: '74%', left: '255px', width: '35%', background: 'white', boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)', maxHeight: '200px', overflowY: 'auto' , zIndex: 1000 }}>
-            {suggestions.map((book, index) => (
-                <div key={index} onClick={() => onSelect(book.title)} style={{ padding: '10px', borderBottom: '1px solid #ccc' }}>
-                    <strong>{book.title}</strong> by {book.authors.join(', ')}
-                </div>
-            ))}
-        </div>
-    );
-};
-
+interface BookSuggestion {
+    title: string;
+    authors: string[];
+    publisher?: string;
+    publishedDate?: string;
+    image?: string;
+}
 
 
 const Sales: React.FC = () => {
@@ -77,10 +71,10 @@ const Sales: React.FC = () => {
     const [category, setCategory] = React.useState<Category[]>([]);
     const [OneCategory, setOneCategory] = React.useState<Category>();
     const [selectedCategory, setSelectedCategory] = useState('');
-    const [year_book, setYearBook] = React.useState(0);
+    const [year_book, setYearBook] = useState<number | null>(null);
     const [status_book, setStatusBook ] = React.useState('');
     const [selectedStatus, setSelectedStatus] = useState('');
-    const [stock_book, setStockBook] = React.useState(0);
+    const [stock_book, setStockBook] = React.useState(1);
     const [description_book, setDescriptionBook] = React.useState('');
     {/* Publicación */}
     const [id_publication, setIdPublication] = React.useState('');
@@ -95,8 +89,13 @@ const Sales: React.FC = () => {
     {/* Sugerencia */}
     const [suggestions, setSuggestions] = useState<{ title: string; authors: string[] }[]>([]);
 
-    
+    const [selectedTitle, setSelectedTitle] = useState('');
+
+    const [open, setOpen] = useState(false);
+    const [options, setOptions] = useState<BookSuggestion[]>([]);
+    const [selectedBook, setSelectedBook] = useState<BookSuggestion | null>(null); 
     {/*-----------------------------------------------------------------------------*/}
+
     {/* Eliminar Animaciones */}
     const theme = createTheme({
         palette: {
@@ -134,35 +133,45 @@ const Sales: React.FC = () => {
         },
         },
     });
-    
-
-
     {/*-----------------------------------------------------------------------------*/}
-    {/* Título */}
 
-    const handleTitleChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-        const searchTerm = e.target.value;
-        try {
-            const response = await axios.get(
-                `https://www.googleapis.com/books/v1/volumes?q=${searchTerm}&key=AIzaSyDJrjXWiZuxrAOhRE4GB1Xltcdy0dhsPsM`
-            );
-            const books = response.data.items.map((item: any) => ({
+    {/* Título */}
+    const handleInputChange = async (
+        event: React.SyntheticEvent<Element, Event>,
+        value: string,
+        reason: AutocompleteInputChangeReason
+    ) => {
+        if (reason === 'input') {
+            if (value.length > 2) {
+            try {
+                const response = await axios.get(`https://www.googleapis.com/books/v1/volumes?q=${value}`);
+                const books = response.data.items.map((item: any) => ({
                 title: item.volumeInfo.title,
-                authors: item.volumeInfo.authors || [], // Si no hay autores, establecemos un arreglo vacío
-            }));
-            setSuggestions(books);
-        } catch (error) {
-            console.error('Error al buscar libros:', error);
+                authors: item.volumeInfo.authors || [],
+                publisher: item.volumeInfo.publisher,
+                publishedDate: item.volumeInfo.publishedDate,
+                image: item.volumeInfo.image,
+                }));
+                setOptions(books);
+            } catch (error) {
+                console.error('Error al buscar libros:', error);
+            }
+            }
         }
     };
-    
 
-    const handleSuggestionSelect = (selectedTitle: string) => {
-        setNameBook(selectedTitle);
-        setSuggestions([]); 
+    const handleSelectChange = (event: React.ChangeEvent<{}>, value: BookSuggestion | null) => {
+        if (value) {
+            setNameBook(value.title);
+            setPublisherName(value.publisher || '');
+            setYearBook(value.publishedDate ? new Date(value.publishedDate).getFullYear() : null);
+            setImageShowcase(value.image || null);
+        } else {
+            setNameBook('');
+        }
     };
-
     {/*-----------------------------------------------------------------------------*/}
+
     {/* Step and Scroll */}
     const contentRef = useRef<HTMLDivElement>(null);
     const [step, setStep] = useState(1);
@@ -182,8 +191,8 @@ const Sales: React.FC = () => {
         margin: "15px",
         overflowY: step === 2 ? 'scroll' : 'hidden'
     };
-    
     {/*-----------------------------------------------------------------------------*/}
+
     {/* Imagenes */}
     const [imageShowcase, setImageShowcase] = useState<string | null>(null);
     const [imageCover, setImageCover] = useState<string | null>(null);
@@ -192,11 +201,11 @@ const Sales: React.FC = () => {
 
     const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.files) {
-            setPhotoShowcase(e.target.files[0]);
-            setImageShowcase(URL.createObjectURL(e.target.files[0]));
+            setPhotoShowcase(e.target.files[0]); 
+            setImageShowcase(URL.createObjectURL(e.target.files[0])); 
         }
     };
-
+    
     const handleImageChangeCover = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.files) {
             setPhotoCover(e.target.files[0])
@@ -217,8 +226,8 @@ const Sales: React.FC = () => {
             setImageBack(URL.createObjectURL(e.target.files[0]));
         }
     };
-
     {/*-----------------------------------------------------------------------------*/}
+
     {/* Category */}
 
     //llamar categorias
@@ -226,7 +235,6 @@ const Sales: React.FC = () => {
         axios.get('http://localhost:3001/categories')
             .then(response => {
             setCategory(response.data);
-            console.log('Mostrar Categorias: '+ response.data);
             });
     }, []);
 
@@ -237,7 +245,6 @@ const Sales: React.FC = () => {
         axios.get(`http://localhost:3001/categories/${id_category}`)
             .then(response => {
             setOneCategory(response.data);
-            console.log('Mostrar Categorias: ' + response.data);
             });
 
     };
@@ -249,53 +256,49 @@ const Sales: React.FC = () => {
         }
     }
     {/*-----------------------------------------------------------------------------*/}
+
     {/* Status */}
-    
-        
     const handleStatusChange = (event: SelectChangeEvent) => {
     setSelectedStatus(event.target.value);
-    console.log("estado: " + event.target.value)
     };
-
     {/*-----------------------------------------------------------------------------*/}
+
     {/* Checkbox mas libros */}
     const [isChecked, setIsChecked] = useState(false);
 
     const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setIsChecked(event.target.checked);
     };
-    
     {/*-----------------------------------------------------------------------------*/}
+
     {/* Subir Libro */}
-    
     const handleSubmitBook = async (event: React.FormEvent) => {
         event.preventDefault();
     
         try {
-            // guarda el autor y obtén su ID
-            const id_author = uuidv4();
+            // Primero, guarda el autor y obtén su ID
+            let id_author = uuidv4();
             const responseAuthor = await axios.post('http://localhost:3001/author', {
             id_author: id_author,    
             name_author: author_name,
             });
-            console.log(responseAuthor.data)
-            
-            //guarda la editorial y obtén su ID
+            const author_id = responseAuthor.data.id_author
+            // Luego, guarda la editorial y obtén su ID
             let id_publisher = uuidv4();
             const responsePublisher = await axios.post('http://localhost:3001/publisher', {
                 id_publisher: id_publisher,    
                 name_publisher: publisher_name  
             });
+            const publisher_id = responsePublisher.data.id_publisher;
+            const bookId = `${name_book}-${author_name.length}-${publisher_name.slice(0, 3)}`.toLowerCase();
 
-            console.log(responsePublisher.data)
-          const bookId = `${name_book}-${author_name.length}-${publisher_name.slice(0, 3)}`.toLowerCase();
-            //guarda el libro con los IDs del autor y la ediorial
+            // Finalmente, guarda el libro con los IDs del autor y la editorial
             const responseBook = await axios.post('http://localhost:3001/book', {
                 id_book: bookId,
                 name_book: name_book,
                 format_book: format_book,
-                author_id_author: id_author,
-                publisher_id_publisher: id_publisher,
+                author_id_author: author_id,
+                publisher_id_publisher: publisher_id,
                 year_book: year_book,
                 status_book: selectedStatus,
                 stock_book: stock_book,
@@ -303,29 +306,44 @@ const Sales: React.FC = () => {
                 categories: [OneCategory]
             });
     
-            console.log(responseBook.data);
-            setBook(responseBook.data)
             handleNext();
         } catch (error) {
             console.error('Hubo un error al ingresar la publicación:', error);
         }
         const userString = localStorage.getItem('user');
-        console.log('Usuario: ' + userString )
     };
-    
-    const add_book = (event: React.FormEvent) => {
-        event.preventDefault();
-        handleSubmitBook(event).then(() => {
-            toast("Libro guardado con éxito!");
-        });
-    };
-
     {/*-----------------------------------------------------------------------------*/}
+
     {/* Publicación */}
-    
     const handleSubmitPublication = async (event: React.FormEvent) => {
         event.preventDefault();
-        
+
+        // Validación de campos requeridos
+        if (!name_book) {
+            alert("Por favor, ingresa el nombre del libro.");
+            return;
+        }
+        if (!author_name) {
+            alert("Por favor, ingresa el nombre del autor.");
+            return;
+        }
+        if (!publisher_name) {
+            alert("Por favor, ingresa el nombre de la editorial.");
+            return;
+        }
+        if (!year_book) {
+            alert("Por favor, ingresa el año del libro.");
+            return;
+        }
+        if (!cost_book) {
+            alert("Por favor, ingresa el costo del libro.");
+            return;
+        }
+        if (!category) {
+            alert("Por favor, selecciona una categoría.");
+            return;
+        }
+
         const formData = new FormData();
 
             if (photo_showcase) {
@@ -346,7 +364,7 @@ const Sales: React.FC = () => {
             const userString = localStorage.getItem('user');
 
             if (userString !== null) {
-                const user: User = JSON.parse(userString);
+                const user: Users = JSON.parse(userString);
                 let user_rut = user.rut_user;  
                 formData.append('rut_user', user_rut.toString());
             } 
@@ -356,25 +374,21 @@ const Sales: React.FC = () => {
             if(cost_book){
             formData.append('cost_book', cost_book.toString());
             }
-            console.log('formatData: ' + formData)
     try {
         const response = await axios.post('http://localhost:3001/publications/upload', formData, {
             headers: {
             'Content-Type': 'multipart/form-data',
             },
         });
-    
-        console.log(response.data);
         
         navigate('/home2')
     
     }catch (error) {
         console.error('Hubo un error al registrar el libro:', error);
         }
-    
     };
-
     {/*-----------------------------------------------------------------------------*/}
+
     {/* Agregar mas publicaciones */}
     const handleAddAnother = () => {
         // Aquí puedes agregar la lógica para guardar el libro actual
@@ -387,19 +401,12 @@ const Sales: React.FC = () => {
     return (
         <>
             <NavBarLogin />
-            
                 <NoSsr>
                     <ThemeProvider theme={theme}>
-                    
                         <div>
-                            
-                            <Box className="fondoVenta" sx={{ paddingTop: step === 2 ? '64px' : '0px' }}>
-                                
-                                <Card  sx={{ marginTop:"90px", borderRadius:"20px",width:"1100px", maxWidth: "1400px", maxHeight:"100%" }} ref={contentRef} style={contentStyle} >
-                                
-                                    {suggestions.length > 0 && (
-                                        <SuggestionsBox suggestions={suggestions} onSelect={handleSuggestionSelect} />
-                                    )}
+                            <Box className="fondoVenta" sx={{ paddingTop: step === 2 ? '40px' : '0px', paddingBottom: '30px' }}>
+                                <Card  sx={{ marginTop:"90px", borderRadius:"20px",width:"1100px", maxWidth: "1400px", maxHeight:"100%", marginBottom:"10px" }} ref={contentRef} style={contentStyle} >
+
                                     <CardActionArea disableRipple>
                                         <CardContent style={{backgroundColor:"#002E5D", alignContent:"center"}}>
                                             <div style={{textAlign: "center", alignContent:"center", color:"#ffff", fontFamily: "SF Pro Display Medium", paddingTop:"10px"}} >
@@ -433,17 +440,28 @@ const Sales: React.FC = () => {
                                                 </CardContent>
                                                 <CardBody style={{marginLeft:"30px", }}>
                                                     <h6 style={{fontFamily:"SF Pro Display Bold"}}>Título</h6>
-                                                    <FormControl style={{ width:"50%" }}>
-                                                        <InputLabel style={{ fontSize: "16px"}} ></InputLabel>
-                                                        < TextField
-                                                            id="name"
-                                                            value={name_book}
-                                                            onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                                                                setNameBook(e.target.value);
-                                                                handleTitleChange(e);
-                                                            }}
-                                                            sx={{ width: '100%', color: "black", height: "45px", borderRadius: "10px" }}
-                                                        />
+                                                    <FormControl fullWidth>
+                                                        <InputLabel id="book-select-label"></InputLabel>
+                                                        <Autocomplete
+                                                        id="book-search-autocomplete"
+                                                        open={open}
+                                                        onOpen={() => setOpen(true)}
+                                                        onClose={() => setOpen(false)}
+                                                        getOptionLabel={(option) => `${option.title} - ${option.authors.join(', ')}`}
+                                                        options={options}
+                                                        loading={open && options.length === 0}
+                                                        value={selectedBook}
+                                                        onChange={handleSelectChange}
+                                                        onInputChange={handleInputChange}
+                                                        renderInput={(params) => (
+                                                            <TextField
+                                                                {...params}
+                                                                label="Buscar libro"
+                                                                variant="outlined"
+                                                                fullWidth
+                                                            />
+                                                        )}
+                                                    />
                                                     </FormControl>
                                                 </CardBody>
                                                 </> 
@@ -467,7 +485,7 @@ const Sales: React.FC = () => {
                                                             <Grid item xs={6}>
                                                                 <h6 style={{fontFamily:"SF Pro Display Bold"}}>Autor</h6>
                                                                 <TextField fullWidth 
-                                                                    style={{ color: "black", borderRadius: 20 }}
+                                                                    style={{ color: "black" }}
                                                                     id="author"
                                                                     className="mb-3 formulario"
                                                                     placeholder="Autor/a de la obra"
@@ -477,8 +495,6 @@ const Sales: React.FC = () => {
                                                                     InputLabelProps={{
                                                                         sx: { fontSize: "16px"} 
                                                                     }}
-                                                                    
-                                                                    sx={{ borderRadius: 20 }}
                                                                 />
                                                             </Grid>
                                                             {/* Categoría */}
@@ -489,7 +505,7 @@ const Sales: React.FC = () => {
                                                                     <Select 
                                                                         labelId="category-label"
                                                                         id="category"
-                                                                        sx={{ width: '100%', color: "black", borderRadius:"15px"}}
+                                                                        sx={{  color: "black"}}
                                                                         onChange={handleCategoryChange}
                                                                         value={selectedCategory.toString()}
                                                                         placeholder="Selecciona"
@@ -528,19 +544,22 @@ const Sales: React.FC = () => {
                                                                     id="year"
                                                                     className="mb-3 formulario"
                                                                     placeholder="Año"
-                                                                    type="year"
-                                                                    value={year_book}
-                                                                    onChange={e => setYearBook (Number(e.target.value))}
+                                                                    type="text" 
+                                                                    value={year_book === 0 ? '' : year_book} 
+                                                                    onChange={e => {
+                                                                        const value = e.target.value;
+                                                                        setYearBook(value === '' ? 0 : !isNaN(Number(value)) ? Number(value) : year_book);
+                                                                    }}
                                                                     InputLabelProps={{
                                                                         sx: { fontSize: "16px" } 
                                                                     }}
                                                                     InputProps={{
                                                                         inputProps: { 
-                                                                            min: 0, 
-                                                                            style: { 
-                                                                                MozAppearance: 'textfield',
-                                                                                appearance: 'textfield'
-                                                                            }
+                                                                        min: 0, 
+                                                                        style: { 
+                                                                            MozAppearance: 'textfield',
+                                                                            appearance: 'textfield'
+                                                                        }
                                                                         }
                                                                     }}
                                                                 />
@@ -551,42 +570,46 @@ const Sales: React.FC = () => {
                                                             <Grid item xs={6}>
                                                                 <h6 style={{fontFamily:"SF Pro Display Bold"}}>Precio de venta</h6>
                                                                 <TextField fullWidth 
-                                                                    style={{ color: "black" }}
-                                                                    id="cost"
-                                                                    className="mb-3 formulario"
-                                                                    placeholder="Precio"
-                                                                    type="numeric"
-                                                                    value={cost_book}
-                                                                    onChange={e => setCostBook(Number(e.target.value))}
-                                                                    InputLabelProps={{
-                                                                        sx: { fontSize: "16px" } 
-                                                                    }}
-                                                                    variant="outlined"
-                                                                    sx={{ borderRadius: 20 }}
+                                                                style={{ color: "black" }}
+                                                                id="cost"
+                                                                className="mb-3 formulario"
+                                                                placeholder="Precio"
+                                                                type="text"
+                                                                value={cost_book === 0 ? '' : cost_book}
+                                                                onChange={e => {
+                                                                    const value = e.target.value;
+                                                                    setCostBook(value === '' ? 0 : !isNaN(Number(value)) ? Number(value) : cost_book);
+                                                                }}
+                                                                InputLabelProps={{
+                                                                    sx: { fontSize: "16px" } 
+                                                                }}
+                                                                variant="outlined"
+                                                                sx={{ borderRadius: 20 }}
                                                                 />
+
                                                             </Grid>
                                                             {/* Estado del libro */}
                                                             <Grid item xs={6}>
-                                                                <FormControl fullWidth>
-                                                                    <h6 style={{fontFamily:"SF Pro Display Bold"}}>Estado del libro</h6>
-                                                                    <Select fullWidth 
-                                                                        style={{ color: "black" }}
-                                                                        id="status"
-                                                                        className="mb-3 formulario"
-                                                                        onChange={handleStatusChange}
-                                                                        value={selectedStatus}
-                                                                        labelId="status-label"
-                                                                        sx={{ borderRadius:"15px"}}
-                                                                        displayEmpty                                       
-                                                                    >
-                                                                        <MenuItem value="">Selecciona una opción</MenuItem>
-                                                                        <MenuItem value="Nuevo">Nuevo</MenuItem>
-                                                                        <MenuItem value="Usado: Como nuevo">Usado: Como nuevo</MenuItem>
-                                                                        <MenuItem value="Usado: Con algo de desgaste">Usado: Con algo de desgaste</MenuItem>
-                                                                        <MenuItem value="Usado: Con mucho desgaste">Usado: Con mucho desgaste</MenuItem>
-                                                                        <MenuItem value="Usado:  En mal estado">Usado:  En mal estado</MenuItem>
-                                                                        </Select>
-                                                                </FormControl>
+                                                            <FormControl fullWidth>
+                                                                <h6 style={{ fontFamily: "SF Pro Display Bold" }}>Estado del libro</h6>
+                                                                <Select
+                                                                fullWidth
+                                                                style={{ color: "black" }}
+                                                                id="status"
+                                                                className="mb-3 formulario"
+                                                                onChange={handleStatusChange}
+                                                                value={selectedStatus}
+                                                                labelId="status-label"
+                                                                displayEmpty
+                                                                >
+                                                                <MenuItem value="">Selecciona una opción</MenuItem>
+                                                                <MenuItem value="Nuevo">Nuevo</MenuItem>
+                                                                <MenuItem value="Usado: Como nuevo">Usado: Como nuevo</MenuItem>
+                                                                <MenuItem value="Usado: Con algo de desgaste">Usado: Con algo de desgaste</MenuItem>
+                                                                <MenuItem value="Usado: Con mucho desgaste">Usado: Con mucho desgaste</MenuItem>
+                                                                <MenuItem value="Usado: En mal estado">Usado: En mal estado</MenuItem>
+                                                                </Select>
+                                                            </FormControl>
                                                             </Grid>
                                                         </Grid>
                                                         <Grid container spacing={2} >
@@ -617,22 +640,25 @@ const Sales: React.FC = () => {
                                                             </Grid>
                                                             {/* Num ejemplares */}
                                                             <Grid item xs={6} alignItems="flex-start">
-                                                                <FormGroup>
+                                                                
+                                                                {selectedStatus === "Nuevo" && (
+                                                                    <FormGroup>
                                                                     <FormControlLabel
                                                                         control={<Checkbox checked={isChecked} onChange={handleCheckboxChange} />}
                                                                         label="Deseo publicar más de un ejemplar"
                                                                     />
                                                                     {isChecked && (
                                                                         <TextField 
-                                                                            fullWidth 
-                                                                            id="stock"
-                                                                            label="Número de Libros"
-                                                                            type="number"
-                                                                            value={stock_book}
-                                                                            onChange={(event) => setStockBook(Number(event.target.value))}
+                                                                        fullWidth 
+                                                                        id="stock"
+                                                                        label="Número de Libros"
+                                                                        type="number"
+                                                                        value={stock_book}
+                                                                        onChange={(event) => setStockBook(Number(event.target.value))}
                                                                         />
                                                                     )}
-                                                                </FormGroup>
+                                                                    </FormGroup>
+                                                                )}
                                                                 <br />
                                                                 <h6 style={{color: "#000000", fontFamily:"SF Pro Display Bold"}}>Información Adicional</h6>
 
@@ -727,7 +753,6 @@ const Sales: React.FC = () => {
                                                                     )}
                                                                 </CardContent>
                                                             </Card>
-
                                                             {/* Portada Página (Fotografía) */}
                                                             <Card style={{ margin: "10px", alignContent: "center", height:"255px", width: "175px", borderRadius: "20px", textAlign: "center", position: 'relative'}} sx={{ maxWidth: 345, padding: "10px"}}>
                                                                 <CardContent style={{padding:"0px", position: "relative"}}>
@@ -762,7 +787,6 @@ const Sales: React.FC = () => {
                                                                     )}
                                                                 </CardContent>
                                                             </Card>
-
                                                             {/* Contraportada (Fotografía) */}
                                                             <Card style={{ margin: "10px", alignContent: "center", height:"255px", width: "175px", borderRadius: "20px", textAlign: "center", position: 'relative'}} sx={{ maxWidth: 345, padding: "10px"}}>
                                                                 <CardContent style={{padding:"0px", position: "relative"}}>
@@ -797,57 +821,56 @@ const Sales: React.FC = () => {
                                                                     )}
                                                                 </CardContent>
                                                             </Card>
-
-                                                    </Grid>
-                                                </div>
-                                            </>
-                                        )}            
-                                    </CardContent>
-                                </CardActionArea>
-                                <CardActions style={{ justifyContent: 'space-between', marginRight:"50%", marginLeft:"60%" }}>
-                                    {step > 1 && (
-                                        <div style={{justifyContent: "flex-end"}}>
-                                        <Button onClick={handlePrevious} style={{ backgroundColor:"#1eaeff", color: "#ffffff", borderRadius:"30px", textTransform: "none", marginRight:"30px", width:"130px", height:"50px", fontWeight:"bold"}} >
-                                            Anterior
-                                        </Button>
-                                        </div>
-                                    )}
-                                    {step === 1 ? (
-                                        <div style={{justifyContent: "flex-start"}}>
-                                        <Button onClick={handleNext} style={{ backgroundColor:"#1eaeff", color: "#ffffff", borderRadius:"30px", textTransform: "none", marginRight:"30px", width:"130px", height:"50px", fontWeight:"bold"}} >
-                                            Siguiente
-                                        </Button>
-                                        </div>
-                                    ) : step === 2 ? (
-                                        <div style={{justifyContent: "flex-start"}}>
-                                        <Button onClick={add_book}  style={{ backgroundColor:"#1eaeff", color: "#ffffff", borderRadius:"30px", textTransform: "none", marginRight:"30px", width:"130px", height:"50px", fontWeight:"bold"}} >
-                                            Siguiente
-                                        </Button>
-                                        <ToastContainer 
-                                        position="top-right"
-                                        autoClose={5000}
-                                        hideProgressBar={false}
-                                        newestOnTop={false}
-                                        closeOnClick
-                                        rtl={false}
-                                        pauseOnFocusLoss
-                                        draggable
-                                        pauseOnHover
-                                        />
-                                        </div>
-                                    ) : (
-                                        <div style={{ display: 'flex', justifyContent: 'flex-start' }}>
-                                        <Button onClick={handleAddAnother} style={{ backgroundColor:"#1eaeff", color: "#ffffff", borderRadius:"30px", textTransform: "none",  width:"130px", height:"50px", fontWeight:"bold"}} >
-                                            Agregar otro
-                                        </Button>
-                                        <Button onClick={handleSubmitPublication} style={{ backgroundColor:"#1eaeff", color: "#ffffff", borderRadius:"30px", textTransform: "none",  width:"130px", height:"50px", fontWeight:"bold"}} >
-                                            Completado
-                                        </Button>
-                                        </div>
-                                    )}
-                                </CardActions>
-                                    <CardContent style={{backgroundColor:"#002E5D"}}></CardContent>
-                            </Card> 
+                                                        </Grid>
+                                                    </div>
+                                                </>
+                                            )}            
+                                        </CardContent>
+                                    </CardActionArea>
+                                    <CardActions style={{ justifyContent: 'space-between', marginRight:"50%", marginLeft:"60%" }}>
+                                        {step > 1 && (
+                                            <div style={{justifyContent: "flex-end"}}>
+                                            <Button onClick={handlePrevious} style={{ backgroundColor:"#1eaeff", color: "#ffffff", borderRadius:"30px", textTransform: "none", marginRight:"30px", width:"130px", height:"50px", fontWeight:"bold"}} >
+                                                Anterior
+                                            </Button>
+                                            </div>
+                                        )}
+                                        {step === 1 ? (
+                                            <div style={{justifyContent: "flex-start"}}>
+                                            <Button onClick={handleNext} style={{ backgroundColor:"#1eaeff", color: "#ffffff", borderRadius:"30px", textTransform: "none", marginRight:"30px", width:"130px", height:"50px", fontWeight:"bold"}} >
+                                                Siguiente
+                                            </Button>
+                                            </div>
+                                        ) : step === 2 ? (
+                                            <div style={{justifyContent: "flex-start"}}>
+                                            <Button onClick={handleSubmitBook}  style={{ backgroundColor:"#1eaeff", color: "#ffffff", borderRadius:"30px", textTransform: "none", marginRight:"30px", width:"130px", height:"50px", fontWeight:"bold"}} >
+                                                Siguiente
+                                            </Button>
+                                            <ToastContainer 
+                                            position="top-right"
+                                            autoClose={5000}
+                                            hideProgressBar={false}
+                                            newestOnTop={false}
+                                            closeOnClick
+                                            rtl={false}
+                                            pauseOnFocusLoss
+                                            draggable
+                                            pauseOnHover
+                                            />
+                                            </div>
+                                        ) : (
+                                            <div style={{ display: 'flex', justifyContent: 'flex-start' }}>
+                                            <Button onClick={handleAddAnother} style={{ backgroundColor:"#1eaeff", color: "#ffffff", borderRadius:"30px", textTransform: "none",  width:"130px", height:"50px", fontWeight:"bold"}} >
+                                                Agregar otro
+                                            </Button>
+                                            <Button onClick={handleSubmitPublication} style={{ backgroundColor:"#1eaeff", color: "#ffffff", borderRadius:"30px", textTransform: "none",  width:"130px", height:"50px", fontWeight:"bold"}} >
+                                                Completado
+                                            </Button>
+                                            </div>
+                                        )}
+                                    </CardActions>
+                                        <CardContent style={{backgroundColor:"#002E5D"}}></CardContent>
+                            </Card>
                         </Box>
                     </div>
                 </ThemeProvider>

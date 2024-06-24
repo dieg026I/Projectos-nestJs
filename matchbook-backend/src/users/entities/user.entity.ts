@@ -1,6 +1,9 @@
 import { Entity, Column, ManyToOne, JoinColumn, PrimaryColumn, OneToMany } from 'typeorm';
 import { Cities } from 'src/commune/entities/cities.entity';
 import { Publication } from 'src/publication/entities/publication.entity';
+import { ShoppingCart } from 'src/shopping_cart/entities/shopping_cart.entity';
+import { Address } from 'src/address/entities/address.entity';
+import { BankAccount } from 'src/bank-account/entities/bank-account.entity';
 
 
 @Entity('users')
@@ -29,13 +32,27 @@ export class Users {
   @Column()
   photo_user: string;
 
+  @Column()
+  username: string;
+
   @ManyToOne(() => Cities, (city) => city.users)
   @JoinColumn({ name: 'city_id' })
-  city_id: number;
+  cities: Cities;
 
-  @OneToMany(() => Publication, publication => publication.user_rut_user)
-  publications: Publication[];
+  @Column()
+  city_id: string;
 
+  @OneToMany(() => Publication, publication => publication.users)
+  publication: Publication[];
+
+  @OneToMany(() => ShoppingCart, shoppingCart => shoppingCart.users)
+  shopping_carts: ShoppingCart[];
+
+  @OneToMany(() => Address, address => address.user)
+  addresses: Address[];
+
+  @OneToMany(() => BankAccount, BankAccount => BankAccount.user)
+  bank_accounts: BankAccount[]
 
 }
 

@@ -33,8 +33,48 @@ import  Logo from "../../../assents/img/logoMatch.png";
 import { deepOrange } from '@mui/material/colors';
 import axios from 'axios';
 
+
+interface Users {
+    name_user: string,
+    lastname_user: string,
+    rut_user: number,
+    dv_user: string,
+    phone_user: number,
+    email_user: string,
+    password_users: string,
+    username: string
+}
+
+
 export const NavBarLogin: React.FC<{}> = () => {
     const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = useState<null | HTMLElement>(null);
+
+    {/* Nombre de usuario y correo */}
+    const [users, setUsers] = React.useState<Users>();
+
+    const [term, setTerm] = React.useState('');
+
+    useEffect(() => {
+        const fetchPublications = async () => {
+        
+        const userString = localStorage.getItem("user");
+        if (userString !== null){
+        const users : Users = JSON.parse(userString);
+        try {
+            const responseUser= await axios.get(`http://localhost:3001/users/rut/${users.rut_user}`);
+            const userResponse = responseUser.data;
+            setUsers(userResponse);
+            console.log(JSON.stringify(responseUser.data, null, 2))
+        } catch (error) {
+        console.error('Error fetching publications:', error);
+        }
+        }   
+        
+    };
+
+    fetchPublications();
+    }, []);
+
 
     {/* Resposivo */}
     const isMobile = useMediaQuery('(max-width:1080px)') ;
@@ -54,10 +94,7 @@ export const NavBarLogin: React.FC<{}> = () => {
         setOpen(false);
     };
 
-    {/* Nombre de usuario */}
-    const [email_user, setEmail_user] = useState('');
-    const username = localStorage.getItem('username');
-
+ 
     {/* Colores Boton Perfil */}
     const [bgColorProfile, setBgColorProfile] = useState('transparent');
     const [textColorProfile, setTextColorProfile] = useState('#f05d16');
@@ -119,15 +156,22 @@ export const NavBarLogin: React.FC<{}> = () => {
     const navigate = useNavigate();
 
     const logout = () => {
-        // Elimina el token del almacenamiento local
         localStorage.removeItem('access_token');
-
-        // Redirige al usuario a la página de inicio de sesión
         navigate('/login');
     };
 
-
+    const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setTerm(event.target.value);
+    };
     
+    const handleSearch = async () => {
+        try {
+            const response = await axios.get(`http://localhost:3001/publications/search/${term}`);
+            navigate('/marketplaceSearch', { state: { searchResults: response.data } });
+        } catch (error) {
+            console.error('Error fetching publications:', error);
+        }
+    };
 
     return (
         <div className="navbar">
@@ -137,8 +181,8 @@ export const NavBarLogin: React.FC<{}> = () => {
                         <Grid
                             direction="row"
                             alignItems="center"
-                            container  // Aumenta este valor para más espacio entre los elementos
-                            justifyContent="space-between" // Distribuye el espacio de manera uniforme entre los elementos
+                            container
+                            justifyContent="space-between"
                         >
                             <Grid item xs={2} sm={2} md={2} lg={2}>
                                 {isMobile ? (
@@ -166,9 +210,7 @@ export const NavBarLogin: React.FC<{}> = () => {
                                         edge="start"
                                         color="inherit"
                                         aria-label="open drawer"
-                                        
                                         onClick={handleMobileMenuOpen}
-                                        
                                     >
                                         <LuMenu style={{ width: "30px", height:"30px"}}  />
                                     </IconButton>
@@ -189,8 +231,8 @@ export const NavBarLogin: React.FC<{}> = () => {
                                     </IconButton>
                                 ) : (
                                     <div className="searchHome" >
-                                        <input className="search" placeholder="Buscar" />
-                                        <LuSearch id="search-icon" />
+                                        <input className="search" placeholder="Buscar" value={term} onChange={handleInputChange} />
+                                        <LuSearch id="search-icon" onClick={handleSearch} />
                                     </div>
                                 )}
                             </Grid>
@@ -199,29 +241,27 @@ export const NavBarLogin: React.FC<{}> = () => {
                                     {isMobile ? (
                                         <>
                                             <Badge badgeContent={1} color="primary">  
-                                                <LuShoppingCart style={{width: "30px", height:"30px"}} href="/cart" color="inherit" />
+                                                <LuShoppingCart style={{width: "30px", height:"30px", cursor: 'pointer'}} href="/cart" color="inherit" />
                                             </Badge>
                                             <IconButton href="/sales" color="inherit"  >
-                                                <LuDollarSign style={{ width: "35px", height:"35px"}} />
+                                                <LuDollarSign style={{ width: "35px", height:"35px", cursor: 'pointer'}} />
                                             </IconButton>
-                                            <div onClick={handleOpen}>
-                                                <Avatar style={{backgroundColor: "#f05d16"}} src="/broken-image.jpg"  />
-                                                <div>{username}</div> 
+                                            <div onClick={handleOpen} style={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }}>
+                                                <Avatar style={{ backgroundColor: "#f05d16" }} src="/broken-image.jpg" />
+                                                <div style={{ marginLeft: '10px' }}>{users?.username}</div>
                                             </div>
-
                                         </>
                                     ) : (
                                         <>
-
                                             <Badge badgeContent={1} color="primary">
-                                                <LuShoppingCart style={{width: "30px", height:"30px", marginLeft:"40px"}} href="/cart" color="inherit" />
+                                                <LuShoppingCart style={{width: "30px", height:"30px", marginLeft:"40px", cursor: 'pointer'}} href="/cart" color="inherit" />
                                             </Badge>
 
                                             <Button style={{ backgroundColor: '#f05d16' , textTransform: "none", color: "#ffff", fontSize: "16px", marginLeft: "10px", borderRadius:"20px", width:"90px", padding:"6px" }} href="/sales">Vender</Button>
 
-                                            <div onClick={handleOpen}>
-                                                <Avatar style={{backgroundColor: "#f05d16"}} src="/broken-image.jpg"  />
-                                                <div>{username}</div> 
+                                            <div onClick={handleOpen} style={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }}>
+                                                <Avatar style={{ backgroundColor: "#f05d16" }} src="/broken-image.jpg" />
+                                                <div style={{ marginLeft: '10px' }}>{users?.username}</div>
                                             </div>
                                         </>
                                     )}
@@ -233,7 +273,7 @@ export const NavBarLogin: React.FC<{}> = () => {
             </AppBar>
 
             <div>
-                <Dialog open={open} onClose={handleClose} PaperProps={{ style: { width: '300px', maxHeight: '80vh', margin: 'auto', borderRadius:"20px"}, }}  >
+                <Dialog open={open} onClose={handleClose} PaperProps={{ style: { width: '360px', maxHeight: '90vh' ,margin: 'auto', borderRadius:"20px"}, }}  >
                     <div style={{justifyContent:"center", textAlign: "center", position: 'relative',  }}>
                         <DialogTitle>
                             <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
@@ -247,8 +287,8 @@ export const NavBarLogin: React.FC<{}> = () => {
                                     justifyContent: 'center', 
                                     alignItems: 'center',
                                     position: 'absolute', 
-                                    top: '27%', 
-                                    left: '160px', 
+                                    top: '14%', 
+                                    left: '190px', 
                                     transform: 'translateY(-50%)',
                                     boxShadow: '0px 3px 6px rgba(0, 0, 0, 0.36)'
                                 }}>
@@ -257,8 +297,8 @@ export const NavBarLogin: React.FC<{}> = () => {
                             </div>
                         </DialogTitle>
                         <DialogContent style={{justifyContent:"center", textAlign: "center", paddingBottom: "0px", marginBottom:"0px"}}>
-                            <h2 style={{ fontSize: "18px", fontFamily: "SF Pro Display Bold"}}>Na.rubilark</h2> {/*{username} */}
-                            <p style={{ fontSize: "15px", fontFamily: "SF Pro Display Regular"}}>na.rubilar@duocuc.cl</p> {/*{email_user} */}
+                            <h2 style={{ fontSize: "18px", fontFamily: "SF Pro Display Bold"}}>{users?.username}</h2> 
+                            <p style={{ fontSize: "15px", fontFamily: "SF Pro Display Regular"}}>{users?.email_user}</p> 
                             <Button fullWidth
                                 href="/profile" 
                                 variant="contained"  
@@ -292,7 +332,7 @@ export const NavBarLogin: React.FC<{}> = () => {
                                 border: '2px solid borderColor',
                                 boxShadow: '0px 3px 6px rgba(0, 0, 0, 0.36)',
                                 fontSize:"15px", 
-                                marginBottom: "20px" ,
+                                marginBottom: "15px" ,
                                 fontFamily: "SF Pro Display Bold",
                                 }}
                                 
@@ -316,7 +356,7 @@ export const NavBarLogin: React.FC<{}> = () => {
                                 boxShadow: '0px 3px 6px rgba(0, 0, 0, 0.36)',
                                 fontSize:"15px", 
                                 marginBottom: "20px" ,
-                                marginTop: "20px" ,
+                                marginTop: "15px" ,
                                 fontFamily: "SF Pro Display Bold",
                                 }}
                                 

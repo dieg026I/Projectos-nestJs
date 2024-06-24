@@ -2,7 +2,7 @@ import { Card, Grid } from "@mui/material";
 import React from "react";
 
 import libro from "../../assents/img/libro.png";
-import Chile from "../../assents/img/chile.png";
+import ClubLectura from "../../assents/img/clubLectura.png";
 import { MdKeyboardArrowDown } from "react-icons/md";
 import NavBarLogin from "../../components/common/NavBarLogin/navBarLogin";
 import Footer from "../../components/common/Footer/footer";
@@ -11,7 +11,7 @@ export default function ReadingClub() {
     return (
         <>
             <NavBarLogin />
-            <div>
+            <div >
                 <div style={{textAlign:"center", paddingTop:"80px"}}>
                     <h1 style={{fontFamily:"SF Pro Display Bold", fontSize:"44px", color:"#00A9E0", paddingBottom:"10px"}}>¿Cómo funciona nuestro club de lectura?</h1>
                     <p style={{fontFamily:"SF Pro Display Regular", fontSize:"18px", textAlign:"center", marginLeft:"220px", marginRight:"220px"}} >Compréndete a tí mismo y el fascinante mundo de la mente humana 
@@ -75,19 +75,19 @@ export default function ReadingClub() {
                 <br />
 
 
-                <div>
+                <div >
                     <div style={{ textAlign: 'center' }}>
                         <MdKeyboardArrowDown style={{ width:"100px", height:"100px"}} />
                         <h2>Ingresar al Club</h2>
                     </div>
                     
-                    <Card style={{ boxShadow: '0px 3px 6px rgba(0, 0, 0, 0.36)', marginTop:"60px" }}>
+                    <Card style={{ boxShadow: '0px 3px 6px rgba(0, 0, 0, 0.36)', marginTop:"60px", paddingBottom:"38px", display:"flex", alignItems:"center" }}>
                         <Grid container spacing={2} columnSpacing={{ xs: 1, sm: 2, md: 3 }} alignItems="center" justifyContent="center">
                         <Grid className="text-center" item xs={12} sm={6} md={6} lg={6}>
                             <button style={{borderRadius:"20px", backgroundColor:"#ff7f41", width: "90%", color:"#ffffff", height:"50px", border: "none", fontFamily:"Roboto Bold" }}>Whatsapp Club de Lectura</button>
                         </Grid>
                             <Grid className="text-center" item xs={12} sm={6} md={6} lg={6}>
-                                <img src={Chile} style={{ width: "240px", alignContent:"center" }} alt="chile" />
+                                <img src={ClubLectura} style={{ width: "240px", alignContent:"center" }} alt="chile" />
                             </Grid>
                         </Grid>
                     </Card>

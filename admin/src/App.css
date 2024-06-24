@@ -63,6 +63,19 @@
   z-index: 1;
 }
 
+.myCard {
+  width: 350px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  justify-items: center;
+  align-content: center;
+}
+
+
+
+
 /* Font*/
 
 @font-face {
@@ -90,7 +103,6 @@
   font-family: 'Roboto Bold';
   src: url('../../admin/src/assents/font/Roboto/Roboto-Bold.ttf') format('opentype');
 }
-
 
 /* SF Pro Text*/
 @font-face {
