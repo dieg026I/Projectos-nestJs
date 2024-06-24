@@ -7,6 +7,7 @@ import React from "react";
 import '../../App.css';
 import axios from "axios";
 import { v4 as uuidv4 } from 'uuid';
+import { FaRegTrashCan } from "react-icons/fa6";
 
 interface Category {
     id_category: string;
@@ -53,148 +54,154 @@ interface Book {
 const ReadingClubAdmin: React.FC = () => {
 
     const [activeTab, setActiveTab] = useState('Agregar');
-    const [selectedMeetingImage, setSelectedMeetingImage] = useState<File | null>(null);
-    const [name_book, setNameBook] = React.useState('');
+
+
+
+    {/* Publicar libro Club */}
     const [image, setImage] = useState<File | null>(null);
     const [description, setDescription] = useState('');
     const [title, setTitle] = useState('');
+    const [date, setDate] = useState('');
+    const [time, setTime] = useState('');
+    const [place, setPlace] = useState('');
+    const [readingClub, setReadingClub] = React.useState<ReadingClub[]>([]);
 
+    const [selectedClub, setSelectedClub] = useState<string[]>([]);
+    const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null);
+
+    {/* almacenar libro */}
     const [books, setBooks] = React.useState<Book[]>([]);
-
     const [selectedBook, setSelectedBook] = useState<Book | null>(null);
+
     const [open, setOpen] = useState(false);
     const [options, setOptions] = useState<Book[]>([]);
 
-    const [fecha, setFecha] = useState('');
+    {/*-----------------------------------------------------------------------------*/}
 
-    const [hora, setHora] = useState('');
-    const [lugar, setLugar] = useState('');
+    {/* Mostrar Libros*/}
+    useEffect(() => {
+        const fetchBooks = async () => {
+        try {
+            const response = await axios.get('http://localhost:3001/book');
+            setBooks(response.data);
+        } catch (error) {
+        console.error('Error fetching publications:', error);
+        }
+    };
+    fetchBooks();
+    }, []);
+    {/*-----------------------------------------------------------------------------*/} 
 
-        {/* Mostrar Libros*/}
-        useEffect(() => {
-            const fetchBooks = async () => {
-            try {
-                const response = await axios.get('http://localhost:3001/book');
-                setBooks(response.data);
-            } catch (error) {
-            console.error('Error fetching publications:', error);
+    {/* Mostrar Publicaciones del Club de lectura*/}
+    useEffect(() => {
+        const fetchReadingClub = async () => {
+        try {
+            const response = await axios.get('http://localhost:3001/reading-club');
+            setReadingClub(response.data);
+        } catch (error) {
+        console.error('Error fetching publications:', error);
+        }
+    };
+
+    fetchReadingClub();
+    }, []);
+    {/*-----------------------------------------------------------------------------*/} 
+
+    {/* Mostrar libros publicados*/}
+    const handleInputChange = (
+        event: React.SyntheticEvent<Element, Event>,
+        value: string,
+        reason: AutocompleteInputChangeReason
+    ) => {
+        if (reason === 'input') {
+            if (value.length > 2) {
+                const filteredBooks = books.filter((book) => book.title && book.title.toLowerCase().includes(value.toLowerCase()));
+                setOptions(filteredBooks);
             }
-        };
-        fetchBooks();
-        }, []);
+        }
+    };
+    {/*-----------------------------------------------------------------------------*/} 
 
-        const [readingClub, setReadingClub] = React.useState<ReadingClub[]>([]);
+    {/* Datos de readiadingClub*/}   
 
-        useEffect(() => {
-            const fetchReadingClub = async () => {
-            try {
-                const response = await axios.get('http://localhost:3001/reading-club');
-                setReadingClub(response.data);
-            } catch (error) {
-            console.error('Error fetching publications:', error);
-            }
-        };
+    //Descripcion
+    const handleDescriptionChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
+        setDescription(event.target.value);
+    };
 
-        fetchReadingClub();
-        }, []);
+    //Imagen
+    const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        if (event.target.files) {
+            setImage(event.target.files[0]);
+        }
+    };
 
+    //Eliminar Imagen
+    const handleDeleteImage = () => {
+        setImage(null);
+    };
 
+    //Fecha
+    const handleDateChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setDate(event.target.value);
+    };
+    
+    //Tiempo
+    const handleTimeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setTime(event.target.value);
+    };
+    
+    //Lugar
+    const handlePlaceChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setPlace(event.target.value);
+    };
+    {/*-----------------------------------------------------------------------------*/} 
 
+    {/* Subir Publicacion al Club de lectura*/} 
+    const handleSubmitClub = async () => {
 
-        const handleInputChange = (
-            event: React.SyntheticEvent<Element, Event>,
-            value: string,
-            reason: AutocompleteInputChangeReason
-        ) => {
-            if (reason === 'input') {
-                if (value.length > 2) {
-                    const filteredBooks = books.filter((book) => book.title && book.title.toLowerCase().includes(value.toLowerCase()));
-                    setOptions(filteredBooks);
-                }
-            }
-        };
+        const formData = new FormData();
+        let id_club = uuidv4();
+
+        formData.append('id_club', id_club);
+        if (image) {
+            formData.append('image', image);
+        }else{
+            console.log("no se encuentran valores en image")
+        }
+
+        formData.append('description_club', description);
+
+        formData.append('title_club',  title );
+        if (selectedBook) {
+            formData.append('id_book_club', selectedBook.id_book );
+        }else{
+            console.log("no se encuentran valores en selectedBook")
+        }
         
+        formData.append('date_club', date);
+        formData.append('time_club', time);
+        formData.append('place_club', place);
 
-        const handleSelectChange = (event: React.ChangeEvent<{}>, value: Book | null) => {
-            if (value) {
-                setNameBook(value.title);
+        try {
+            const response = await axios.post('http://localhost:3001/reading-club', formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                }
+            });
+    
+            if (response.status === 201) {
+                alert('Datos guardados exitosamente');
             } else {
-                setNameBook('');
+                alert('Hubo un error al guardar los datos');
             }
-        };
+        } catch (error) {
+            console.error('Error al guardar los datos:', error);
+        }
+    };   
+    {/*-----------------------------------------------------------------------------*/} 
 
-
-        const handleDescriptionChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
-            setDescription(event.target.value);
-        };
-
-        const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-            if (event.target.files) {
-                setImage(event.target.files[0]);
-            }
-        };
-
-        const handleFechaChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-            setFecha(event.target.value);
-        };
-        
-        const handleHoraChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-            setHora(event.target.value);
-        };
-        
-        const handleLugarChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-            setLugar(event.target.value);
-        };
-
-
-        const handleSubmitClub = async () => {
-            // Crea un objeto FormData para enviar la imagen
-            const formData = new FormData();
-            let id_club = uuidv4();
-
-            formData.append('id_club', id_club);
-            if (image) {
-                formData.append('image', image);
-            }else{
-                console.log("no se encuentran valores en image")
-            }
-
-
-            formData.append('description_club', description);
-
-            formData.append('title_club',  title );
-            if (selectedBook) {
-                formData.append('id_book_club', selectedBook.id_book );
-            }else{
-                console.log("no se encuentran valores en selectedBook")
-            }
-            
-            formData.append('date_club', fecha);
-            formData.append('time_club', hora);
-            formData.append('place_club', lugar);
-
-            try {
-                // Haz una solicitud POST a tu servidor
-                const response = await axios.post('http://localhost:3001/reading-club', formData, {
-                    headers: {
-                        'Content-Type': 'multipart/form-data'
-                    }
-                });
-        
-                // Maneja la respuesta del servidor
-                if (response.status === 201) {
-                    alert('Datos guardados exitosamente');
-                } else {
-                    alert('Hubo un error al guardar los datos');
-                }
-            } catch (error) {
-                console.error('Error al guardar los datos:', error);
-            }
-        };
-
-        const [selectedClub, setSelectedClub] = useState<string[]>([]);
-
-        // Función para manejar la selección de usuarios
+    {/* Seleccionar una publicación del club*/} 
         const handleSelectClub = (id: string) => {
     
             const selectedIndex = selectedClub.indexOf(id);
@@ -204,38 +211,37 @@ const ReadingClubAdmin: React.FC = () => {
                 newSelectedClub = [...selectedClub, id];
             } else {
                 newSelectedClub = selectedClub.filter(selectedId => selectedId !== id);
-                
-
             }
             setSelectedClub(newSelectedClub);
-            };
+        };
+    {/*-----------------------------------------------------------------------------*/} 
 
-                {/* Eliminar publicaciones seleccionadas*/}
-            const deleteSelectedClub = () => {
-                if (window.confirm('¿Realmente quieres eliminar la(s) publicación(es)?')) {
-                    const deleteRequests = selectedClub.map(id => axios.delete(`http://localhost:3001/reading-club/${id}`));
-                    Promise.all(deleteRequests)
-                        .then(() => {
-                            setReadingClub(readingClub.filter(readingClubs => !selectedClub.includes(readingClubs.id_club)));
-                            setSelectedClub([]);
-                            alert('Publicación(es) Eliminada(s)');
-                            window.location.reload();
-                        })
-                        .catch(error => console.error('Hubo un error al eliminar la(s) publicación(es)', error));
-                }
-            };
+    {/* Eliminar publicaciones seleccionadas*/} 
+        const deleteSelectedClub = () => {
+            if (window.confirm('¿Realmente quieres eliminar la(s) publicación(es)?')) {
+                const deleteRequests = selectedClub.map(id => axios.delete(`http://localhost:3001/reading-club/${id}`));
+                Promise.all(deleteRequests)
+                    .then(() => {
+                        setReadingClub(readingClub.filter(readingClubs => !selectedClub.includes(readingClubs.id_club)));
+                        setSelectedClub([]);
+                        alert('Publicación(es) Eliminada(s)');
+                        window.location.reload();
+                    })
+                    .catch(error => console.error('Hubo un error al eliminar la(s) publicación(es)', error));
+            }
+        };
+    {/*-----------------------------------------------------------------------------*/} 
 
-            const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null);
+    {/* Ver mas en descripcion*/} 
+        const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+            event.preventDefault();
+            setAnchorEl(event.currentTarget);
+        };
 
-            const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-                event.preventDefault();
-                setAnchorEl(event.currentTarget);
-            };
-
-            const handleClose = (event: React.MouseEvent<HTMLButtonElement>) => {
-                event.preventDefault();
-            setAnchorEl(null);
-            };
+        const handleClose = (event: React.MouseEvent<HTMLButtonElement>) => {
+            event.preventDefault();
+        setAnchorEl(null);
+        };
     
     return (
         <form >
@@ -284,62 +290,73 @@ const ReadingClubAdmin: React.FC = () => {
                                 {/* Línea horizontal */}
                                 <hr style={{ margin: "10px 0", opacity: 0.1 }} />
 
-                                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginTop:"26px", marginBottom:"26px"  }}>
-                                    
-                                    <label htmlFor="imagen-input" style={{ marginTop: '20px' }}>Titulo:</label>
-
-                                    <TextField fullWidth 
-                                        id="title"
-                                        value={title}
-                                        onChange={e => setTitle(e.target.value)}                      
-                                    />
-
-                                    <label htmlFor="imagen-input" style={{ marginTop: '20px' }}>Imagen:</label>
-                                    <input
-                                        type="file"
-                                        id="image"
-                                        onChange={handleImageChange}
-                                        style={{ width: '100%', marginTop: '10px', marginBottom:"10px" }}
-                                    />
-                                    {image && (
-                                        <div style={{ marginTop: '20px' }}>
-                                            <img src={URL.createObjectURL(image)} alt="Imagen seleccionada" style={{ width: "80px", height:"auto" }} />
-                                        </div>
-                                    )}
-                                    
-                                    <label htmlFor="nombre-input" style={{ marginRight: '35px' }}>Titulo:</label>
-                                    <FormControl fullWidth>
-                                        <InputLabel id="book-select-label"></InputLabel>
-                                        <Autocomplete
-                                            id="book-search-autocomplete"
-                                            open={open}
-                                            onOpen={() => setOpen(true)}
-                                            onClose={() => setOpen(false)}
-                                            getOptionLabel={(option) => option ? option.name_book : ""}
-                                            options={books}
-                                            loading={open && books.length === 0}
-                                            value={selectedBook}
-                                            onChange={(event, newValue) => setSelectedBook(newValue)}
-                                            onInputChange={handleInputChange}
-                                            renderInput={(params) => (
-                                                <TextField
-                                                    {...params}
-                                                    label="Buscar libro"
-                                                    variant="outlined"
-                                                    fullWidth
-                                                />
-                                            )}
+                                <div style={{ marginTop: "26px", marginBottom: "26px" }}>
+                                    <div style={{ display: 'flex', alignItems: 'center', marginBottom: '20px' }}>
+                                        <label htmlFor="title" style={{ marginRight: '54px' }}>Titulo:</label>
+                                        <TextField 
+                                            id="title"
+                                            value={title}
+                                            placeholder="Ingresar titulo"
+                                            onChange={e => setTitle(e.target.value)}                      
                                         />
-                                    </FormControl>
-
-                                    <label htmlFor="descripcion-input" style={{ marginTop: '20px' }}>Descripción:</label>
-                                    <textarea
-                                        id="description"
-                                        value={description}
-                                        onChange={handleDescriptionChange}
-                                        style={{ width: '100%', height: '100px', marginTop: '10px' }}
-                                    />
+                                    </div>
                                     
+                                    <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', position: 'relative', marginBottom:"20px" }}>
+                                    <label htmlFor="imagen-input" style={{ marginRight: '40px' }}>Imagen:</label>
+                                    <input
+                                            type="file"
+                                            id="image"
+                                            onChange={handleImageChange}
+                                            style={{ marginRight: '10px' }}
+                                        />
+                                        {image && (
+                                            <>
+                                                <img src={URL.createObjectURL(image)} alt="Imagen seleccionada" style={{ width: "90px", height:"auto" }} />
+                                                <FaRegTrashCan style={{ position: 'absolute', top: 0, right: 626, cursor: 'pointer', color:"#dc001a" }} onClick={handleDeleteImage} />
+                                            </>
+                                        )}
+                                    </div>
+
+                                    <div style={{ display: 'flex', alignItems: 'center', marginBottom: '20px' }}>
+                                        
+                                        <label htmlFor="nombre-input" style={{ marginRight: '56px' }}>Libro:</label>
+                                        <FormControl>
+                                            <InputLabel id="book-select-label"></InputLabel>
+                                            <Autocomplete
+                                            style={{width:"400px"}}
+                                                id="book-search-autocomplete"
+                                                open={open}
+                                                onOpen={() => setOpen(true)}
+                                                onClose={() => setOpen(false)}
+                                                getOptionLabel={(option) => option ? option.name_book : ""}
+                                                options={books}
+                                                loading={open && books.length === 0}
+                                                value={selectedBook}
+                                                onChange={(event, newValue) => setSelectedBook(newValue)}
+                                                onInputChange={handleInputChange}
+                                                renderInput={(params) => (
+                                                    <TextField
+                                                        {...params}
+                                                        label="Buscar libro"
+                                                        variant="outlined"
+                                                        fullWidth
+                                                    />
+                                                )}
+                                            />
+                                        </FormControl>
+                                    </div>
+                                    <div style={{ display: 'flex', alignItems: 'flex-start', marginBottom: '20px' }}>
+
+                                        <label htmlFor="descripcion-input" style={{  marginRight:"10px" }}>Descripción:</label>
+                                        <textarea
+                                            id="description"
+                                            value={description}
+                                            onChange={handleDescriptionChange}
+                                            placeholder="Ej: El libro relata las aventuras y desventuras de un hidalgo de 50 años llamado Alonso Quijano..."
+                                            style={{ width: '100%', height: '100px', marginTop: '10px' }}
+                                        />
+                                        
+                                    </div>
                                 </div>
 
                                 {/* Línea horizontal */}
@@ -355,17 +372,17 @@ const ReadingClubAdmin: React.FC = () => {
                                 <div style={{ marginTop:"26px", marginBottom:"26px"}}>
                                     <div style={{ display: 'flex', alignItems: 'center' }}>
                                         <label htmlFor="nombre-input" style={{ marginRight: '35px' }}>Fecha:</label>
-                                        <input type="date" id="fecha-input" name="meeting_Date" onChange={handleFechaChange} />
+                                        <input style={{width:"auto", height:"40px"}} type="date" id="fecha-input" name="meeting_Date" onChange={handleDateChange} />
                                     </div>
                                     <br />
                                     <div style={{ display: 'flex', alignItems: 'center' }}>
                                         <label htmlFor="nombre-input" style={{ marginRight: '43px' }}>Hora:</label>
-                                        <input type="time" id="hora-input" name="meeting_Time" onChange={handleHoraChange} />
+                                        <input style={{width:"auto", height:"40px"}} type="time" id="hora-input" name="meeting_Time" onChange={handleTimeChange} />
                                     </div>
                                     <br />
                                     <div style={{ display: 'flex', alignItems: 'center' }}>
                                         <label htmlFor="nombre-input" style={{ marginRight: '38px' }}>Lugar:</label>
-                                        <input type="text" id="lugar-input" name="meeting_Place" onChange={handleLugarChange} />
+                                        <input style={{width:"400px", height:"40px"}} placeholder="Ej: Café Magia y Letras - 1 Nte. 461, Viña del Mar, Valparaíso" type="text" id="lugar-input" name="meeting_Place" onChange={handlePlaceChange} />
                                     </div>
                                     <br />
                                     
