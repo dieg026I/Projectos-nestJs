@@ -50,7 +50,7 @@ interface Publication {
     photo_cover: string;
     photo_first_page: string;
     photo_back_cover: string;
-    cost_book: number;
+    
 }
 interface Author {
     id_author: string;
