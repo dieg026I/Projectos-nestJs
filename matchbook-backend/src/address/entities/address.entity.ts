@@ -1,8 +1,9 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn, OneToMany } from 'typeorm';
 import { Country } from '../../country/entities/country.entity';
 import { Cities } from '../../commune/entities/cities.entity';
 import { Users } from '../../users/entities/user.entity';
 import { Region } from '../../region/entities/region.entity';
+import { ShippingDetail } from 'src/shipping_detail/entities/shipping_detail.entity';
 
 @Entity('address')
 export class Address {
@@ -51,6 +52,12 @@ export class Address {
     @ManyToOne(() => Users, (user) => user.addresses)
     @JoinColumn({ name: 'user_id' })
     user: Users;
+
+    @OneToMany(() => ShippingDetail, (shippingDetail) => shippingDetail.buyer_address)
+    shipping_details_buyer : Address[];
+
+    @OneToMany(() => ShippingDetail, (shippingDetail) => shippingDetail.seller_address)
+    shipping_details_seller : Address[];
 
     user_id : number;
 

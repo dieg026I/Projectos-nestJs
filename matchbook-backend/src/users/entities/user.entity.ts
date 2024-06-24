@@ -3,6 +3,7 @@ import { Cities } from 'src/commune/entities/cities.entity';
 import { Publication } from 'src/publication/entities/publication.entity';
 import { ShoppingCart } from 'src/shopping_cart/entities/shopping_cart.entity';
 import { Address } from 'src/address/entities/address.entity';
+import { BankAccount } from 'src/bank-account/entities/bank-account.entity';
 
 
 @Entity('users')
@@ -49,6 +50,9 @@ export class Users {
 
   @OneToMany(() => Address, address => address.user)
   addresses: Address[];
+
+  @OneToMany(() => BankAccount, BankAccount => BankAccount.user)
+  bank_accounts: BankAccount[]
 
 }
 

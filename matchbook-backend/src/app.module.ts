@@ -35,6 +35,12 @@ import { AddressModule } from './address/address.module';
 import { CountryModule } from './country/country.module';
 import { Country } from './country/entities/country.entity';
 import { Address } from './address/entities/address.entity';
+import { TransactionStatusModule } from './transaction_status/transaction_status.module';
+import { TransactionStatus } from './transaction_status/entities/transaction_status.entity';
+import { BankAccountModule } from './bank-account/bank-account.module';
+import { ShippingDetailModule } from './shipping_detail/shipping_detail.module';
+import { BankModule } from './bank/bank.module';
+import { AccountTypeModule } from './account_type/account_type.module';
 
 @Module({
   imports: [
@@ -46,8 +52,8 @@ import { Address } from './address/entities/address.entity';
     password: '222648',
     database: 'Matchbook_DB',
     entities: [Users, Cities, Region, Book, Author, Publisher,
-    Publication, Category, Buy, ShipmentType, StatusSend, ReadingClub, ShoppingCart, Country, Address ],
-    synchronize: false, // Solo para entornos de desarrollo
+    Publication, Category, Buy, ShipmentType, StatusSend, ReadingClub, ShoppingCart, Country, Address, TransactionStatus ],
+    synchronize: false, // Solo para entornos de desarrollos
     autoLoadEntities: false,
     logging: true
   }),RegionModule,CommuneModule, UsersModule, AuthModule,
@@ -66,7 +72,12 @@ import { Address } from './address/entities/address.entity';
     ReadingClubModule,
     ShoppingCartModule,
     AddressModule,
-    CountryModule ],
+    CountryModule,
+    TransactionStatusModule,
+    BankAccountModule,
+    ShippingDetailModule,
+    BankModule,
+    AccountTypeModule ],
   controllers: [AppController],
   providers: [AppService],
 })
