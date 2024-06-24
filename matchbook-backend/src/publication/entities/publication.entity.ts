@@ -51,9 +51,4 @@ export class Publication {
   @Column()
   id_cart: number;
 
-
-  
-
-  @Column()
-  id_cart: number;
 }
