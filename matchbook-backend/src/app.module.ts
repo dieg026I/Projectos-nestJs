@@ -41,6 +41,10 @@ import { BankAccountModule } from './bank-account/bank-account.module';
 import { ShippingDetailModule } from './shipping_detail/shipping_detail.module';
 import { BankModule } from './bank/bank.module';
 import { AccountTypeModule } from './account_type/account_type.module';
+import { ShippingDetail } from './shipping_detail/entities/shipping_detail.entity';
+import { BankAccount } from './bank-account/entities/bank-account.entity';
+import { Bank } from './bank/entities/bank.entity';
+import { AccountType } from './account_type/entities/account_type.entity';
 
 @Module({
   imports: [
@@ -52,7 +56,9 @@ import { AccountTypeModule } from './account_type/account_type.module';
     password: '222648',
     database: 'Matchbook_DB',
     entities: [Users, Cities, Region, Book, Author, Publisher,
-    Publication, Category, Buy, ShipmentType, StatusSend, ReadingClub, ShoppingCart, Country, Address, TransactionStatus ],
+    Publication, Category, Buy, ShipmentType, StatusSend, ReadingClub,
+     ShoppingCart, Country, Address, TransactionStatus, ShippingDetail,
+    BankAccount, Bank, AccountType],
     synchronize: false, // Solo para entornos de desarrollos
     autoLoadEntities: false,
     logging: true

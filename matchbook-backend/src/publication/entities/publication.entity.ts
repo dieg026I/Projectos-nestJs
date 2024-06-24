@@ -21,6 +21,9 @@ export class Publication {
   
   @ManyToOne(() => Book, (book) => book.publication)
   @JoinColumn({ name: 'book_id_book' })
+  book: Book;
+
+  @Column()
   book_id_book: string;
 
   @Column()
@@ -41,7 +44,10 @@ export class Publication {
   @OneToMany(() => Buy, buy => buy.publication)
   buy: Buy[];
 
-  @OneToMany(() => ShoppingCart, shoppingCart => shoppingCart.publication)
-  shoppingCart: ShoppingCart[];
+  @ManyToOne(() => ShoppingCart, shoppingCart => shoppingCart.publication)
+  @JoinColumn({name:'id_cart'})
+  shoppingCart: ShoppingCart;
 
+  @Column()
+  id_cart: number;
 }

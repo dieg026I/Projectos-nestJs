@@ -28,9 +28,15 @@ export class ShippingDetail {
   @JoinColumn({ name: 'buyer_address_id' })
   buyer_address: Address;
 
+  @Column()
+  buyer_address_id: string;
+
   @ManyToOne(() => Address, address => address.shipping_details_seller)
   @JoinColumn({ name: 'seller_address_id' })
   seller_address: Address;
+
+  @Column()
+  seller_address_id: string;
 
   @Column({ type: 'json', nullable: true })
   branch_info: object;

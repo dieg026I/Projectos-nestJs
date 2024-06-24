@@ -52,14 +52,19 @@ export class Address {
     @ManyToOne(() => Users, (user) => user.addresses)
     @JoinColumn({ name: 'user_id' })
     user: Users;
+    
+    @Column()
+    user_id : number;
 
     @OneToMany(() => ShippingDetail, (shippingDetail) => shippingDetail.buyer_address)
     shipping_details_buyer : Address[];
 
+  
+
     @OneToMany(() => ShippingDetail, (shippingDetail) => shippingDetail.seller_address)
     shipping_details_seller : Address[];
 
-    user_id : number;
+   
 
     @Column({ type: 'boolean', nullable: true })
     is_dev: boolean;

@@ -1,4 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, OneToOne, JoinColumn, OneToMany } from 'typeorm';
 import { Users } from '../../users/entities/user.entity';
 import { Publication } from '../../publication/entities/publication.entity';
 
@@ -7,11 +7,13 @@ export class ShoppingCart {
     @PrimaryGeneratedColumn()
     id_shopping_cart: number;
 
-    @ManyToOne(() => Users, user => user.shopping_carts)
-    @Column({ name: 'user_id_user' })
+    @OneToOne(() => Users, user => user.shopping_carts)
+    @JoinColumn({ name: 'user_id_user' })
     users: Users;
 
-    @ManyToOne(() => Publication, publication => publication.shoppingCart)
-    @Column({ name: 'publication_id_publication' })
-    publication: Publication;
+    @Column()
+    user_id_user: number;
+
+    @OneToMany(() => Publication, publication => publication.shoppingCart)
+    publication: Publication[];
 }
