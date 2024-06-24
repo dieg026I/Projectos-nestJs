@@ -9,6 +9,8 @@ import { MdClose } from "react-icons/md";
 import React from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import NavBarLogin from "../../components/common/NavBarLogin/navBarLogin";
+import Footer from "../../components/common/Footer/footer";
 
 interface Region  {
     id_region: number;
@@ -160,9 +162,22 @@ const DeliveryMethods: React.FC = () => {
 
     return (
         <>
-            <div>
-                <p>botones</p>
-            </div>
+        <NavBarLogin />
+            <br />
+            <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', marginTop:"40px" }}>
+    <div style={{ display: 'flex', alignItems: 'center', width: '300px', justifyContent: 'space-between' }}>
+        <div style={{ textAlign: 'center' }}>
+            <div style={{ width: '40px', height: '40px', borderRadius: '50%', backgroundColor: '#F05D16', color: 'white', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>1</div>
+            <div style={{ marginTop: '10px' }}>Detalle de Entrega</div>
+        </div>
+        <div style={{ height: '2px', backgroundColor: 'grey', flex: '1', alignSelf: 'center' }}></div>
+        <div style={{ textAlign: 'center' }}>
+            <div style={{ width: '40px', height: '40px', borderRadius: '50%', backgroundColor: '#C04A12', color: 'white', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>2</div>
+            <div style={{ marginTop: '10px' }}>Pago</div>
+        </div>
+    </div>
+</div>
+
 
             <Grid  container spacing={2} columnSpacing={{ xs: 1, sm: 2, md: 3 }}  alignItems= "center " >
                 <Grid className="text-center" item xs={12} sm={12} md={12} lg={7} xl={7}>
@@ -403,12 +418,14 @@ const DeliveryMethods: React.FC = () => {
                                     <Typography style={{}}>Arnold Lobel</Typography>
                                 </div>  
                             </div>
-                            <Card style={{backgroundColor:"#00a9e0", marginTop:"10px"}}>
-                                <Button fullWidth href='/cart' style={{ textAlign:"center", color:"#ffffff" }}>Ir al Carro</Button>
+                            <Card style={{backgroundColor:"#00a9e0", marginTop:"10px", borderRadius:"30px", height:"40px", alignContent:"center"}}>
+                                <Button fullWidth href='/pay' style={{ textAlign:"center", color:"#ffffff", textTransform: "none", fontSize:"19px", alignContent:"center" }}>Continuar</Button>
                             </Card> 
                     </Card>
                 </Grid>
             </Grid>
+            <br />
+            <Footer/>
         </>
     );
 };

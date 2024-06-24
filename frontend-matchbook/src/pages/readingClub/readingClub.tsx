@@ -7,6 +7,7 @@ import { MdKeyboardArrowDown } from "react-icons/md";
 import NavBarLogin from "../../components/common/NavBarLogin/navBarLogin";
 import Footer from "../../components/common/Footer/footer";
 import axios from "axios";
+import { Typography } from "antd";
 
 interface Author {
     id_author: string;
@@ -75,19 +76,19 @@ export default function ReadingClub() {
                         <br />
                     {readingClub.reverse().map((readingClubs) => (
                     <>
-                        <div style={{textAlign:"center"}}>
-                            <h2 >{readingClubs.title_club} </h2>
+                        <div style={{textAlign:"left"}}>
+                            <h2 style={{marginBottom:"25px", fontFamily:"SF Pro Display Bold", fontSize:"30px", textAlign:"center"}} >{readingClubs.title_club} </h2>
                             <Grid container spacing={2} columnSpacing={{ xs: 1, sm: 2, md: 3 }} alignItems="center">
                             <Grid className="text-center" item xs={12} sm={6} md={6} lg={5}>
-                                    <img src={`http://localhost:3001/images/${readingClubs.image_club}`} style={{ width: "240px" }} alt="chile" />
+                                    <img src={`http://localhost:3001/images/${readingClubs.image_club}`} style={{ width: "240px", marginLeft:"280px" }} alt="chile" />
                                 </Grid>
                                 <Grid className="text-left" item xs={12} sm={6} md={6} lg={7}>
                                     <div>
-                                        <h3>{readingClubs.book.name_book}</h3>
-                                        <h4>{readingClubs.book.author_id_author.name_author}</h4>
-                                        <p>{readingClubs.description_club}</p>
+                                        <Typography style={{ fontFamily:"SF Pro Display Semibold", fontSize:"25px", marginBottom:"10px"}}>{readingClubs.book.name_book}</Typography>
+                                        <Typography style={{ fontFamily:"SF Pro Display Semibold", fontSize:"20px", color:"#00254B"}}>{readingClubs.book.author_id_author.name_author}</Typography>
+                                        <p style={{marginRight:"80px"}}>{readingClubs.description_club}</p>
                                         <br />
-                                        <ul>
+                                        <ul style={{ listStyleType: 'none' , paddingRight: '50px'}}>
                                             <li>Editorial: {readingClubs.book.publisher_id_publisher.name_publisher}</li>
                                             <li>Año: {readingClubs.book.year_book}</li>
                                             <li>Categoría: Historia, Romance</li>
@@ -97,11 +98,11 @@ export default function ReadingClub() {
                             </Grid>
                         </div>
                         <br />
-
-                        <div style={{textAlign:"center", marginBottom:"50px"}}>
-                            <h2>Horario</h2>
+                            <h2 style={{ textAlign:"center"}}>Horario</h2>
+                        <div style={{textAlign:"center", marginBottom:"50px", display: 'flex', justifyContent: 'center'}}>
+                            
                             <br />
-                            <Card style={{ boxShadow: '0px 3px 6px rgba(0, 0, 0, 0.36)' }}>
+                            <Card style={{ boxShadow: '0px 3px 6px rgba(0, 0, 0, 0.36)', borderRadius:"20px", width:"1200px", justifyContent:"center"}}>
                                 <Grid container spacing={2} columnSpacing={{ xs: 1, sm: 2, md: 3 }} alignItems="center" justifyContent="center">
                                     <Grid className="text-center" item xs={12} sm={4} md={4} lg={4}>
                                         <div>
@@ -124,6 +125,8 @@ export default function ReadingClub() {
                                 </Grid>
                             </Card>
                         </div>
+                        {/* Línea horizontal */}
+                        <hr style={{ margin: "10px 0", opacity: 0.1 }} />
                         <br />
                         </>
                     ))}
