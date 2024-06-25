@@ -30,17 +30,15 @@ export class Book {
   
   @ManyToOne(() => Author, (author) => author.books)
   @JoinColumn({ name: 'author_id_author' })
-  author: Author;
+  author_id_author: Author;
   
-  @Column()
-  author_id_author: string;
+ 
 
   @ManyToOne(() => Publisher, publisher => publisher.books)
   @JoinColumn({ name: 'publisher_id_publisher' })
-  publisher: Publisher;
+  publisher_id_publisher: Publisher;
 
-  @Column()
-  publisher_id_publisher: string;
+ 
 
   @OneToMany(() => Publication, publication => publication.book)
   publication: Publication[]

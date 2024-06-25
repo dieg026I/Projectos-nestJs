@@ -163,6 +163,7 @@ const Sales: React.FC = () => {
     const handleSelectChange = (event: React.ChangeEvent<{}>, value: BookSuggestion | null) => {
         if (value) {
             setNameBook(value.title);
+            setAuthorName(value.authors.join(', '));
             setPublisherName(value.publisher || '');
             setYearBook(value.publishedDate ? new Date(value.publishedDate).getFullYear() : null);
             setImageShowcase(value.image || null);
