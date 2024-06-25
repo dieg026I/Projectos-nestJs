@@ -44,29 +44,14 @@ export const SideMenu: React.FC<{}> = () => {
 
                     <Box flex={1}>
                         <List component="nav">
-                        {/* Transacciones */}
-
-                        <div className="listItemButtonContainer">
-                            <ListItemButton
-                                href='/'
-                                selected={isSelected('/')}
-                                className={isSelected('/') ? 'listItemButtonSelected' : ''}
-                                style={{ backgroundColor: isSelected('/') ? '#00A9E0' : 'inherit', position: 'relative' }}
-                            >
-                                <ListItemIcon style={{ width: '2.5rem', fontSize: '2.2rem', color: "#ffffff" }}>
-                                    <RiMoneyDollarCircleLine />
-                                </ListItemIcon>
-                                <ListItemText primary="Transacciones" />
-                            </ListItemButton>
-                        </div>
-                                        
+                        
                         {/* Libros */}
-                        <div className="listItemButtonContainer" style={{paddingTop:"10px"}}>
+                        <div className="listItemButtonContainer" >
                             <ListItemButton
-                            href='/bookAdmin'
-                            selected={isSelected('/bookAdmin')}
-                            className={isSelected('/bookAdmin') ? 'listItemButtonSelected' : ''}
-                            style={{ backgroundColor: isSelected('/bookAdmin') ? '#00A9E0' : 'inherit' }}
+                            href='/'
+                            selected={isSelected('/')}
+                            className={isSelected('/') ? 'listItemButtonSelected' : ''}
+                            style={{ backgroundColor: isSelected('/') ? '#00A9E0' : 'inherit', position: 'relative' }}
                             >
                                 <ListItemIcon style={{ width: '2.5rem', fontSize: '2rem', color: "#ffffff" }}>
                                     <RiBookMarkedLine />
@@ -75,7 +60,6 @@ export const SideMenu: React.FC<{}> = () => {
                             </ListItemButton>
                         </div>
 
-                        
                         {/* Usuarios */}
                         <div className="listItemButtonContainer" style={{paddingTop:"10px"}}>
                             <ListItemButton
@@ -90,7 +74,6 @@ export const SideMenu: React.FC<{}> = () => {
                                 <ListItemText primary="Usuarios" />
                             </ListItemButton>
                         </div>
-
                         
                         {/* Club de lectura */}
                         <div className="listItemButtonContainer" style={{paddingTop:"10px"}}>
@@ -104,6 +87,21 @@ export const SideMenu: React.FC<{}> = () => {
                                     <RiBookOpenLine />
                                 </ListItemIcon>
                                 <ListItemText primary="Club de lectura" />
+                            </ListItemButton>
+                        </div>
+
+                        {/* Transacciones */}
+                        <div className="listItemButtonContainer" style={{paddingTop:"10px"}}>
+                            <ListItemButton
+                                href='/transactions'
+                                selected={isSelected('/transactions')}
+                                className={isSelected('/transactions') ? 'listItemButtonSelected' : ''}
+                                style={{ backgroundColor: isSelected('/transactions') ? '#00A9E0' : 'inherit' }}
+                            >
+                                <ListItemIcon style={{ width: '2.5rem', fontSize: '2.2rem', color: "#ffffff" }}>
+                                    <RiMoneyDollarCircleLine />
+                                </ListItemIcon>
+                                <ListItemText primary="Transacciones" />
                             </ListItemButton>
                         </div>
                     

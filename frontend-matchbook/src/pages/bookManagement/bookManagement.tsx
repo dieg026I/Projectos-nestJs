@@ -250,7 +250,8 @@ const BookManagement: React.FC = () => {
                         {/* Pestaña "Publicaciones" */}
                         <Box sx={{
                             ...tabStyle,
-                            right: 'calc(70% - 100px)'
+                            right: 'calc(70% - 100px)',
+                            top: '13%'
                         }} onClick={() => setActiveTab('publicaciones')}>
                             <Typography variant="body2">Publicaciones</Typography>
                         </Box>
@@ -259,6 +260,7 @@ const BookManagement: React.FC = () => {
                         <Box sx={{
                             ...tabStyle,
                             right: 'calc(50% - 100px)',
+                            top: '13%'
                         }} onClick={() => setActiveTab('compras')}>
                             <Typography variant="body2">Compras</Typography>
                         </Box>
@@ -267,6 +269,7 @@ const BookManagement: React.FC = () => {
                         <Box sx={{
                             ...tabStyle,
                             right: 'calc(30% - 100px)',
+                            top: '13%'
                         }} onClick={() => setActiveTab('ventas')}>
                             <Typography variant="body2">Ventas</Typography>
                         </Box>

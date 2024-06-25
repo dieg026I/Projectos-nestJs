@@ -10,18 +10,9 @@ import PlaceIcon from '@mui/icons-material/Place';
 import { registerContainer } from "react-toastify/dist/core/store";
 import { Category } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
-interface Publication {
-    id_publication: string;
-    date_publication: Date;
-    users: Users;
-    book: Book;
-    photo_showcase: string;
-    photo_cover: string;
-    photo_first_page: string;
-    photo_back_cover: string;
-    cost_book: number;
-}
+
 interface Users {
     name_user: string,
     lastname_user: string,
@@ -33,6 +24,18 @@ interface Users {
     cities: Cities,
     username: string,
     publication: Publication[]
+}
+
+interface Publication {
+    id_publication: string;
+    date_publication: Date;
+    users: Users;
+    book: Book;
+    photo_showcase: string;
+    photo_cover: string;
+    photo_first_page: string;
+    photo_back_cover: string;
+    cost_book: number;
 }
 interface Author {
     id_author: string;
@@ -69,7 +72,6 @@ interface Category {
     id_category: string;
     name_category: string;
 }
-
 type FilterParams = {
     region?: string;
     city?: string;
@@ -77,6 +79,12 @@ type FilterParams = {
     minPrice?: number;
     maxPrice?: number;
 };
+
+interface ShoppingCart {
+    id_shopping_cart: number,
+    user: Users,
+    publication: Publication[],
+}
 
 export default function Marketplace() {
 
@@ -119,6 +127,13 @@ export default function Marketplace() {
 
     const navigate = useNavigate();
 
+    //Carro
+    const [publicationCart, setPublicationCart] = useState<Publication>();
+    const [cart, setCart] = useState<ShoppingCart>();
+
+    //Usuario
+    const [users, setUsers] = React.useState<Users>();
+
     {/*-----------------------------------------------------------------------------*/}
 
     {/*                        ------UseEffect------                                */}
@@ -134,6 +149,17 @@ export default function Marketplace() {
         } catch (error) {
         console.error('Error fetching publications:', error);
         }
+        const userString = localStorage.getItem("user");
+        if (userString !== null){
+            const users : Users = JSON.parse(userString);
+            try {
+                const responseUser= await axios.get(`http://localhost:3001/users/rut/${users.rut_user}`);
+                const userResponse = responseUser.data;
+                setUsers(userResponse);
+            } catch (error) {
+            console.error('error usuario local:', error);
+            }
+        } 
     };
     fetchPublications();
     }, []);
@@ -172,8 +198,8 @@ export default function Marketplace() {
             setCities(response.data);
         });
     };
-    
     {/*------------------------------------------ */}
+
     {/* Seleccion de la Comuna */}
     const handleCityChange = (event: SelectChangeEvent<number>) => {
         const value = event.target.value === "" ? null : Number(event.target.value);
@@ -264,9 +290,8 @@ export default function Marketplace() {
             const response = await axios.get('http://localhost:3001/publications/findByFilters', { params });
         
             setFilteredPublications(response.data);
-            // Si no se encuentran publicaciones, muestra un mensaje
+
             if (response.data.length === 0) {
-                // Puedes establecer un estado para manejar el mensaje o usar una variable
                 console.log("No se encontraron publicaciones con los filtros aplicados.");
             }
         } catch (error) {
@@ -291,9 +316,119 @@ export default function Marketplace() {
         console.log("maxPrice: ", maxPrice);
     };
     
-    
     const getAriaValueText = (value: number) => `${value} CLP`;
+    {/*-----------------------------------------------------------------------------*/}
     
+    {/* Agregar Publicación al Carro" */}
+
+    //Obtener Carro del usuario
+    async function obtenerCarroPorUsuario(idUsuario: number) {
+        
+        if (users) {
+            let carro: ShoppingCart;
+
+            try {
+                const response = await axios.get(`http://localhost:3001/shopping-cart/userCart/${idUsuario}`);
+                carro = response.data;
+                setCart(carro);
+                console.log("carro"+ carro)
+
+                if (!carro) {
+                    console.log("se va a crear un carro nuevo")
+                    carro = await crearCarro(idUsuario);
+                } 
+                return carro;
+            } catch (error) {
+            console.error('No se pudo obtener el carro del usuario', error);
+            } 
+        } else {
+            console.log("usuario no encontrado")
+        }
+    }
+
+    //Crear Carro
+    async function crearCarro(idUsuario: number) {
+
+        try {
+            const response = await axios.post('http://localhost:3001/shopping-cart', {
+            user_id_user: idUsuario,
+            publication: publicationCart
+            });
+            console.log("Carro creado")
+            return response.data;
+        } catch (error) {
+            console.error('No se pudo crear el carro', error);
+        }
+    }
+
+    // Agregar Publicación al Carro
+    async function agregarAlCarro(publicationCart: Publication) {
+        if (users) {
+            const carro = await obtenerCarroPorUsuario(users.rut_user);
+            if (carro) {
+                console.log("id carro: "+ carro.id_shopping_cart);
+                console.log("id publicacion: "+ publicationCart.id_publication);
+                const allCart: Publication[]= carro.publication;
+                console.log("allCart: "+ allCart)
+                if(allCart.length > 0){
+
+                    for (let i = 0; i < allCart.length; i++) {
+                        if (allCart[i].id_publication === publicationCart.id_publication) {
+                        
+                            alert('Ya existe este libro en tu carro');
+                            break;
+                        } else{
+                            try {
+                                const response = await axios.post(`http://localhost:3001/shopping-cart/publicationCart/${carro.id_shopping_cart}/publications/${publicationCart.id_publication}`);
+                                console.log("publicacion guardada en el carro: "+ response.data)
+                                if(response.data){    
+                                    const cartResponse: ShoppingCart = response.data; 
+                                    setCart(cartResponse);
+                                }
+                            } catch (error) {
+                                console.error('No se pudo agregar la publicación al carro', error);
+                            }
+                        }
+                    }
+                } else {
+                    try {
+                        const response = await axios.post(`http://localhost:3001/shopping-cart/publicationCart/${carro.id_shopping_cart}/publications/${publicationCart.id_publication}`);
+                        console.log("publicacion guardada en el carro: "+ response.data)
+                        if(response.data){    
+                            const cartResponse: ShoppingCart = response.data; 
+                            setCart(cartResponse);
+                        }
+                    } catch (error) {
+                        console.error('No se pudo agregar la publicación al carro', error);
+                    }
+                }
+            } else {
+                console.log('carro.publication es undefined');
+            }
+        }
+    }
+
+    {/*-----------------------------------------------------------------------------*/}
+
+    {/* Agregar Publicación al Carro" */}
+    const notify = () => {
+        toast(
+            <div>
+                <p>📖 Publicacion agregada al carro</p>
+            </div>, 
+            {
+                position: "top-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+            }
+        );
+    }
+
+
     return (
         <>
             <NavBarLogin />
@@ -499,7 +634,7 @@ export default function Marketplace() {
                                                     justifyContent: 'center',
                                                     width: '80%', 
                                                 }}>
-                                                    <Button type="button" style={{textTransform: "none", color:"#ffffff", backgroundColor:"#00a9e0", marginTop:"5px", textAlign: 'center', justifyContent:"center"}}>
+                                                    <Button onClick={() => {setPublicationCart(publication); agregarAlCarro(publication); notify()}} type="button" style={{textTransform: "none", color:"#ffffff", backgroundColor:"#00a9e0", marginTop:"5px", textAlign: 'center', justifyContent:"center"}}>
                                                         Agregar al carro
                                                     </Button>
                                                     <Button onClick={() => navigate('/publicationDetail', { state: { publicationId: publication.id_publication } })} type="button" style={{textTransform: "none", color:"#ffffff", backgroundColor:"#00a9e0", marginTop:"5px", textAlign: 'center', justifyContent:"center"}}>
@@ -535,12 +670,15 @@ export default function Marketplace() {
                                     </Card>
                                 ))}
                                 
-                                {filteredPublications.length === 0 && (
-                                    <Grid item xs={12}>
+                                {(filteredPublications.length === 0 && publications.length === 0) && (
+                                    <Card 
+                                        style={{ margin: "10px", width: "230px", borderRadius: "20px", textAlign: "center", position: 'relative', padding:"22px"}} 
+                                        sx={{ maxWidth: 345, padding: "10px"}}
+                                    >
                                         <Typography variant="h6" style={{ textAlign: 'center' }}>
-                                        Publicaciones no encontradas
+                                            Publicaciones no encontradas
                                         </Typography>
-                                    </Grid>
+                                    </Card>
                                 )}
 
                                 </Grid>

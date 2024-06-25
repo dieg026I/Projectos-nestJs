@@ -19,7 +19,7 @@ import Form from 'react-bootstrap/Form';
 import { CgDanger } from "react-icons/cg";
 import "../../App.css";
 import axios from 'axios';
-import logo from "../../assents/img/logoMatch.png";
+import  logo from "../../assents/img/logoMatch.png";
 import { useNavigate } from 'react-router-dom'; 
 
 interface Region  {

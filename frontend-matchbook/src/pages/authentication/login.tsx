@@ -6,6 +6,8 @@ import {
   CardActions,
   CardContent,
   Grid,
+  IconButton,
+  Popover,
   TextField,
   Typography,
 } from "@mui/material"; 
@@ -15,8 +17,10 @@ import { FaFacebookF } from "react-icons/fa";
 import "../../App.css";
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import logo from "../../assents/img/logoMatch.png";
+import  logo from "../../assents/img/logoMatch.png";
 import React, { useContext, useState } from "react";
+import { GrUserAdmin } from "react-icons/gr";
+
 
 type FormValue = {
   email: string,
@@ -45,8 +49,8 @@ const LoginPage: React.FC = () => {
   const navigate = useNavigate();
 
   {/*-----------------------------------------------------------------------------*/}
+
   {/* Login */}
-  
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
 
@@ -100,12 +104,54 @@ const LoginPage: React.FC = () => {
       }
     }
   };
+  {/*-----------------------------------------------------------------------------*/}
+
+  {/* Admin */}
+  const [anchorEl, setAnchorEl] = React.useState<EventTarget & HTMLButtonElement | null>(null);
+
+  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  const handleAdminClick = () => {
+    window.location.href = 'http://localhost:4000/loginAdmin';
+    handleClose();
+  };
+
+  const open = Boolean(anchorEl);
+  const id = open ? 'simple-popover' : undefined;
 
   return (
     <form onSubmit={handleSubmit}>
       <Box  className= "d-flex login-container" justifyContent="center" alignItems="center" >
           <Grid  container spacing={2} columnSpacing={{ xs: 1, sm: 2, md: 3 }}  alignItems= "center " >
-            
+            <div style={{ position: 'absolute', left: 0, top: 33 }}>
+              <IconButton aria-describedby={id} onClick={handleClick} style={{color:"#ffffff", width:"100px"}}>
+                <GrUserAdmin />
+              </IconButton>
+              <Popover
+                id={id}
+                open={open}
+                anchorEl={anchorEl}
+                onClose={handleClose}
+                anchorOrigin={{
+                  vertical: 'bottom',
+                  horizontal: 'center',
+                }}
+                transformOrigin={{
+                  vertical: 'top',
+                  horizontal: 'center',
+                }}
+              >
+                <Typography onClick={handleAdminClick} style={{ cursor: 'pointer', padding: '10px' }}>
+                  Administrador
+                </Typography>
+              </Popover>
+            </div>
             {/* -- Icono y titulo Matchbook -- */}
             <Grid className="text-center" item xs={12} sm={6} md={6} lg={7}>
               <Box display="flex" alignItems="center" justifyContent="center" textAlign="center">

@@ -8,6 +8,7 @@ import axios from "axios";
 import { FaHeart } from "react-icons/fa6";
 import PlaceIcon from '@mui/icons-material/Place';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { toast } from "react-toastify";
 
 
 interface Publication {
@@ -77,6 +78,12 @@ type FilterParams = {
     maxPrice?: number;
 };
 
+interface ShoppingCart {
+    id_shopping_cart: number,
+    user: Users,
+    publication: Publication[],
+}
+
 
 export default function MarketplaceSearch() {
 
@@ -122,6 +129,13 @@ export default function MarketplaceSearch() {
     const location = useLocation();
     const { searchResults } = location.state || {};
 
+    //Carro
+    const [publicationCart, setPublicationCart] = useState<Publication>();
+    const [cart, setCart] = useState<ShoppingCart>();
+
+    //Usuario
+    const [users, setUsers] = React.useState<Users>();
+
     {/*-----------------------------------------------------------------------------*/}
     {/* Mostrar Publicacion */}
 
@@ -138,6 +152,17 @@ export default function MarketplaceSearch() {
             } catch (error) {
                 console.error('Error fetching publications:', error);
             }
+            const userString = localStorage.getItem("user");
+            if (userString !== null){
+                const users : Users = JSON.parse(userString);
+                try {
+                    const responseUser= await axios.get(`http://localhost:3001/users/rut/${users.rut_user}`);
+                    const userResponse = responseUser.data;
+                    setUsers(userResponse);
+                } catch (error) {
+                console.error('error usuario local:', error);
+                }
+            } 
         };
     
         fetchPublications();
@@ -296,8 +321,118 @@ export default function MarketplaceSearch() {
         console.log("maxPrice: ", maxPrice);
     };
     
-    
     const getAriaValueText = (value: number) => `${value} CLP`;
+    {/*-----------------------------------------------------------------------------*/}
+    
+    {/* Agregar Publicación al Carro" */}
+
+    //Obtener Carro del usuario
+    async function obtenerCarroPorUsuario(idUsuario: number) {
+        
+        if (users) {
+            let carro: ShoppingCart;
+
+            try {
+                const response = await axios.get(`http://localhost:3001/shopping-cart/userCart/${idUsuario}`);
+                carro = response.data;
+                setCart(carro);
+                console.log("carro"+ carro)
+
+                if (!carro) {
+                    console.log("se va a crear un carro nuevo")
+                    carro = await crearCarro(idUsuario);
+                } 
+                return carro;
+            } catch (error) {
+            console.error('No se pudo obtener el carro del usuario', error);
+            } 
+        } else {
+            console.log("usuario no encontrado")
+        }
+    }
+
+    //Crear Carro
+    async function crearCarro(idUsuario: number) {
+
+        try {
+            const response = await axios.post('http://localhost:3001/shopping-cart', {
+            user_id_user: idUsuario,
+            publication: publicationCart
+            });
+            console.log("Carro creado")
+            return response.data;
+        } catch (error) {
+            console.error('No se pudo crear el carro', error);
+        }
+    }
+
+    // Agregar Publicación al Carro
+    async function agregarAlCarro(publicationCart: Publication) {
+        if (users) {
+            const carro = await obtenerCarroPorUsuario(users.rut_user);
+            if (carro) {
+                console.log("id carro: "+ carro.id_shopping_cart);
+                console.log("id publicacion: "+ publicationCart.id_publication);
+                const allCart: Publication[]= carro.publication;
+                console.log("allCart: "+ allCart)
+                if(allCart.length > 0){
+
+                    for (let i = 0; i < allCart.length; i++) {
+                        if (allCart[i].id_publication === publicationCart.id_publication) {
+                        
+                            alert('Ya existe este libro en tu carro');
+                            break;
+                        } else{
+                            try {
+                                const response = await axios.post(`http://localhost:3001/shopping-cart/publicationCart/${carro.id_shopping_cart}/publications/${publicationCart.id_publication}`);
+                                console.log("publicacion guardada en el carro: "+ response.data)
+                                if(response.data){    
+                                    const cartResponse: ShoppingCart = response.data; 
+                                    setCart(cartResponse);
+                                }
+                            } catch (error) {
+                                console.error('No se pudo agregar la publicación al carro', error);
+                            }
+                        }
+                    }
+                } else {
+                    try {
+                        const response = await axios.post(`http://localhost:3001/shopping-cart/publicationCart/${carro.id_shopping_cart}/publications/${publicationCart.id_publication}`);
+                        console.log("publicacion guardada en el carro: "+ response.data)
+                        if(response.data){    
+                            const cartResponse: ShoppingCart = response.data; 
+                            setCart(cartResponse);
+                        }
+                    } catch (error) {
+                        console.error('No se pudo agregar la publicación al carro', error);
+                    }
+                }
+            } else {
+                console.log('carro.publication es undefined');
+            }
+        }
+    }
+
+    {/*-----------------------------------------------------------------------------*/}
+
+    {/* Agregar Publicación al Carro" */}
+    const notify = () => {
+        toast(
+            <div>
+                <p>📖 Publicacion agregada al carro</p>
+            </div>, 
+            {
+                position: "top-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+            }
+        );
+    }
+
 
     return (
         <>
@@ -502,7 +637,7 @@ export default function MarketplaceSearch() {
                                                     justifyContent: 'center',
                                                     width: '80%', 
                                                 }}>
-                                                    <Button type="button" style={{textTransform: "none", color:"#ffffff", backgroundColor:"#00a9e0", marginTop:"5px", textAlign: 'center', justifyContent:"center"}}>
+                                                    <Button onClick={() => {setPublicationCart(publication); agregarAlCarro(publication); notify()}} type="button" style={{textTransform: "none", color:"#ffffff", backgroundColor:"#00a9e0", marginTop:"5px", textAlign: 'center', justifyContent:"center"}}>
                                                         Agregar al carro
                                                     </Button>
                                                     <Button onClick={() => navigate('/publicationDetail', { state: { publicationId: publication.id_publication } })} type="button" style={{textTransform: "none", color:"#ffffff", backgroundColor:"#00a9e0", marginTop:"5px", textAlign: 'center', justifyContent:"center"}}>

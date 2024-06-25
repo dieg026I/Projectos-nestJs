@@ -150,6 +150,7 @@ const Sales: React.FC = () => {
     const handleSelectChange = (event: React.ChangeEvent<{}>, value: BookSuggestion | null) => {
         if (value) {
             setNameBook(value.title);
+            setAuthorName(value.authors.join(', '));
             setPublisherName(value.publisher || '');
             setYearBook(value.publishedDate ? new Date(value.publishedDate).getFullYear() : null);
             setImageShowcase(value.image || null);
@@ -843,20 +844,20 @@ const Sales: React.FC = () => {
                                     <CardActions style={{ justifyContent: 'space-between', marginRight:"50%", marginLeft:"60%" }}>
                                         {step > 1 && (
                                             <div style={{justifyContent: "flex-end"}}>
-                                            <Button onClick={handlePrevious} style={{ backgroundColor:"#1eaeff", color: "#ffffff", borderRadius:"30px", textTransform: "none", marginRight:"30px", width:"130px", height:"50px", fontWeight:"bold"}} >
+                                            <Button onClick={handlePrevious} style={{ backgroundColor:"#1eaeff", color: "#ffffff", borderRadius:"30px", textTransform: "none", marginRight:"8px", width:"130px", height:"50px", fontWeight:"bold"}} >
                                                 Anterior
                                             </Button>
                                             </div>
                                         )}
                                         {step === 1 ? (
                                             <div style={{justifyContent: "flex-start"}}>
-                                            <Button onClick={handleNext} style={{ backgroundColor:"#1eaeff", color: "#ffffff", borderRadius:"30px", textTransform: "none", marginRight:"30px", width:"130px", height:"50px", fontWeight:"bold"}} >
+                                            <Button onClick={handleNext} style={{ backgroundColor:"#1eaeff", color: "#ffffff", borderRadius:"30px", textTransform: "none", marginRight:"10px", width:"130px", height:"50px", fontWeight:"bold"}} >
                                                 Siguiente
                                             </Button>
                                             </div>
                                         ) : step === 2 ? (
                                             <div style={{justifyContent: "flex-start"}}>
-                                            <Button onClick={handleSubmitBook}  style={{ backgroundColor:"#1eaeff", color: "#ffffff", borderRadius:"30px", textTransform: "none", marginRight:"30px", width:"130px", height:"50px", fontWeight:"bold"}} >
+                                            <Button onClick={handleSubmitBook}  style={{ backgroundColor:"#1eaeff", color: "#ffffff", borderRadius:"30px", textTransform: "none", marginRight:"10px", width:"130px", height:"50px", fontWeight:"bold"}} >
                                                 Siguiente
                                             </Button>
                                             <ToastContainer 
@@ -873,7 +874,7 @@ const Sales: React.FC = () => {
                                             </div>
                                         ) : (
                                             <div style={{ display: 'flex', justifyContent: 'flex-start' }}>
-                                            <Button onClick={handleAddAnother} style={{ backgroundColor:"#1eaeff", color: "#ffffff", borderRadius:"30px", textTransform: "none",  width:"130px", height:"50px", fontWeight:"bold"}} >
+                                            <Button onClick={handleAddAnother} style={{ backgroundColor:"#1eaeff", color: "#ffffff", borderRadius:"30px", textTransform: "none",  width:"130px", height:"50px", fontWeight:"bold", marginRight:"10px"}} >
                                                 Agregar otro
                                             </Button>
                                             <Button onClick={handleSubmitPublication} style={{ backgroundColor:"#1eaeff", color: "#ffffff", borderRadius:"30px", textTransform: "none",  width:"130px", height:"50px", fontWeight:"bold"}} >

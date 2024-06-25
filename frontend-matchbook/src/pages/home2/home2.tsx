@@ -93,12 +93,24 @@ function handleClick(event: React.MouseEvent<HTMLDivElement, MouseEvent>) {
         setPage(value);
     };
     const navigate = useNavigate();
-    {/*-----------------------------------------------------------------------------*/}
 
-    {/* Mostrar Publicacion */}
+    //Carro
+    const [publicationCart, setPublicationCart] = useState<Publication>();
+    const [cart, setCart] = useState<ShoppingCart>();
+
+    //Publicación
     const [publications, setPublications] = React.useState<Publication[]>([]);
     const [users, setUsers] = React.useState<Users>();
 
+    //Animación y diseño Buttons 
+    const [bgColor, setBgColor] = useState('transparent');
+    const [textColor, setTextColor] = useState('#f05d16');
+
+    //Mostrar boton "agregar al carro y ver detalle"
+    const [activeCard, setActiveCard] = useState<string | null>(null);
+    {/*-----------------------------------------------------------------------------*/}
+
+    {/* Mostrar Publicacion */}
     useEffect(() => {
         const fetchPublications = async () => {
         try {
@@ -109,14 +121,14 @@ function handleClick(event: React.MouseEvent<HTMLDivElement, MouseEvent>) {
         }
         const userString = localStorage.getItem("user");
         if (userString !== null){
-        const users : Users = JSON.parse(userString);
-        try {
-            const responseUser= await axios.get(`http://localhost:3001/users/rut/${users.rut_user}`);
-            const userResponse = responseUser.data;
-            setUsers(userResponse);
-        } catch (error) {
-        console.error('error usuario local:', error);
-        }
+            const users : Users = JSON.parse(userString);
+            try {
+                const responseUser= await axios.get(`http://localhost:3001/users/rut/${users.rut_user}`);
+                const userResponse = responseUser.data;
+                setUsers(userResponse);
+            } catch (error) {
+            console.error('error usuario local:', error);
+            }
         }   
     };
 
@@ -141,9 +153,6 @@ function handleClick(event: React.MouseEvent<HTMLDivElement, MouseEvent>) {
     {/*-----------------------------------------------------------------------------*/}
 
     {/* Animación y diseño Buttons */}
-    const [bgColor, setBgColor] = useState('transparent');
-    const [textColor, setTextColor] = useState('#000000');
-
     const handleMouseOver = () => {
         setBgColor('#f05d16');
         setTextColor('#ffffff');
@@ -151,7 +160,7 @@ function handleClick(event: React.MouseEvent<HTMLDivElement, MouseEvent>) {
 
     const handleMouseOut = () => {
         setBgColor('transparent');
-        setTextColor('#000000'); 
+        setTextColor('#f05d16'); 
     };
     {/*-----------------------------------------------------------------------------*/}
 
@@ -163,17 +172,11 @@ function handleClick(event: React.MouseEvent<HTMLDivElement, MouseEvent>) {
     };
     {/*-----------------------------------------------------------------------------*/}
 
-    {/* Mostrar boton "agregar al carro y ver detalle" */}
-    const [activeCard, setActiveCard] = useState<string | null>(null);
+    {/* Agregar Publicación al Carro" */}
 
-{/* ---------------------------------------------------------------------------------- */}
-
-    const [publicationCart, setPublicationCart] = useState<Publication>();
-    const [cart, setCart] = useState<ShoppingCart>();
-
+    //Obtener Carro del usuario
     async function obtenerCarroPorUsuario(idUsuario: number) {
         
-        // Intenta obtener el carro del usuario desde el backend
         if (users) {
             let carro: ShoppingCart;
 
@@ -196,7 +199,7 @@ function handleClick(event: React.MouseEvent<HTMLDivElement, MouseEvent>) {
         }
     }
 
-    // Función para crear un carro para un usuario
+    //Crear Carro
     async function crearCarro(idUsuario: number) {
 
         try {
@@ -211,7 +214,7 @@ function handleClick(event: React.MouseEvent<HTMLDivElement, MouseEvent>) {
         }
     }
 
-    // Función para agregar una publicación al carro
+    // Agregar Publicación al Carro
     async function agregarAlCarro(publicationCart: Publication) {
         if (users) {
             const carro = await obtenerCarroPorUsuario(users.rut_user);
@@ -258,6 +261,9 @@ function handleClick(event: React.MouseEvent<HTMLDivElement, MouseEvent>) {
         }
     }
 
+    {/*-----------------------------------------------------------------------------*/}
+
+    {/* Agregar Publicación al Carro" */}
     const notify = () => {
         toast(
             <div>
@@ -453,7 +459,7 @@ function handleClick(event: React.MouseEvent<HTMLDivElement, MouseEvent>) {
                                                 justifyContent: 'center',
                                                 width: '80%',
                                             }}>
-                                                <Button  onClick={() => {setPublicationCart(publication); agregarAlCarro(publication); notify()}} type="button" style={{textTransform: "none", color:"#ffffff", backgroundColor:"#00a9e0", marginTop:"5px", textAlign: 'center', justifyContent:"center"}}>
+                                                <Button onClick={() => {setPublicationCart(publication); agregarAlCarro(publication); notify()}} type="button" style={{textTransform: "none", color:"#ffffff", backgroundColor:"#00a9e0", marginTop:"5px", textAlign: 'center', justifyContent:"center"}}>
                                                     Agregar al carro
                                                 </Button>
                                                 <Button onClick={() => navigate('/publicationDetail', { state: { publicationId: publication.id_publication } })} type="button" style={{textTransform: "none", color:"#ffffff", backgroundColor:"#00a9e0", marginTop:"5px", textAlign: 'center', justifyContent:"center"}}>
@@ -531,7 +537,6 @@ function handleClick(event: React.MouseEvent<HTMLDivElement, MouseEvent>) {
                 >
                     Revisa todos los libros
                 </Button>
-                <Button onClick={() => notify()}>Provar</Button>
             </div>
         </div>
         <Footer />
