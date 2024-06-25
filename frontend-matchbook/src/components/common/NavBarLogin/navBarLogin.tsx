@@ -182,6 +182,8 @@ export const NavBarLogin: React.FC<{}> = () => {
         }
     };
 
+
+
     return (
         <div className="navbar">
             <AppBar position="static" sx={{backgroundColor: "#1e1e1e"}}>
@@ -250,9 +252,9 @@ export const NavBarLogin: React.FC<{}> = () => {
                                 <Box className="space" >
                                     {isMobile ? (
                                         <>
-                                            <Badge badgeContent={1} color="primary" >  
-                                                <LuShoppingCart onClick={() => navigate('/cart')} style={{width: "30px", height:"30px", cursor: 'pointer'}} href="/cart" color="inherit" />
-                                            </Badge>
+                                            
+                                            <LuShoppingCart onClick={() => navigate('/cart')} style={{width: "30px", height:"30px", cursor: 'pointer'}} href="/cart" color="inherit" />
+                                            
                                             <IconButton href="/sales" color="inherit"  >
                                                 <LuDollarSign style={{ width: "35px", height:"35px", cursor: 'pointer'}} />
                                             </IconButton>
@@ -263,9 +265,9 @@ export const NavBarLogin: React.FC<{}> = () => {
                                         </>
                                     ) : (
                                         <>
-                                            <Badge badgeContent={1} color="primary">
-                                                <LuShoppingCart onClick={() => navigate('/cart')} style={{width: "30px", height:"30px", marginLeft:"40px", cursor: 'pointer'}} href="/cart" color="inherit" />
-                                            </Badge>
+                                            
+                                            <LuShoppingCart onClick={() => navigate('/cart')} style={{width: "30px", height:"30px", marginLeft:"40px", cursor: 'pointer'}} href="/cart" color="inherit" />
+                                            
 
                                             <Button style={{ backgroundColor: '#f05d16' , textTransform: "none", color: "#ffff", fontSize: "16px", marginLeft: "10px", borderRadius:"20px", width:"90px", padding:"6px" }} href="/sales">Vender</Button>
 

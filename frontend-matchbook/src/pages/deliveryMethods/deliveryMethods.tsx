@@ -1,7 +1,8 @@
 
-import { Autocomplete, Box, Button, Card, CardActionArea, CardActions, CardContent, CardMedia, Checkbox, FormControl, FormControlLabel, FormGroup, FormLabel, Grid, InputLabel, MenuItem, Modal, NoSsr, Popper, Radio, RadioGroup, Select, SelectChangeEvent, Tab, Tabs, TextField, ThemeProvider, Typography, createTheme } from "@mui/material";
+import { Autocomplete, Box, Button, Card, CardActionArea,Link ,CardActions, CardContent, CardMedia, Checkbox, FormControl, FormControlLabel, FormGroup, FormLabel, Grid, InputLabel, MenuItem, Modal, NoSsr, Popper, Radio, RadioGroup, Select, SelectChangeEvent, Tab, Tabs, TextField, ThemeProvider, Typography, createTheme } from "@mui/material";
 
 import Book1 from "../../assents/img/book1.jpeg";
+import Book3 from "../../assents/img/book3.jpeg";
 import { TbTruckDelivery } from "react-icons/tb";
 import { MdOutlinePlace } from "react-icons/md";
 import { ChangeEvent, useEffect, useState } from "react";
@@ -11,6 +12,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import NavBarLogin from "../../components/common/NavBarLogin/navBarLogin";
 import Footer from "../../components/common/Footer/footer";
+import { BiMap } from "react-icons/bi";
 
 interface Region  {
     id_region: number;
@@ -157,31 +159,29 @@ const DeliveryMethods: React.FC = () => {
     
 
 
-
+    
 
 
     return (
         <>
         <NavBarLogin />
             <br />
-            <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', marginTop:"40px" }}>
-    <div style={{ display: 'flex', alignItems: 'center', width: '300px', justifyContent: 'space-between' }}>
-        <div style={{ textAlign: 'center' }}>
-            <div style={{ width: '40px', height: '40px', borderRadius: '50%', backgroundColor: '#F05D16', color: 'white', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>1</div>
-            <div style={{ marginTop: '10px' }}>Detalle de Entrega</div>
-        </div>
-        <div style={{ height: '2px', backgroundColor: 'grey', flex: '1', alignSelf: 'center' }}></div>
-        <div style={{ textAlign: 'center' }}>
-            <div style={{ width: '40px', height: '40px', borderRadius: '50%', backgroundColor: '#C04A12', color: 'white', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>2</div>
-            <div style={{ marginTop: '10px' }}>Pago</div>
-        </div>
-    </div>
-</div>
-
+            <div style={{ display: 'flex', justifyContent: 'center', marginBottom:"30px", marginTop:"30px" }}>
+                <div style={{ display: 'flex', alignItems: 'center', width: '300px', justifyContent: 'space-between' }}>
+                    <div style={{ textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                        <div style={{ width: '40px', height: '40px', borderRadius: '50%', backgroundColor: '#F05D16', color: '#ffffff', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>1</div>
+                        <div style={{ marginTop: '10px' }}>Detalle de Entrega</div>
+                    </div>
+                    <div style={{ textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                        <div style={{ width: '40px', height: '40px', borderRadius: '50%', backgroundColor: '#C04A12', color: '#ffffff', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>2</div>
+                        <div style={{ marginTop: '10px' }}>Pago</div>
+                    </div>
+                </div>
+            </div>
 
             <Grid  container spacing={2} columnSpacing={{ xs: 1, sm: 2, md: 3 }}  alignItems= "center " >
                 <Grid className="text-center" item xs={12} sm={12} md={12} lg={7} xl={7}>
-                    <div style={{ display: 'block', gap: '20px', marginLeft: '5px', justifyContent:"center", borderRadius:"20px", alignContent:"center"}}>
+                    <div style={{ display: 'block', gap: '20px', marginLeft: '5px', justifyContent:"center", borderRadius:"20px", alignContent:"flex-start", height:"700px", marginTop:"30px"}}>
                         <Tabs value={delivery} onChange={handleChange} style={{display: 'flex', marginLeft: '55px'}}>
                             <Tab icon={<TbTruckDelivery style={{ marginRight: '10px', }} />} label="Despacho a domicilio" style={{width:"320px", height:"70px"}} />
                             <Tab icon={<MdOutlinePlace style={{ marginRight: '10px' }} />} label="Retiro en sucursal" style={{width:"320px", height:"70px"}} />
@@ -190,10 +190,12 @@ const DeliveryMethods: React.FC = () => {
                         {delivery === 0 && (
                             <div style={{paddingTop:"35px", marginRight:"35px", marginLeft:"55px"}}>
                                 <h2>Dirección de entrega</h2>
-                                <Card style={{margin: '10px 0'}}>
-                                    <p>Dirección</p>
+                                <Card style={{margin: '10px 0', textAlign:"left", padding:"14px", borderRadius:"20px"}}>
+                                    <p style={{fontFamily:"SF Pro Display Medium", fontSize:"20px"}}><BiMap style={{marginRight:"3px"}} /> Mi Casa</p>
+                                    <p style={{fontFamily:"SF Pro Display Medium"}}>Teresa Vial, 1330, 1402B, San Miguel - Metropolitana de Santigo</p>
+                                    <Link style={{color:"#000000", fontFamily:"SF Pro Display Medium"}} >Modificar</Link>
                                 </Card>
-                                <div style={{display: 'flex', justifyContent: 'space-between'}}>
+                                <div style={{display: 'flex', justifyContent: 'space-between', marginTop:"20px"}}>
                                     <p>Agregar dirección</p>
                                     <Button onClick={openModalAddress} variant="contained">+</Button>
                                 </div>
@@ -348,7 +350,6 @@ const DeliveryMethods: React.FC = () => {
                                             />
                                         </Grid>
                                             
-                                        
                                     </Grid>
                                     {/* onClick={handleSubmitPublication} */}
                                     <Grid item xs={6} style={{ marginTop:"28px",marginBottom:"10px" ,justifyContent:"center", display:"flex"}} >
@@ -360,70 +361,128 @@ const DeliveryMethods: React.FC = () => {
                             </div>
                         </Modal>
                         {delivery === 1 && (
-                            <form style={{paddingTop:"35px", marginRight:"35px", marginLeft:"55px"}}>
-                                <div style={{display: 'flex', justifyContent: 'space-between'}}>
-                                    <div>
-                                        <h6 style={{fontFamily:"SF Pro Display Bold", fontSize:"18px" , margin:"0", marginBottom:"20px", marginTop:"10px"}}>Región</h6>
-                                        <FormControl style={{marginRight: '10px'}}>
-                                            <Select>
-                                                {/* Llena este Select con las regiones obtenidas de la API */}
-                                            </Select>
-                                        </FormControl>
-                                    </div>
-                                    <div>
-                                        <h6 style={{fontFamily:"SF Pro Display Bold", fontSize:"18px" , margin:"0", marginBottom:"20px", marginTop:"10px"}}>Comuna</h6>
-                                        <FormControl style={{marginLeft: '10px'}}>
-                                            <Select>
-                                                {/* Llena este Select con las comunas obtenidas de la API */}
-                                            </Select>
-                                        </FormControl>
-                                    </div>
+                            <form style={{paddingTop:"35px", marginRight:"200px", marginLeft:"200px"}}>
+                            <div style={{display: 'flex', justifyContent: 'space-between', marginBottom:"20px"}}>
+                                <div style={{width: '45%'}}>
+                                    <h6 style={{fontFamily:"SF Pro Display Bold", fontSize:"18px", margin:"0", marginBottom:"20px", marginTop:"10px", textAlign:"left"}}>Región</h6>
+                                    <FormControl fullWidth style={{marginRight: '10px', width:"200px"}}>
+                                        <Select 
+                                            labelId="region-label"
+                                            id="region_sucursal"
+                                            value={selectedRegion || ''}
+                                            placeholder="Ej: Valparaiso"
+                                            onChange={(event) => handleRegionChange({
+                                                target: {
+                                                    value: Number(event.target.value),
+                                                },
+                                            })}
+                                        >
+                                            {region.map(region => (
+                                                <MenuItem key={region.id_region} value={region.id_region}>{region.name_region}</MenuItem>
+                                            ))}
+                                        </Select>
+                                    </FormControl>
                                 </div>
-                                <div style={{display: 'flex', justifyContent: 'space-between', marginTop: '10px'}}>
-                                    <div>
-                                        <h6 style={{fontFamily:"SF Pro Display Bold", fontSize:"18px" , margin:"0", marginBottom:"20px", marginTop:"10px"}}>Sucursal</h6>
-                                        <FormControl style={{marginRight: '10px'}}>
-                                            <Select>
-                                                {/* Llena este Select con las sucursales obtenidas de la API */}
-                                            </Select>
-                                        </FormControl>
-                                    </div>
-                                    <div>
-                                        <h6 style={{fontFamily:"SF Pro Display Bold", fontSize:"18px" , margin:"0", marginBottom:"20px", marginTop:"10px"}}>Teléfono</h6>
-                                        <TextField style={{marginLeft: '10px'}} />
-                                    </div>
+                                <div style={{width: '45%'}}>
+                                    <h6 style={{fontFamily:"SF Pro Display Bold", fontSize:"18px", margin:"0", marginBottom:"20px", marginTop:"10px"}}>Comuna</h6>
+                                    <FormControl className="formulario" fullWidth style={{marginLeft: '10px', width:"200px"}}>
+                                        <Select 
+                                            labelId="city-label"
+                                            id="city_sucursal"
+                                            value={id_city || ''}
+                                            placeholder="Ej: Viña del Mar"
+                                            onChange={(event) => handleCityChange({
+                                                target: {
+                                                    value: Number(event.target.value),
+                                                },
+                                            })}
+                                        >
+                                            {cities.map((city: Cities) => (
+                                                <MenuItem key={city.id_city} value={city.id_city}>{city.name}</MenuItem>
+                                            ))}
+                                        </Select>
+                                    </FormControl>
+
                                 </div>
-                                <div>
-                                    <h6 style={{fontFamily:"SF Pro Display Bold", fontSize:"18px" , margin:"0", marginBottom:"20px", marginTop:"10px"}}>Nombre de quien retira</h6>
-                                    <TextField style={{margin: '10px 0'}} />
+                            </div>
+                            <div style={{display: 'flex', justifyContent: 'space-between', marginBottom:"30px"}}>
+                                <div style={{width: '45%'}}>
+                                    <h6 style={{fontFamily:"SF Pro Display Bold", fontSize:"18px", margin:"0", marginBottom:"20px", marginTop:"10px"}}>Sucursal</h6>
+                                    <FormControl style={{marginRight: '10px', width:"200px"}}>
+                                        <InputLabel>Ej: Plaza Latorre 32</InputLabel>
+                                        <Select>
+                                            <MenuItem value="Valparaiso Victoria">Valparaiso Victoria</MenuItem>
+                                            <MenuItem value="Congreso Centro">Congreso Centro</MenuItem>
+                                            <MenuItem value="Valparaiso Brasil">Valparaiso Brasil</MenuItem>
+                                            <MenuItem value="Valparaiso Blanco">Valparaiso Blanco</MenuItem>
+                                            <MenuItem value="Valparaiso Curauma">Valparaiso Curauma</MenuItem>
+                                            <MenuItem value="Centro de Servicios">Centro de Servicios</MenuItem>
+                                            <MenuItem value="Vina Del Mar Plaza Latorre">Vina Del Mar Plaza Latorre</MenuItem>
+                                            <MenuItem value="Plaza Latorre 32, Vina Del Mar">Plaza Latorre 32, Vina Del Mar</MenuItem>
+                                            <MenuItem value="Vina Cinco Norte">Vina Cinco Norte</MenuItem>
+                                            <MenuItem value="Full Service Cibereluno">Full Service Cibereluno</MenuItem>
+                                            <MenuItem value="Pick Up Los Carinositos">Pick Up Los Carinositos</MenuItem>
+                                        </Select>
+                                    </FormControl>
                                 </div>
-                            </form>
+                                <div style={{width: '45%'}}>
+                                    <h6 style={{fontFamily:"SF Pro Display Bold", fontSize:"18px", margin:"0", marginBottom:"20px", marginTop:"10px"}}>Teléfono</h6>
+                                    <TextField placeholder="Ej: +56 9 XXXX XXXX" style={{width: '100%'}} />
+                                </div>
+                            </div>
+                            <div style={{marginBottom:"20px"}}>
+                                <h6 style={{fontFamily:"SF Pro Display Bold", fontSize:"18px", margin:"0", marginBottom:"20px", marginTop:"10px"}}>Nombre de quien retira</h6>
+                                <TextField placeholder="Ej: Natalia Rubilar" style={{width: '100%'}} />
+                            </div>
+                        </form>
                         )}
                     </div>
                 </Grid>
 
                 <Grid className="text-center" item xs={12} sm={12} md={12} lg={5} xl={5}>
 
-                    <Card style={{marginRight:"20px", padding:"20px"}}>
-                        <Typography>Resumen</Typography>
-                        <Typography>s productos</Typography>
-                            <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'flex-start' }}>
+                    <Card style={{marginRight:"20px", padding:"20px", height:"auto", display: 'flex', flexDirection: 'column', justifyContent: 'space-between'}}>
+                        <div>
+                            <Typography style={{fontSize:"25px", fontFamily:"SF Pro Display Bold"}} >Resumen de los Productos</Typography>
+                            <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'flex-start', marginTop:"20px" }}>
                                 <img 
                                     src={Book1}
                                     alt="Imagen del libro"
                                     style={{ height: '100px', width: 'auto', maxWidth: '100%', float: 'left' }}
                                 />
                                 <div style={{ display: 'flex', flexDirection: 'column', marginLeft: '18%', textAlign: 'left', marginBottom:"10px" }}>
-                                    <Typography style={{fontFamily:"SF Pro Display Bold", fontSize:"17px", marginTop:"20px"}}>$10990</Typography>
+                                <Typography style={{fontFamily:"SF Pro Display Semibold", fontSize:"17px", marginTop:"20px"}}>Criaturas Imposibles</Typography>
+                                    <Typography style={{fontFamily:"SF Pro Display Semibold", fontSize:"17px", marginTop:"20px"}}>$10990</Typography>
                                     <Typography style={{}}>Arnold Lobel</Typography>
                                 </div>  
                             </div>
-                            <Card style={{backgroundColor:"#00a9e0", marginTop:"10px", borderRadius:"30px", height:"40px", alignContent:"center"}}>
-                                <Button fullWidth href='/pay' style={{ textAlign:"center", color:"#ffffff", textTransform: "none", fontSize:"19px", alignContent:"center" }}>Continuar</Button>
-                            </Card> 
+                            <br />
+                            {/* Línea horizontal */}
+                            <hr style={{ margin: "10px 0", opacity: 0.1 }} />
+                            <br />
+                            <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'flex-start' }}>
+                                <img 
+                                    src={Book3}
+                                    alt="Imagen del libro"
+                                    style={{ height: '100px', width: 'auto', maxWidth: '100%', float: 'left' }}
+                                />
+                                <div style={{ display: 'flex', flexDirection: 'column', marginLeft: '18%', textAlign: 'left', marginBottom:"10px" }}>
+                                <Typography style={{fontFamily:"SF Pro Display Semibold", fontSize:"17px", marginTop:"20px"}}>Sapo y Sepo, Inseparables</Typography>
+                                    <Typography style={{fontFamily:"SF Pro Display Semibold", fontSize:"17px", marginTop:"20px"}}>$10990</Typography>
+                                    <Typography style={{}}>Katherine Rundell</Typography>
+                                </div>  
+                            </div>
+                        </div>
+                        <div style={{  height:"40px", display: 'flex', justifyContent: 'center', marginTop:"35px"}}>
+                            <Button style={{backgroundColor:"#989ca8", color:"#ffffff", textTransform: "none",fontSize:"19px", marginRight: "130px", borderRadius:"30px"}} href="/cart">Cancelar</Button>
+                            <Button href='/pay' style={{backgroundColor:"#00a9e0", textAlign:"center", color:"#ffffff", textTransform: "none", fontSize:"19px" , borderRadius:"30px"}}>Continuar</Button>
+                        </div>
                     </Card>
                 </Grid>
+                
+                
             </Grid>
+            
             <br />
             <Footer/>
         </>

@@ -170,7 +170,7 @@ export default function Profile() {
                                     {users && Array.isArray(users.publication) && users.publication.slice((page - 1) * 3, page * 3).reverse().map((publication) => (
                                             <Card 
                                                 key={publication.id_publication} 
-                                                style={{ margin: "10px", width: "150px",height:"auto" ,borderRadius: "20px", textAlign: "left", position: 'relative', padding:"22px"}} 
+                                                style={{ margin: "10px", width: "190px",height:"auto" ,borderRadius: "20px", textAlign: "left", position: 'relative', padding:"22px"}} 
                                                 sx={{ maxWidth: 345, padding: "10px", marginTop:"30px"}}
                                             >
                                                 {/* Imagen libros */}
@@ -199,7 +199,7 @@ export default function Profile() {
                                                         variant="h5" 
                                                         component="div" 
                                                         style={{
-                                                            fontSize: "17px",  
+                                                            fontSize: "15px",  
                                                             paddingTop: "5px", 
                                                             fontFamily: "SF Pro Display Medium",
                                                             height: '3em',
@@ -211,22 +211,18 @@ export default function Profile() {
 
                                                     <div style={{ height: '80px', overflow: 'hidden' }}>
                                                                 {/* Autor Libro */}
-                                                                <Typography variant="body2" color="text.secondary" style={{ fontFamily: "SF Pro Display Regular"}}>
-                                                                    {publication.book.author_id_author.name_author} 
+                                                                <Typography variant="body2" color="text.secondary" style={{ fontFamily: "SF Pro Display Regular", fontSize:"13px"}}>
+                                                                    {publication.book.author_id_author.name_author.length > 19 ? `${publication.book.author_id_author.name_author.substring(0, 19)}...` : publication.book.author_id_author.name_author}
                                                                 </Typography>
                                                     
-                                                                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' , fontSize: "14px", marginTop:"15px" }}>
+                                                                <Box sx={{ display: 'flex', justifyContent: 'left', alignItems: 'center' , fontSize: "14px", marginTop:"15px" }}>
                                                                 
                                                                     {/* Precio Libro */}
-                                                                    <Typography gutterBottom component="div" style={{fontSize: "15px", fontWeight: "bold", paddingTop: "5px"}}>
+                                                                    <Typography gutterBottom component="div" style={{fontSize: "20px", fontWeight: "bold", paddingTop: "5px"}}>
                                                                         ${publication.cost_book}
                                                                     </Typography>
                                             
-                                                                    {/* Ubicación Libro */}
-                                                                    <Box sx={{ display: 'flex', fontSize: "13px" }}>
-                                                                        <PlaceIcon style={{ color:"#00a9e0", alignItems: 'center' }} />
-                                                                        <span>{users.cities.name}</span>
-                                                                    </Box>
+                                            
                                                                 </Box>
                                                     </div>
                                                 </CardContent>

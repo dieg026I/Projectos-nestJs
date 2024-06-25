@@ -42,21 +42,15 @@ const Transactions: React.FC = () => {
                             </TableHead>
                             <TableBody>
                             <TableRow>
-                                <TableCell align="center">
-                                <Button variant="contained">Producto</Button>
-                                </TableCell>
-                                <TableCell align="center">
-                                <Button variant="contained">Estado</Button>
-                                </TableCell>
-                                <TableCell align="center">
-                                <Button variant="contained">Stock</Button>
-                                </TableCell>
-                                <TableCell align="center">
-                                <Button variant="contained">Total</Button>
-                                </TableCell>
-                                <TableCell align="center">
-                                <Button variant="contained">Acciones</Button>
-                                </TableCell>
+                                <TableCell align="center"></TableCell>
+                                <TableCell align="center"></TableCell>
+                                <TableCell align="center"></TableCell>
+                                <TableCell align="center"></TableCell>
+                                <TableCell align="center"></TableCell>
+                                <TableCell align="center"></TableCell>
+                                <TableCell align="center"></TableCell>
+                                <TableCell align="center"></TableCell>
+                                <TableCell align="center"></TableCell>
                             </TableRow>
                             </TableBody>
                         </Table>

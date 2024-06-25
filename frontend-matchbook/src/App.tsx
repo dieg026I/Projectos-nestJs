@@ -19,8 +19,8 @@ import MarketplaceSearch from './pages/marketplaceSearch/marketplaceSearch';
 import PublicationDetail from './pages/publicationDetail/publicationDetail';
 import ProfileUsers from './pages/profileUsers/profileUsers';
 import DeliveryMethods from './pages/deliveryMethods/deliveryMethods';
-
-
+import Pay from './pages/pay/pay';
+import PaymentMessage from './pages/paymentMessage/paymentMessage';
 
 const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const navigate = useNavigate();
@@ -50,6 +50,7 @@ function App() {
   
   const [username, setUsername] = useState(''); 
   const [user, setUser] = useState(null);
+  
   return (
     <BrowserRouter>
 
@@ -68,17 +69,16 @@ function App() {
         <Route path="/marketplaceSearch" element={<MarketplaceSearch />} />
         <Route path="/publicationDetail" element={<PublicationDetail />} />
         <Route path="/deliveryMethods" element={<DeliveryMethods />} />
+        <Route path="/pay" element={<Pay />} />
+        <Route path="/paymentMessage" element={<PaymentMessage/>} />
         <Route path="/bookManagement" element={<ProtectedRoute><BookManagement /></ProtectedRoute>} />
         <Route path="/wallet" element={<ProtectedRoute><Wallet /></ProtectedRoute>} />
 
         {/* Ruta para la página NotFound */}
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
-      
-    
+
     </BrowserRouter>
-
-
   );
 }
 

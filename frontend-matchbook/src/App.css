@@ -82,6 +82,15 @@
   justify-content: center;
   align-items: center;
   height: 100vh;
+
+  /* Fondo oscuro */
+  background-color: rgba(0, 0, 0, 0.4); 
+  background-blend-mode: darken;
+  background-size: 100% auto; 
+
+  .css-1p6z1ep-MuiFormLabel-root-MuiInputLabel-root.Mui-focused {
+    color: #000000;
+  }
 }
 
 /* - NavBar -  */
@@ -257,6 +266,25 @@
   }
 }
 
+.fondoPay {
+  background-image: url("./assents/img/WallpaperPay.jpg");
+  background-size: cover;
+  background-position: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  
+  /* Fondo oscuro */
+  background-color: rgba(0, 0, 0, 0.3); 
+  background-blend-mode: darken;
+  background-size: 100% auto;
+
+  .css-1p6z1ep-MuiFormLabel-root-MuiInputLabel-root.Mui-focused {
+    color: #000000;
+  }
+}
+
 
 /* Font*/
 
@@ -290,3 +318,6 @@
 
 
 
+.algo {
+  color: #e3e1e1;
+}

@@ -41,8 +41,8 @@ function App() {
       <Routes>
         {/* Rutas para páginas existentes */}
         <Route path="/loginAdmin" element={<LoginAdmin />} />
-        <Route path="/" element={<ProtectedRoute><Transactions /></ProtectedRoute>} />
-        <Route path="/bookAdmin" element={<ProtectedRoute><BookAdmin /></ProtectedRoute>} />
+        <Route path="/" element={<ProtectedRoute><BookAdmin /></ProtectedRoute>} />
+        <Route path="/transactions" element={<ProtectedRoute><Transactions /></ProtectedRoute>} />
         <Route path="/readingClubAdmin" element={<ProtectedRoute><ReadingClubAdmin /></ProtectedRoute>} />
         <Route path="/userAdmin" element={<ProtectedRoute><UserAdmin /></ProtectedRoute>} />
       </Routes>
