@@ -128,18 +128,18 @@ export const NavBar: React.FC<{}> = () => {
                                             <IconButton href="/register" color="inherit">
                                                 <LuUserCircle2  />
                                             </IconButton>
-                                            <Badge badgeContent={1} color="primary">  
-                                                <LuShoppingCart style={{width: "60px", height: "22px"}} href="/cart" color="inherit" />
-                                            </Badge>
+                                            
+                                            <LuShoppingCart style={{width: "60px", height: "22px"}} href="/cart" color="inherit" />
+                                            
 
                                         </>
                                     ) : (
                                         <>
                                             <Button className="text" color="inherit" href="/login" style={{paddingLeft: "20px", textTransform: "none", fontSize: "16px" }}>Inicia Sesión</Button>
                                             <Button style={{ backgroundColor: '#f05d16' , textTransform: "none", color: "#ffff", fontSize: "16px", borderRadius:"20px", width:"100px"}} href="/register">Registrate</Button>
-                                            <Badge badgeContent={1} color="primary">
-                                                <LuShoppingCart style={{width: "60px", height: "22px"}} href="/cart" color="inherit" />
-                                            </Badge>
+                                            
+                                            <LuShoppingCart style={{width: "60px", height: "22px"}} href="/cart" color="inherit" />
+                                            
                                         </>
                                     )}
                                 </Box>
