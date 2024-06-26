@@ -189,7 +189,6 @@ export default function Profile() {
                                                             marginRight: 'auto', 
                                                         }}
                                                     />
-                                                    <FaHeart style={{ position: 'absolute', top: '10px', right: '10px', color: '#f05d16' }} />
                                                 </CardMedia>
                                                 
                                                 <CardContent style={{padding: "5px", paddingTop: "15px", marginTop:"7px"}}>

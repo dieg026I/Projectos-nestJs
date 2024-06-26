@@ -66,13 +66,10 @@ const Cart: React.FC = () => {
     {/* Mostrar Publicacion en el carro*/}
     const [publicationsCart, setPublicationsCart] = React.useState<GroupedPublications>({});
 
-
-
     type GroupedPublications = {
         [seller: string]: Publication[];
     };
     
-
     useEffect(() => {
         const fetchPublicationsCart = async () => {
         const userString = localStorage.getItem("user");
@@ -112,7 +109,6 @@ const Cart: React.FC = () => {
     // Dentro de tu componente
     const [selectedQuantity, setSelectedQuantity] = useState(1);
     
-
     
     return (
         <>

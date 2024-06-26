@@ -76,7 +76,7 @@ const Pay: React.FC = () => {
                             <br />
                         <div style={{marginLeft:"110px", marginRight:"110px"}}>
                             <Typography>Para completar el pedido, por favor, 
-                                    transfiere el total de <strong>$5.000</strong> en la siguiente cuenta corriente con el 
+                                    transfiere el total de <strong>$26.980</strong> en la siguiente cuenta corriente con el 
                                     <strong> ASUNTO: Pedido ad20245242155104 pagado.</strong> 
                             </Typography>
                         </div>

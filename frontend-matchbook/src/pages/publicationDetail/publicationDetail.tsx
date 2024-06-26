@@ -67,7 +67,7 @@ interface Book {
 }
 interface Region  {
     id_region: number;
-    name_region: string;
+    name: string;
     cities: Cities[];
 };
 interface Cities {

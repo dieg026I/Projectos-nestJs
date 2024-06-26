@@ -60,7 +60,7 @@ interface Book {
 }
 interface Region  {
     id_region: number;
-    name_region: string;
+    name: string;
     cities: Cities[];
 };
 interface Cities {
@@ -262,7 +262,7 @@ export default function Marketplace() {
             if (selectedRegion) {
                 const oneRegion = await axios.get(`http://localhost:3001/region/oneRegion/${selectedRegion}`);
                 const regionOne: Region = oneRegion.data;
-                params.region = regionOne.name_region;
+                params.region = regionOne.name;
             }
 
             // Ciudad
@@ -498,7 +498,7 @@ export default function Marketplace() {
                                 >
                                     <MenuItem value="" disabled>Elige una región</MenuItem>
                                     {region.map(region => (
-                                    <MenuItem key={region.id_region} value={region.id_region}>{region.name_region}</MenuItem>
+                                    <MenuItem key={region.id_region} value={region.id_region}>{region.name}</MenuItem>
                                     ))}
                                 </Select>
                                 

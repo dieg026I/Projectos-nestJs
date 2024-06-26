@@ -71,7 +71,7 @@ const PaymentMessage: React.FC = () => {
                             </div>
                             <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                                 <Typography style={{fontFamily:"SF Pro Display Bold", fontSize:"20px"}}>Envío:</Typography>
-                                <Typography style={{fontFamily:"SF Pro Display Semibold", fontSize:"17px"}}>0</Typography>
+                                <Typography style={{fontFamily:"SF Pro Display Semibold", fontSize:"17px"}}>5000</Typography>
                             </div>
                         </div>
                         <br />
@@ -81,7 +81,7 @@ const PaymentMessage: React.FC = () => {
                     </div>
                     <div style={{  height:"40px", display: 'flex', justifyContent: 'center', marginTop:"35px"}}>
                         <Typography style={{fontFamily:"SF Pro Display Bold", fontSize:"20px", marginTop:"20px", marginRight:"10px"}}>Total</Typography>
-                        <Typography style={{fontFamily:"SF Pro Display Semibold", fontSize:"20px", marginTop:"20px"}}>$2.500</Typography>
+                        <Typography style={{fontFamily:"SF Pro Display Semibold", fontSize:"20px", marginTop:"20px"}}>$26.980</Typography>
                     </div>
                     </Card>
                     

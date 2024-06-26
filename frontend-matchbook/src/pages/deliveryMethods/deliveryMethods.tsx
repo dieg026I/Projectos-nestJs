@@ -16,7 +16,7 @@ import { BiMap } from "react-icons/bi";
 
 interface Region  {
     id_region: number;
-    name_region: string;
+    name: string;
 };
 interface Cities {
     id_city: number;
@@ -241,7 +241,7 @@ const DeliveryMethods: React.FC = () => {
                                                     })}
                                                 >
                                                     {region.map(region => (
-                                                        <MenuItem key={region.id_region} value={region.id_region}>{region.name_region}</MenuItem>
+                                                        <MenuItem key={region.id_region} value={region.id_region}>{region.name}</MenuItem>
                                                     ))}
                                                 </Select>
                                             </FormControl>
@@ -378,7 +378,7 @@ const DeliveryMethods: React.FC = () => {
                                             })}
                                         >
                                             {region.map(region => (
-                                                <MenuItem key={region.id_region} value={region.id_region}>{region.name_region}</MenuItem>
+                                                <MenuItem key={region.id_region} value={region.id_region}>{region.name}</MenuItem>
                                             ))}
                                         </Select>
                                     </FormControl>
