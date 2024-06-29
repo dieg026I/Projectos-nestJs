@@ -1,6 +1,6 @@
 
 import React, { useEffect, useState } from "react";
-
+import { sendWelcomeEmail } from '../../services/emailService';
 import {
     Box,
     Button,
@@ -207,6 +207,16 @@ const RegisterPage: React.FC = () => {
         
             const response = await axios.post('http://localhost:3001/users', user);
             console.log(response.data);
+
+
+            // Envía el correo electrónico de bienvenida
+            sendWelcomeEmail(username, email_user)
+            .then((response: any) => {
+                console.log('Correo electrónico enviado con éxito!', response.status, response.text);
+            }, (error: any) => {
+                console.error('Error al enviar el correo electrónico:', error);
+            });
+
             navigate('/login');
         } catch (error) {
             console.error('Hubo un error al registrarse:', error);

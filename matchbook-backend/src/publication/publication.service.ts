@@ -80,6 +80,7 @@ export class PublicationService {
     await this.publicationRepository.delete(id);
   }
 
+
   findAllWithBooks(): Promise<Publication[]> {
     return this.publicationRepository.find({ relations: ['book','book.author_id_author', 'book.publisher_id_publisher', 'users', 'users.cities'] })
       .catch(error => {
@@ -96,9 +97,11 @@ export class PublicationService {
       });
   }
 
-  update(id: string, publication: Publication) {
-    return this.publicationRepository.update(id, publication);
-  }
+
+  async update(id_publication: string, updateData: Partial<Publication>): Promise<Publication> { 
+    await this.publicationRepository.update(id_publication, updateData);
+    return this.publicationRepository.findOne({where: {id_publication}});
+}
 
 
 }

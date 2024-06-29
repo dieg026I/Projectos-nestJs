@@ -516,6 +516,9 @@ export default function Marketplace() {
                                         <MenuItem key={city.id_city} value={city.id_city}>{city.name}</MenuItem>
                                     ))}
                                 </Select>
+                                {selectedRegion !== 0 && id_city !== 0 && (
+                                    <Button onClick={() => { setSelectedRegion(0); setIdCity(0); }}>Deseleccionar</Button>
+                                )}
                                 </FormControl>
                             </AccordionDetails>
                         </Accordion>

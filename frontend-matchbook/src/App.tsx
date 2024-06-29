@@ -21,6 +21,7 @@ import ProfileUsers from './pages/profileUsers/profileUsers';
 import DeliveryMethods from './pages/deliveryMethods/deliveryMethods';
 import Pay from './pages/pay/pay';
 import PaymentMessage from './pages/paymentMessage/paymentMessage';
+import MyDetails from './pages/myDetails/myDetails';
 
 const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const navigate = useNavigate();
@@ -64,6 +65,7 @@ function App() {
         <Route path="/home2" element={<ProtectedRoute><HomePageLogin /></ProtectedRoute>} />
         <Route path="/sales" element={<ProtectedRoute><Sales /></ProtectedRoute>} />
         <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
+        <Route path="/myDetails" element={<MyDetails/>} />
         <Route path="/profileUsers" element={<ProtectedRoute><ProfileUsers /></ProtectedRoute>} />
         <Route path="/marketplace" element={<Marketplace />} />
         <Route path="/marketplaceSearch" element={<MarketplaceSearch />} />

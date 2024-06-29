@@ -129,33 +129,33 @@ const DeliveryMethods: React.FC = () => {
         }
     };
 
-            {/* Cargar Todas Las Regiones */}
-            useEffect(() => {
-                axios.get('http://localhost:3001/region')
-                    .then(response => {
-                    setRegion(response.data);
-                    console.log('Mostrar Regiones'+response.data);
-                    });
-            }, []);
-        
-            {/*------------------------------------------ */}
-            {/* Seleccion de la Region */}
-            const handleRegionChange = (event: { target: { value: React.SetStateAction<number>; }; }) => {
-                setSelectedRegion(event.target.value);
-                const numberRegion = event.target.value;
-                console.log('region seleccionada: ' + event.target.value);
-                axios.get(`http://localhost:3001/cities/region/${numberRegion}`)
-                    .then(response => {
-                    setCities(response.data);
-                    console.log(response.data);
-                });
-            };
-            
-            {/*------------------------------------------ */}
-            {/* Seleccion de la Comuna */}
-            const handleCityChange = (event: { target: { value: React.SetStateAction<number>; }; }) => {
-                setIdCity(event.target.value);
-            };
+    {/* Cargar Todas Las Regiones */}
+    useEffect(() => {
+        axios.get('http://localhost:3001/region')
+            .then(response => {
+            setRegion(response.data);
+            console.log('Mostrar Regiones'+response.data);
+            });
+    }, []);
+
+    {/*------------------------------------------ */}
+    {/* Seleccion de la Region */}
+    const handleRegionChange = (event: { target: { value: React.SetStateAction<number>; }; }) => {
+        setSelectedRegion(event.target.value);
+        const numberRegion = event.target.value;
+        console.log('region seleccionada: ' + event.target.value);
+        axios.get(`http://localhost:3001/cities/region/${numberRegion}`)
+            .then(response => {
+            setCities(response.data);
+            console.log(response.data);
+        });
+    };
+    
+    {/*------------------------------------------ */}
+    {/* Seleccion de la Comuna */}
+    const handleCityChange = (event: { target: { value: React.SetStateAction<number>; }; }) => {
+        setIdCity(event.target.value);
+    };
     
 
 

@@ -112,7 +112,7 @@ const UserAdmin: React.FC = () => {
                                 </TableRow>
                             </TableHead>
                             <TableBody>
-                                {users.map((user) => (
+                                {users.filter(user => user.rut_user !== 21076030).map((user) => (
                                     <TableRow key={user.rut_user}>
                                     <Checkbox
                                             checked={selectedUsers.indexOf(user.rut_user) !== -1}

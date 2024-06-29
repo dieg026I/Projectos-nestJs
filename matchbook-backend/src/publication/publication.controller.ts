@@ -54,9 +54,10 @@ export class PublicationController {
     return this.publicationService.remove(id);
   }
 
+
   @Put(':id')
-  async update(@Param('id') id: string, @Body() publication: Publication) {
-    return this.publicationService.update(id, publication);
+  async update(@Param('id') id: string, @Body() updateData: Partial<Publication>): Promise<Publication> {
+      return this.publicationService.update(id, updateData);
   }
 
 }

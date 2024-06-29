@@ -109,6 +109,34 @@ const Cart: React.FC = () => {
     // Dentro de tu componente
     const [selectedQuantity, setSelectedQuantity] = useState(1);
     
+    const handleDelete = async (publicationId: string) => {
+        const userString = localStorage.getItem("user");
+        if (userString !== null){
+            const user : Users = JSON.parse(userString);
+
+            const updateData = new FormData();
+            
+            try {
+                await axios.delete(`http://localhost:3001/publications/put/${publicationId}`);
+                // Actualizar las publicaciones del carrito de compras después de la eliminación
+                const response = await axios.get(`http://localhost:3001/shopping-cart/userCart/${user.rut_user}`);
+                const shoppingCartGet: ShoppingCart = response.data;
+                const publicationGet = shoppingCartGet.publication;
+                // Agrupa las publicaciones por vendedor
+                const groupedPublications: GroupedPublications = publicationGet.reduce((acc: GroupedPublications, publication) => {
+                    const { username } = publication.users;
+                    if (!acc[username]) {
+                        acc[username] = [];
+                    }
+                    acc[username].push(publication);
+                    return acc;
+                }, {});
+                setPublicationsCart(groupedPublications);
+            } catch (error) {
+                console.error('Error deleting publication from cart:', error);
+            }  
+        }
+    };
     
     return (
         <>
@@ -228,7 +256,9 @@ const Cart: React.FC = () => {
                                                     </Select>
                                                     </TableCell>
                                                     <TableCell align="center" style={{  border: 'none', paddingRight:"60px", fontSize:"15px", fontFamily:"SF Pro Display Regular" }}>${publication.cost_book}</TableCell>
-                                                    <TableCell align="center" style={{  border: 'none' , paddingRight:"60px" }}><LuTrash2 style={{width:"28px", height:"28px"}} /></TableCell>
+                                                    <TableCell align="center" style={{  border: 'none' , paddingRight:"60px" }}>
+                                                        <LuTrash2 style={{width:"28px", height:"28px"}} onClick={() => handleDelete(publication.id_publication)} />
+                                                    </TableCell>
                                                 </TableRow>
                                             </>
                                         ))}

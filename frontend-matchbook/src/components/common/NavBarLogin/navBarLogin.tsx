@@ -79,12 +79,11 @@ export const NavBarLogin: React.FC<{}> = () => {
         console.error('Error fetching publications:', error);
         }
         }   
-        
     };
 
     fetchPublications();
     }, []);
-
+    {/*-----------------------------------------------------------------*/}
 
     {/* Resposivo */}
     const isMobile = useMediaQuery('(max-width:1080px)') ;
@@ -92,6 +91,7 @@ export const NavBarLogin: React.FC<{}> = () => {
     const handleMobileMenuOpen = (event: React.MouseEvent<HTMLButtonElement>) => {
         setMobileMoreAnchorEl(event.currentTarget);
     };
+    {/*-----------------------------------------------------------------*/}
 
     {/* Abrir Perfil */}
     const [open, setOpen] = useState(false);
@@ -103,6 +103,7 @@ export const NavBarLogin: React.FC<{}> = () => {
     const handleClose = () => {
         setOpen(false);
     };
+    {/*-----------------------------------------------------------------*/}
 
     {/* Colores Boton Perfil */}
     const [bgColorProfile, setBgColorProfile] = useState('transparent');
@@ -121,6 +122,65 @@ export const NavBarLogin: React.FC<{}> = () => {
         setTextColorProfile('#f05d16'); 
         setBorderColorProfile('#ffffff');
     };
+    {/*-----------------------------------------------------------------*/}
+
+    {/* Colores Boton Datos */}
+    const [bgColorDetails, setBgColorDetails] = useState('transparent');
+    const [textColorDetails, setTextColorDetails] = useState('#f05d16');
+    const [borderColorDetails, setBorderColorDetails] = useState('#ffffff');
+
+    const handleMouseOverDetails = () => {
+        setBgColorDetails('#f05d16');
+        setTextColorDetails('#ffffff');
+        setBorderColorDetails('#f05d16');
+        
+    };
+
+    const handleMouseOutDetails = () => {
+        setBgColorDetails('transparent');
+        setTextColorDetails('#f05d16'); 
+        setBorderColorDetails('#ffffff');
+    };
+    {/*-----------------------------------------------------------------*/}
+
+    {/* Colores Boton Gestion Libros */}
+    const [bgColorBook, setBgColorBook] = useState('transparent');
+    const [textColorBook, setTextColorBook] = useState('#f05d16');
+    const [borderColorBook, setBorderColorBook] = useState('#ffffff');
+
+    const handleMouseOverBook = () => {
+        setBgColorBook('#f05d16');
+        setTextColorBook('#ffffff');
+        setBorderColorBook('#f05d16');
+        
+    };
+
+    const handleMouseOutBook = () => {
+        setBgColorBook('transparent');
+        setTextColorBook('#f05d16'); 
+        setBorderColorBook('#ffffff');
+    };
+
+    {/*-----------------------------------------------------------------*/}
+
+    {/* Colores Boton Saldo */}
+    const [bgColorWallet, setBgColorWallet] = useState('transparent');
+    const [textColorWallet, setTextColorWallet] = useState('#f05d16');
+    const [borderColorWallet, setBorderColorWallet] = useState('#ffffff');
+
+    const handleMouseOverWallet = () => {
+        setBgColorWallet('#f05d16');
+        setTextColorWallet('#ffffff');
+        setBorderColorWallet('#f05d16');
+        
+    };
+
+    const handleMouseOutWallet = () => {
+        setBgColorWallet('transparent');
+        setTextColorWallet('#f05d16'); 
+        setBorderColorWallet('#ffffff');
+    };
+    {/*-----------------------------------------------------------------*/}
 
     {/* Colores Boton Lapiz */}
     const [bgColorPencil, setBgColorPencil] = useState('#ffffff');
@@ -333,13 +393,13 @@ export const NavBarLogin: React.FC<{}> = () => {
                             </Button>
 
                             <Button fullWidth
-                                href="/profile" 
+                                href="/myDetails" 
                                 variant="contained"  
                                 style={{ 
                                 textTransform: "none", 
-                                backgroundColor: "#ffffff", 
+                                backgroundColor: bgColorDetails, 
                                 height:"40px",
-                                color: "#f05d16",  
+                                color: textColorDetails,  
                                 borderRadius: '30px', 
                                 border: '2px solid borderColor',
                                 boxShadow: '0px 3px 6px rgba(0, 0, 0, 0.36)',
@@ -347,7 +407,8 @@ export const NavBarLogin: React.FC<{}> = () => {
                                 marginBottom: "15px" ,
                                 fontFamily: "SF Pro Display Bold",
                                 }}
-                                
+                                onMouseOver={handleMouseOverDetails}
+                                onMouseOut={handleMouseOutDetails}
                             >
                                 Mis Datos
                             </Button>
@@ -360,9 +421,9 @@ export const NavBarLogin: React.FC<{}> = () => {
                                 variant="contained"  
                                 style={{ 
                                 textTransform: "none", 
-                                backgroundColor: "#ffffff", 
+                                backgroundColor: bgColorBook, 
                                 height:"40px",
-                                color: "#f05d16",  
+                                color: textColorBook,  
                                 borderRadius: '30px', 
                                 border: '2px solid borderColor',
                                 boxShadow: '0px 3px 6px rgba(0, 0, 0, 0.36)',
@@ -371,7 +432,8 @@ export const NavBarLogin: React.FC<{}> = () => {
                                 marginTop: "15px" ,
                                 fontFamily: "SF Pro Display Bold",
                                 }}
-                                
+                                onMouseOver={handleMouseOverBook}
+                                onMouseOut={handleMouseOutBook}
                             >
                                 Gestión de Libros
                             </Button>
@@ -381,9 +443,9 @@ export const NavBarLogin: React.FC<{}> = () => {
                                 variant="contained"  
                                 style={{ 
                                 textTransform: "none", 
-                                backgroundColor: "#ffffff", 
+                                backgroundColor: bgColorWallet, 
                                 height:"40px",
-                                color: "#f05d16",  
+                                color: textColorWallet,  
                                 borderRadius: '30px', 
                                 border: '2px solid borderColor',
                                 boxShadow: '0px 3px 6px rgba(0, 0, 0, 0.36)',
@@ -391,7 +453,8 @@ export const NavBarLogin: React.FC<{}> = () => {
                                 marginBottom: "20px" ,
                                 fontFamily: "SF Pro Display Bold",
                                 }}
-                                
+                                onMouseOver={handleMouseOverWallet}
+                                onMouseOut={handleMouseOutWallet}
                             >
                                 Saldo
                             </Button>

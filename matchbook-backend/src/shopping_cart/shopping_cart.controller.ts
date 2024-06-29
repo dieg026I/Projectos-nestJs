@@ -40,4 +40,6 @@ export class ShoppingCartController {
     async addPublicationToCart(@Param('idCart') id_shopping_cart: number, @Param('idPublication') id_publication: string) {
         return this.shoppingCartService.addPublicationToCart(id_shopping_cart, id_publication);
     }
+
+    
 }

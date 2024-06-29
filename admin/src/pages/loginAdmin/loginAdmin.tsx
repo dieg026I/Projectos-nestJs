@@ -9,12 +9,6 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router';
 
 
-type FormValue = {
-    email: string,
-    password: string
-
-}
-
 interface User {
 name_user: string,
 lastname_user: string,
@@ -48,6 +42,12 @@ const LoginAdmin: React.FC = () => {
         //  -Contraseña-
         if (!password_user.trim()) {
             alert('Contraseña requerida.');
+            return;
+        }
+
+        // Verificar si el correo electrónico ingresado es el del usuario permitido
+        if (email_user !== 'nataliarubilarh@MatchbookAdmin.cl') {
+            alert('Acceso denegado. Tu cuenta no es de administrador.');
             return;
         }
     

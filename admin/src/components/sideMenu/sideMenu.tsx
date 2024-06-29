@@ -1,5 +1,7 @@
 import { Avatar, Divider, Drawer, Icon, List, ListItemButton, ListItemIcon, ListItemText, colors, useTheme, Button } from '@mui/material';
 import { Box } from '@mui/system';
+import axios from 'axios';
+import React, { useEffect } from 'react';
 import { useState } from 'react';
 import { RiMoneyDollarCircleLine } from "react-icons/ri";
 import { RiAccountCircleLine } from "react-icons/ri";
@@ -9,22 +11,50 @@ import { RiBookOpenLine } from "react-icons/ri";
 import { useLocation } from 'react-router';
 import { useNavigate } from 'react-router';
 
+interface Users {
+    name_user: string,
+    lastname_user: string,
+    rut_user: number,
+    dv_user: string,
+    phone_user: number,
+    email_user: string,
+    password_users: string,
+    username: string
+}
 
 export const SideMenu: React.FC<{}> = () => {
 
     const theme = useTheme();
     const location = useLocation();
     const navigate = useNavigate();
+    {/* Nombre de usuario y correo */}
+    const [users, setUser] = useState<Users | null>(null);
     
     const isSelected = (path: string) => location.pathname === path;
     
     const logout = () => {
         // Elimina el token del almacenamiento local
         localStorage.removeItem('access_token');
-
         navigate('/loginAdmin');
     };
 
+    useEffect(() => {
+        const fetchUser = async () => {
+            const userString = localStorage.getItem("user");
+            if (userString !== null){
+                const users : Users = JSON.parse(userString);
+                try {
+                    const responseUser = await axios.get(`http://localhost:3001/users/rut/${users.rut_user}`);
+                    const userResponse: Users = responseUser.data;
+                    setUser(userResponse);
+                } catch (error) {
+                    console.error('Error fetching user:', error);
+                }
+            }
+        };
+
+        fetchUser();
+    }, []);
 
     return (
         <>
@@ -36,7 +66,7 @@ export const SideMenu: React.FC<{}> = () => {
                             sx={{ height: theme.spacing(12), width: theme.spacing(12) }}
                             src="https://yt3.ggpht.com/grfYgQadT8iNg9WPb-jkrKB-9224y_DBDXAOtV4Yt7cyQmtR47J_453uveQOTDsp_dRSH851TMM=s108-c-k-c0x00ffffff-no-rj"
                         />
-                        <p style={{ color: '#ffffff', marginTop: theme.spacing(1) }}>Hola</p>
+                        <p style={{ color: '#ffffff', marginTop: theme.spacing(1) }}>{users?.username}</p>
                         
                     </Box>
                     

@@ -9,7 +9,7 @@ import axios from "axios";
 import { v4 as uuidv4 } from 'uuid';
 import { FaRegTrashCan } from "react-icons/fa6";
 
-interface Category {
+interface Categories {
     id_category: string;
     name_category: string;
 }
@@ -28,7 +28,7 @@ interface Book {
     author_id_author: Author;
     publisher_name: string; 
     publisher_id_publisher: Publisher;
-    category: string;
+    categories: Categories[];
     year_book: number;
     status_book: string;
     stock_book: number;
@@ -502,7 +502,7 @@ const ReadingClubAdmin: React.FC = () => {
                                                 
                                                 <TableCell align="center">{readingClubs.book.publisher_id_publisher.name_publisher}</TableCell>
                                                 <TableCell align="center">{readingClubs.book.year_book}</TableCell>
-                                                <TableCell align="center">{readingClubs.book.category}</TableCell>
+                                                <TableCell align="center">{readingClubs.book.categories.map((category) => category.name_category )}</TableCell>
                                                 <TableCell align="center">
                                                     {readingClubs.date_club instanceof Date ? `${("0" + readingClubs.date_club.getDate()).slice(-2)}/${("0" + (readingClubs.date_club.getMonth() + 1)).slice(-2)}/${readingClubs.date_club.getFullYear()}` : readingClubs.date_club}
                                                 </TableCell>

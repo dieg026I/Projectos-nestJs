@@ -9,6 +9,11 @@ import Footer from "../../components/common/Footer/footer";
 import axios from "axios";
 import { Typography } from "antd";
 
+interface Categories {
+    id_category: string;
+    name_category: string;
+}
+
 interface Author {
     id_author: string;
     name_author: string;
@@ -24,7 +29,7 @@ interface Book {
     author_id_author: Author;
     publisher_name: string; 
     publisher_id_publisher: Publisher;
-    category: string;
+    categories: Categories[];
     year_book: number;
     status_book: string;
     stock_book: number;
@@ -91,7 +96,7 @@ export default function ReadingClub() {
                                         <ul style={{ listStyleType: 'none' , paddingRight: '50px'}}>
                                             <li>Editorial: {readingClubs.book.publisher_id_publisher.name_publisher}</li>
                                             <li>Año: {readingClubs.book.year_book}</li>
-                                            <li>Categoría: Historia, Romance</li>
+                                            <li>Categoría: {readingClubs.book.categories.map((category) => category.name_category )}</li>
                                         </ul>
                                     </div>
                                 </Grid>
