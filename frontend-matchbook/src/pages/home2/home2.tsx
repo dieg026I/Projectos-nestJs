@@ -224,7 +224,7 @@ function handleClick(event: React.MouseEvent<HTMLDivElement, MouseEvent>) {
                 console.log("id publicacion: "+ publicationCart.id_publication);
                 const allCart: Publication[]= carro.publication;
                 console.log("allCart: "+ allCart)
-                if(allCart.length > 0){
+                if(allCart){
 
                     for (let i = 0; i < allCart.length; i++) {
                         if (allCart[i].id_publication === publicationCart.id_publication) {

@@ -14,7 +14,7 @@ export class ReadingClubService {
 
   async saveImage(imageBuffer: Buffer, mimetype: string): Promise<string> {
     const imageName = uuidv4(); // Genera un nombre único para la imagen
-    const path = `C:\\Projectos-nestJs\\images\\${imageName}`;
+    const path = `C:\\Users\\dieg0\\OneDrive\\Documentos\\Projectos-nestJs\\images${imageName}`;
     // Guarda la imagen en el almacenamiento local
     fs.writeFileSync(path, imageBuffer);
       return imageName;

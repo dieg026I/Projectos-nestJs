@@ -14,14 +14,46 @@ import NavBarLogin from "../../components/common/NavBarLogin/navBarLogin";
 import Footer from "../../components/common/Footer/footer";
 import { BiMap } from "react-icons/bi";
 
-interface Region  {
-    id_region: number;
-    name: string;
-};
+interface regions {
+        regionId: string ,
+        regionName: string,
+        ineRegionCode: number
+
+}
+
 interface Cities {
-    id_city: number;
-    name: string;
-};
+   
+        countyCode: string,
+        countyName: string,
+        regionCode: string,
+        ineCountyCode: number,
+        queryMode: number,
+        coverageName: string
+    }
+
+interface Sucursal  {
+        regionName: string,
+        countyName: string,
+        officeName: string,
+        officeType: number,
+        streetName: string,
+        streetNumber: number,
+        complement: string,
+        addressId: number,
+        latitude: string,
+        longitude: string,
+        streetNameId: number,
+        ineCountyId: number,
+        managerName: string,
+        telephone: string,
+        businessHour: [{
+            day: string,
+            initialStartHour: string,
+            initialEndHour: string,
+            finalStartHour: string,
+            finalEndHour: string;
+        }],
+}
 
 const DeliveryMethods: React.FC = () => {
     const [delivery, setDelivery] = useState(0);
@@ -29,16 +61,18 @@ const DeliveryMethods: React.FC = () => {
     const [isModalOpenAdress, setIsModalOpenAdress] = useState(false);
 
     const [name, setNameAdress] = React.useState('');
+    const [id_sucu, setId_sucu] = React.useState('');
     const [street, setStreet] = React.useState('');
     const [house_number, setHouseNumber] = React.useState<number | null>(null);
     const [extra_details, setExtraDetails] = React.useState('');
     const [postal_code, setPostalCode] = React.useState<number | null>(null);
     const [phone_number, setPhoneNumber] = React.useState<number | null>(null);
 
-    const [region , setRegion] = React.useState<Region[]>([]);
-    const [selectedRegion, setSelectedRegion] = useState(0);
+    const [region , setRegion] = React.useState<regions[]>([]);
+    const [selectedRegion, setSelectedRegion] = useState('');
     const [cities, setCities] = React.useState<Cities[]>([]);
-    const [id_city, setIdCity] = useState(0);
+    const [sucursal, setSucursal] = React.useState<Sucursal[]>([]);
+    const [id_city, setIdCity] = useState('');
     const navigate = useNavigate();
     
     const handleChange = (event: ChangeEvent<{}>, newValue: number) => {
@@ -131,36 +165,56 @@ const DeliveryMethods: React.FC = () => {
 
     {/* Cargar Todas Las Regiones */}
     useEffect(() => {
-        axios.get('http://localhost:3001/region')
+        axios.get('http://testservices.wschilexpress.com/georeference/api/v1.0/regions')
             .then(response => {
-            setRegion(response.data);
-            console.log('Mostrar Regiones'+response.data);
+            setRegion(response.data.regions);
+            console.log('Mostrar Regiones'+ response.data);
             });
     }, []);
 
     {/*------------------------------------------ */}
     {/* Seleccion de la Region */}
-    const handleRegionChange = (event: { target: { value: React.SetStateAction<number>; }; }) => {
-        setSelectedRegion(event.target.value);
-        const numberRegion = event.target.value;
+    const handleRegionChange = (event: { target: { value: React.SetStateAction<string>; }; }) => {
+        const numberRegion  = event.target.value;
+        setSelectedRegion(numberRegion);
         console.log('region seleccionada: ' + event.target.value);
-        axios.get(`http://localhost:3001/cities/region/${numberRegion}`)
+        if(numberRegion){
+        axios.get(`http://testservices.wschilexpress.com/georeference/api/v1.0/coverage-areas?RegionCode=${numberRegion}&type=1`)
             .then(response => {
-            setCities(response.data);
-            console.log(response.data);
-        });
+            const responseData : Cities[] = response.data.coverageAreas;  
+            if(responseData){
+            setCities(responseData);
+            console.log("Datos comuna: " + responseData);
+            }else{
+                console.log("Entro pero no hay respuesta");
+            }
+            })
+        
+            
+        }else{
+            console.log("No hay datos de comunas")
+        }
+
+
     };
     
     {/*------------------------------------------ */}
     {/* Seleccion de la Comuna */}
-    const handleCityChange = (event: { target: { value: React.SetStateAction<number>; }; }) => {
+    const handleCityChange = (event: { target: { value: React.SetStateAction<string>; }; }) => {
         setIdCity(event.target.value);
+        axios.get(`http://testservices.wschilexpress.com/georeference/api/v1.0/offices?Type={Type}[&${selectedRegion}][&${id_city}]`)
+            .then(response => {
+            setSucursal(response.data.offices);
+            console.log(response.data.offices);
+    })
     };
     
 
 
+    const handleSucursal= (event: { target: { value: React.SetStateAction<string>; }; }) => {
+        setId_sucu(event.target.value);
     
-
+    };
 
     return (
         <>
@@ -236,12 +290,12 @@ const DeliveryMethods: React.FC = () => {
                                                     placeholder="Elige una región"
                                                     onChange={(event) => handleRegionChange({
                                                         target: {
-                                                            value: Number(event.target.value),
+                                                            value:(event.target.value),
                                                         },
                                                     })}
                                                 >
                                                     {region.map(region => (
-                                                        <MenuItem key={region.id_region} value={region.id_region}>{region.name}</MenuItem>
+                                                        <MenuItem key={region.regionId} value={region.ineRegionCode}>{region.regionName}</MenuItem>
                                                     ))}
                                                 </Select>
                                             </FormControl>
@@ -259,12 +313,12 @@ const DeliveryMethods: React.FC = () => {
                                                     placeholder="Elige una ciudad"
                                                     onChange={(event) => handleCityChange({
                                                         target: {
-                                                            value: Number(event.target.value),
+                                                            value: (event.target.value),
                                                         },
                                                     })}
                                                 >
                                                     {cities.map((city: Cities) => (
-                                                        <MenuItem key={city.id_city} value={city.id_city}>{city.name}</MenuItem>
+                                                        <MenuItem key={city.countyCode} value={city.countyName}>{city.countyName}</MenuItem>
                                                     ))}
                                                 </Select>
                                             </FormControl>
@@ -373,12 +427,12 @@ const DeliveryMethods: React.FC = () => {
                                             placeholder="Ej: Valparaiso"
                                             onChange={(event) => handleRegionChange({
                                                 target: {
-                                                    value: Number(event.target.value),
+                                                    value:(event.target.value),
                                                 },
                                             })}
                                         >
                                             {region.map(region => (
-                                                <MenuItem key={region.id_region} value={region.id_region}>{region.name}</MenuItem>
+                                                <MenuItem key={region.regionId} value={region.regionId}>{region.regionName}</MenuItem>
                                             ))}
                                         </Select>
                                     </FormControl>
@@ -393,12 +447,12 @@ const DeliveryMethods: React.FC = () => {
                                             placeholder="Ej: Viña del Mar"
                                             onChange={(event) => handleCityChange({
                                                 target: {
-                                                    value: Number(event.target.value),
+                                                    value:(event.target.value),
                                                 },
                                             })}
                                         >
                                             {cities.map((city: Cities) => (
-                                                <MenuItem key={city.id_city} value={city.id_city}>{city.name}</MenuItem>
+                                                <MenuItem key={city.countyCode} value={city.countyName}>{city.countyName}</MenuItem>
                                             ))}
                                         </Select>
                                     </FormControl>
@@ -410,18 +464,19 @@ const DeliveryMethods: React.FC = () => {
                                     <h6 style={{fontFamily:"SF Pro Display Bold", fontSize:"18px", margin:"0", marginBottom:"20px", marginTop:"10px"}}>Sucursal</h6>
                                     <FormControl style={{marginRight: '10px', width:"200px"}}>
                                         <InputLabel>Ej: Plaza Latorre 32</InputLabel>
-                                        <Select>
-                                            <MenuItem value="Valparaiso Victoria">Valparaiso Victoria</MenuItem>
-                                            <MenuItem value="Congreso Centro">Congreso Centro</MenuItem>
-                                            <MenuItem value="Valparaiso Brasil">Valparaiso Brasil</MenuItem>
-                                            <MenuItem value="Valparaiso Blanco">Valparaiso Blanco</MenuItem>
-                                            <MenuItem value="Valparaiso Curauma">Valparaiso Curauma</MenuItem>
-                                            <MenuItem value="Centro de Servicios">Centro de Servicios</MenuItem>
-                                            <MenuItem value="Vina Del Mar Plaza Latorre">Vina Del Mar Plaza Latorre</MenuItem>
-                                            <MenuItem value="Plaza Latorre 32, Vina Del Mar">Plaza Latorre 32, Vina Del Mar</MenuItem>
-                                            <MenuItem value="Vina Cinco Norte">Vina Cinco Norte</MenuItem>
-                                            <MenuItem value="Full Service Cibereluno">Full Service Cibereluno</MenuItem>
-                                            <MenuItem value="Pick Up Los Carinositos">Pick Up Los Carinositos</MenuItem>
+                                        <Select
+                                        labelId="sucu-label"
+                                            id="sucursal"
+                                            value={ id_sucu|| ''}
+                                            onChange={(event) => handleSucursal({
+                                                target: {
+                                                    value:(event.target.value),
+                                                },
+                                            })}
+                                        >
+                                            {sucursal.map((sucu: Sucursal) => (
+                                                <MenuItem key={sucu.addressId} value={sucu.complement}>{sucu.complement}</MenuItem>
+                                            ))}
                                         </Select>
                                     </FormControl>
                                 </div>
@@ -488,4 +543,5 @@ const DeliveryMethods: React.FC = () => {
         </>
     );
 };
+
 export default DeliveryMethods;
