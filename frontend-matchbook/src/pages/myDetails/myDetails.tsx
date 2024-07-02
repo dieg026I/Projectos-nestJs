@@ -126,7 +126,6 @@ const MyDetails: React.FC = () => {
         }
     };
 
-
     {/* Contenido Pestañas */}
     const getContent = () => {
         switch (activeTab) {

@@ -10,9 +10,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { v4 as uuidv4 } from 'uuid';
 import NavBarLogin from "../../components/common/NavBarLogin/navBarLogin";
-import { UserContext } from "../UserContext";
 import { Navigate, useNavigate } from "react-router-dom";
-import { Console } from "console";
 import Footer from "../../components/common/Footer/footer";
 import { AutocompleteInputChangeReason } from '@mui/material/Autocomplete';
 
@@ -76,6 +74,7 @@ const Sales: React.FC = () => {
     const [selectedStatus, setSelectedStatus] = useState('');
     const [stock_book, setStockBook] = React.useState(1);
     const [description_book, setDescriptionBook] = React.useState('');
+    
     {/* Publicación */}
     const [id_publication, setIdPublication] = React.useState('');
     const [date_publication, setDatePublication] = React.useState('');
@@ -85,11 +84,6 @@ const Sales: React.FC = () => {
     const [photo_back_cover, setPhotoBackCover] = React.useState<File | null>(null);
     const [book, setBook] = React.useState<Book>();
     const navigate = useNavigate();
-
-    {/* Sugerencia */}
-    const [suggestions, setSuggestions] = useState<{ title: string; authors: string[] }[]>([]);
-
-    const [selectedTitle, setSelectedTitle] = useState('');
 
     const [open, setOpen] = useState(false);
     const [options, setOptions] = useState<BookSuggestion[]>([]);

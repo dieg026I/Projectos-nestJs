@@ -183,7 +183,7 @@ const DeliveryMethods: React.FC = () => {
                 <Grid className="text-center" item xs={12} sm={12} md={12} lg={7} xl={7}>
                     <div style={{ display: 'block', gap: '20px', marginLeft: '5px', justifyContent:"center", borderRadius:"20px", alignContent:"flex-start", height:"700px", marginTop:"30px"}}>
                         <Tabs value={delivery} onChange={handleChange} style={{display: 'flex', marginLeft: '55px'}}>
-                            <Tab icon={<TbTruckDelivery style={{ marginRight: '10px', }} />} label="Despacho a domicilio" style={{width:"320px", height:"70px"}} />
+                            <Tab icon={<TbTruckDelivery style={{ marginRight: '10px' }} />} label="Despacho a domicilio" style={{width:"320px", height:"70px"}} />
                             <Tab icon={<MdOutlinePlace style={{ marginRight: '10px' }} />} label="Retiro en sucursal" style={{width:"320px", height:"70px"}} />
                         </Tabs>
 

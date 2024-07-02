@@ -144,8 +144,8 @@ const Cart: React.FC = () => {
             <br />
             <div>
                 <br />
-                <Card style={{backgroundColor:"#f05d16", height:"60px", alignContent:"center"}}>
-                    <p style={{color:"#ffffff", paddingLeft:"20px", paddingTop:"10px", textAlign:"center", fontSize:"20px", fontFamily:"SF Pro Display Bold" }}>ATENCIÓN: Los pagos se realizan por separado si estás comprando a distintos bookers</p>
+                <Card style={{backgroundColor:"#f05d16", height:"60px", display:"flex", justifyContent:"center", alignItems:"center"}}>
+                    <p style={{ color:"#ffffff", paddingLeft:"20px", paddingTop:"10px", textAlign:"center", fontSize:"20px", fontFamily:"SF Pro Display Bold" }}>ATENCIÓN: Los pagos se realizan por separado si estás comprando a distintos bookers</p>
                 </Card>
                 <br />
                 <div style={{ display: 'flex', justifyContent: 'center', margin: '0 auto' }}>
@@ -256,8 +256,8 @@ const Cart: React.FC = () => {
                                                     </Select>
                                                     </TableCell>
                                                     <TableCell align="center" style={{  border: 'none', paddingRight:"60px", fontSize:"15px", fontFamily:"SF Pro Display Regular" }}>${publication.cost_book}</TableCell>
-                                                    <TableCell align="center" style={{  border: 'none' , paddingRight:"60px" }}>
-                                                        <LuTrash2 style={{width:"28px", height:"28px"}} onClick={() => handleDelete(publication.id_publication)} />
+                                                    <TableCell onClick={() => handleDelete(publication.id_publication)} align="center" style={{  border: 'none' , paddingRight:"60px" , cursor: 'pointer'}}>
+                                                        <LuTrash2 style={{width:"28px", height:"28px"}}  />
                                                     </TableCell>
                                                 </TableRow>
                                             </>

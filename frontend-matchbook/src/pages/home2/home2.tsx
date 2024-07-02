@@ -224,8 +224,7 @@ function handleClick(event: React.MouseEvent<HTMLDivElement, MouseEvent>) {
                 console.log("id publicacion: "+ publicationCart.id_publication);
                 const allCart: Publication[]= carro.publication;
                 console.log("allCart: "+ allCart)
-                if(allCart.length > 0){
-
+                if(allCart){
                     for (let i = 0; i < allCart.length; i++) {
                         if (allCart[i].id_publication === publicationCart.id_publication) {
                         
@@ -235,6 +234,7 @@ function handleClick(event: React.MouseEvent<HTMLDivElement, MouseEvent>) {
                             try {
                                 const response = await axios.post(`http://localhost:3001/shopping-cart/publicationCart/${carro.id_shopping_cart}/publications/${publicationCart.id_publication}`);
                                 console.log("publicacion guardada en el carro: "+ response.data)
+                                notify();
                                 if(response.data){    
                                     const cartResponse: ShoppingCart = response.data; 
                                     setCart(cartResponse);
@@ -248,6 +248,7 @@ function handleClick(event: React.MouseEvent<HTMLDivElement, MouseEvent>) {
                     try {
                         const response = await axios.post(`http://localhost:3001/shopping-cart/publicationCart/${carro.id_shopping_cart}/publications/${publicationCart.id_publication}`);
                         console.log("publicacion guardada en el carro: "+ response.data)
+                        notify();
                         if(response.data){    
                             const cartResponse: ShoppingCart = response.data; 
                             setCart(cartResponse);
@@ -460,7 +461,7 @@ function handleClick(event: React.MouseEvent<HTMLDivElement, MouseEvent>) {
                                                 justifyContent: 'center',
                                                 width: '80%',
                                             }}>
-                                                <Button onClick={() => {setPublicationCart(publication); agregarAlCarro(publication); notify()}} type="button" style={{textTransform: "none", color:"#ffffff", backgroundColor:"#00a9e0", marginTop:"5px", textAlign: 'center', justifyContent:"center"}}>
+                                                <Button onClick={() => {setPublicationCart(publication); agregarAlCarro(publication);}} type="button" style={{textTransform: "none", color:"#ffffff", backgroundColor:"#00a9e0", marginTop:"5px", textAlign: 'center', justifyContent:"center"}}>
                                                     Agregar al carro
                                                 </Button>
                                                 <Button onClick={() => navigate('/publicationDetail', { state: { publicationId: publication.id_publication } })} type="button" style={{textTransform: "none", color:"#ffffff", backgroundColor:"#00a9e0", marginTop:"5px", textAlign: 'center', justifyContent:"center"}}>

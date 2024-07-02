@@ -381,6 +381,7 @@ export default function Marketplace() {
                             try {
                                 const response = await axios.post(`http://localhost:3001/shopping-cart/publicationCart/${carro.id_shopping_cart}/publications/${publicationCart.id_publication}`);
                                 console.log("publicacion guardada en el carro: "+ response.data)
+                                notify()
                                 if(response.data){    
                                     const cartResponse: ShoppingCart = response.data; 
                                     setCart(cartResponse);
@@ -394,6 +395,7 @@ export default function Marketplace() {
                     try {
                         const response = await axios.post(`http://localhost:3001/shopping-cart/publicationCart/${carro.id_shopping_cart}/publications/${publicationCart.id_publication}`);
                         console.log("publicacion guardada en el carro: "+ response.data)
+                        notify()
                         if(response.data){    
                             const cartResponse: ShoppingCart = response.data; 
                             setCart(cartResponse);
@@ -637,7 +639,7 @@ export default function Marketplace() {
                                                     justifyContent: 'center',
                                                     width: '80%', 
                                                 }}>
-                                                    <Button onClick={() => {setPublicationCart(publication); agregarAlCarro(publication); notify()}} type="button" style={{textTransform: "none", color:"#ffffff", backgroundColor:"#00a9e0", marginTop:"5px", textAlign: 'center', justifyContent:"center"}}>
+                                                    <Button onClick={() => {setPublicationCart(publication); agregarAlCarro(publication); }} type="button" style={{textTransform: "none", color:"#ffffff", backgroundColor:"#00a9e0", marginTop:"5px", textAlign: 'center', justifyContent:"center"}}>
                                                         Agregar al carro
                                                     </Button>
                                                     <Button onClick={() => navigate('/publicationDetail', { state: { publicationId: publication.id_publication } })} type="button" style={{textTransform: "none", color:"#ffffff", backgroundColor:"#00a9e0", marginTop:"5px", textAlign: 'center', justifyContent:"center"}}>
