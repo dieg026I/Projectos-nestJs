@@ -1,5 +1,6 @@
 import { Entity, PrimaryColumn, Column, OneToMany } from 'typeorm';
 import { Buy } from '../../buy/entities/buy.entity'; // Asegúrate de importar la entidad Buy
+import { Transfer } from 'src/transfer/entities/transfer.entity';
 
 @Entity('shipment_type')
 export class ShipmentType {
@@ -11,5 +12,8 @@ export class ShipmentType {
 
   @OneToMany(() => Buy, buy => buy.shipment_type)
   buys: Buy[];
+
+  @OneToMany(() => Transfer, (transfer) => transfer.shipmentType)
+    transfers: Transfer[];
 }
 

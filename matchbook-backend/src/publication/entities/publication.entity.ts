@@ -3,6 +3,7 @@ import { Users } from '../../users/entities/user.entity';
 import { Book } from '../../book/entities/book.entity';
 import { Buy } from 'src/buy/entities/buy.entity';
 import { ShoppingCart } from 'src/shopping_cart/entities/shopping_cart.entity';
+import { Transfer } from 'src/transfer/entities/transfer.entity';
 
 @Entity('publication')
 export class Publication {
@@ -50,5 +51,8 @@ export class Publication {
 
   @Column()
   id_cart: number;
+
+  @OneToMany(() => Transfer, (transfer) => transfer.publication)
+  transfers: Transfer[];
 
 }

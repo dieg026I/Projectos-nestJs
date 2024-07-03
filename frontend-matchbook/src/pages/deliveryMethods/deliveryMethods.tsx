@@ -202,7 +202,7 @@ const DeliveryMethods: React.FC = () => {
     {/* Seleccion de la Comuna */}
     const handleCityChange = (event: { target: { value: React.SetStateAction<string>; }; }) => {
         setIdCity(event.target.value);
-        axios.get(`http://testservices.wschilexpress.com/georeference/api/v1.0/offices?Type={Type}[&${selectedRegion}][&${id_city}]`)
+        axios.get(`http://testservices.wschilexpress.com/georeference/api/v1.0/offices?Type=1[&${selectedRegion}][&${id_city}]`)
             .then(response => {
             setSucursal(response.data.offices);
             console.log(response.data.offices);
