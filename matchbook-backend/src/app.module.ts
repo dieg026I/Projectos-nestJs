@@ -45,6 +45,8 @@ import { ShippingDetail } from './shipping_detail/entities/shipping_detail.entit
 import { BankAccount } from './bank-account/entities/bank-account.entity';
 import { Bank } from './bank/entities/bank.entity';
 import { AccountType } from './account_type/entities/account_type.entity';
+import { TransferModule } from './transfer/transfer.module';
+import { Transfer } from './transfer/entities/transfer.entity';
 
 @Module({
   imports: [
@@ -57,8 +59,8 @@ import { AccountType } from './account_type/entities/account_type.entity';
     database: 'Matchbook_DB',
     entities: [Users, Cities, Region, Book, Author, Publisher,
     Publication, Category, Buy, ShipmentType, StatusSend, ReadingClub,
-     ShoppingCart, Country, Address, TransactionStatus, ShippingDetail,
-    BankAccount, Bank, AccountType],
+    ShoppingCart, Country, Address, TransactionStatus, ShippingDetail,
+    BankAccount, Bank, AccountType, Transfer],
     synchronize: false, // Solo para entornos de desarrollos
     autoLoadEntities: false,
     logging: true
@@ -83,7 +85,8 @@ import { AccountType } from './account_type/entities/account_type.entity';
     BankAccountModule,
     ShippingDetailModule,
     BankModule,
-    AccountTypeModule ],
+    AccountTypeModule,
+    TransferModule ],
   controllers: [AppController],
   providers: [AppService],
 })

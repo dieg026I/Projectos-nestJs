@@ -5,6 +5,7 @@ import Footer from "../../components/common/Footer/footer";
 import NavBarLogin from "../../components/common/NavBarLogin/navBarLogin";
 import { LuTrash2 } from "react-icons/lu";
 import axios from "axios";
+import { useLocation, useNavigate } from "react-router-dom";
 
 interface Cities {
     id_city: number;
@@ -62,27 +63,30 @@ interface ShoppingCart {
 
 const Cart: React.FC = () => {
     
-    {/*-----------------------------------------------------------------------------*/}
-    {/* Mostrar Publicacion en el carro*/}
     const [publicationsCart, setPublicationsCart] = React.useState<GroupedPublications>({});
+    const navigate = useNavigate();
 
+    // Dentro de tu componente
+    const [selectedQuantity, setSelectedQuantity] = useState(1);
+    {/*-----------------------------------------------------------------------------*/}
+
+    {/* Publicaciones agrupadas por vendedor */}
     type GroupedPublications = {
         [seller: string]: Publication[];
     };
-    
+    {/*-----------------------------------------------------------------------------*/}
+
+    {/* Publicaciones en el carro */}
     useEffect(() => {
         const fetchPublicationsCart = async () => {
         const userString = localStorage.getItem("user");
             if (userString !== null){
                 const user : Users = JSON.parse(userString);
-
                 console.log("rut: "+ user.rut_user)
-            
                 try {
                     const response = await axios.get(`http://localhost:3001/shopping-cart/userCart/${user.rut_user}`);
                     const shoppingCartGet: ShoppingCart = response.data;
                     const publicationGet = shoppingCartGet.publication;
-
 
                     // Agrupa las publicaciones por vendedor
                     const groupedPublications: GroupedPublications = publicationGet.reduce((acc: GroupedPublications, publication) => {
@@ -93,8 +97,6 @@ const Cart: React.FC = () => {
                         acc[username].push(publication);
                         return acc;
                     }, {});
-
-
                     setPublicationsCart(groupedPublications);
                     console.log(JSON.stringify(response.data, null, 2))
                     
@@ -105,24 +107,18 @@ const Cart: React.FC = () => {
     };
     fetchPublicationsCart();
     }, []);
-    
-    // Dentro de tu componente
-    const [selectedQuantity, setSelectedQuantity] = useState(1);
-    
+    {/*-----------------------------------------------------------------------------*/}
+
+    {/* Eliminar Publicacion del carro */} //NO LISTO
     const handleDelete = async (publicationId: string) => {
         const userString = localStorage.getItem("user");
         if (userString !== null){
             const user : Users = JSON.parse(userString);
-
-            const updateData = new FormData();
-            
             try {
                 await axios.delete(`http://localhost:3001/publications/put/${publicationId}`);
-                // Actualizar las publicaciones del carrito de compras después de la eliminación
                 const response = await axios.get(`http://localhost:3001/shopping-cart/userCart/${user.rut_user}`);
                 const shoppingCartGet: ShoppingCart = response.data;
                 const publicationGet = shoppingCartGet.publication;
-                // Agrupa las publicaciones por vendedor
                 const groupedPublications: GroupedPublications = publicationGet.reduce((acc: GroupedPublications, publication) => {
                     const { username } = publication.users;
                     if (!acc[username]) {
@@ -267,11 +263,15 @@ const Cart: React.FC = () => {
                                             <TableCell colSpan={3}>
                                                 <Grid container>
                                                     <Grid item xs={2} />
-                                                    <Grid item xs={8} style={{ display: 'flex', justifyContent: 'center' }}>
+                                                    <Grid item xs={8} style={{ display: 'flex', justifyContent: 'center' }}>    
                                                         <Card style={{ height:"150px",padding: '10px', width:"300px",maxWidth: '300px', textAlign: 'center', marginBottom:"20px" }}>
                                                             <Typography style={{paddingBottom:"10px"}} >SubTotal</Typography>
                                                             <Typography style={{ fontSize:"25px", fontFamily:"SF Pro Display Bold" , paddingBottom:"20px"}}>${subtotal}</Typography>
-                                                            <Button  fullWidth href="/deliveryMethods" style={{ textTransform: 'none', backgroundColor: '#00A9E0', color: '#ffffff' }}>Pagar</Button>
+                                                            {publications.map((publication) =>  (
+                                                                <>
+                                                                    <Button onClick={() => navigate('/deliveryMethods', { state: { publicationId: publication.id_publication } })} fullWidth style={{ textTransform: 'none', backgroundColor: '#00A9E0', color: '#ffffff' }}>Pagar</Button>
+                                                                </>
+                                                            ))}
                                                         </Card>
                                                     </Grid>
                                                     <Grid item xs={2} />

@@ -21,6 +21,11 @@ export class AddressController {
     return this.addressService.findOne(id);
   }
 
+  @Get('userAdress/:id')
+  findAdress(@Param('id') id: number): Promise<Address[]> {
+    return this.addressService.findOneUser(id);
+  }
+
   @Put(':id')
   update(@Param('id') id: string, @Body() addressData: any): Promise<Address> {
     return this.addressService.update(id, addressData);

@@ -19,16 +19,15 @@ export class CountryService {
         return this.countryRepository.find({ relations: ['addresses'] });
     }
 
-    findOne(id_country: number): Promise<Country> {
-        return this.countryRepository.findOne({ where: {id_country} , relations: ['addresses'] });
+    findOne(country_id: string): Promise<Country> {
+        return this.countryRepository.findOne({ where: {country_id} , relations: ['addresses'] });
     }
 
-    async update(id_country: number, countryData: { name: string }) {
-        await this.countryRepository.update(id_country, countryData);
-      
+    async update(country_id: string, countryData: { name: string }) {
+        await this.countryRepository.update(country_id, countryData);
     }
 
-    async remove(id: number): Promise<void> {
-        await this.countryRepository.delete(id);
+    async remove(country_id: string): Promise<void> {
+        await this.countryRepository.delete(country_id);
     }
 }

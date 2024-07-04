@@ -1,4 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn, OneToMany } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn, OneToMany, CreateDateColumn, UpdateDateColumn } from 'typeorm';
 import { Country } from '../../country/entities/country.entity';
 import { Cities } from '../../commune/entities/cities.entity';
 import { Users } from '../../users/entities/user.entity';
@@ -31,12 +31,6 @@ export class Address {
     @Column({ type: 'boolean', nullable: true })
     default_address: boolean;
 
-    @ManyToOne(() => Country, (country) => country.addresses)
-    @JoinColumn({ name: 'country_id' })
-    country: Country;
-
-    country_id : number;
-
     @ManyToOne(() => Region, (region) => region.addresses)
     @JoinColumn({ name: 'region_id' })
     region: Region;
@@ -59,20 +53,16 @@ export class Address {
     @OneToMany(() => ShippingDetail, (shippingDetail) => shippingDetail.buyer_address)
     shipping_details_buyer : Address[];
 
-  
-
     @OneToMany(() => ShippingDetail, (shippingDetail) => shippingDetail.seller_address)
     shipping_details_seller : Address[];
-
-   
 
     @Column({ type: 'boolean', nullable: true })
     is_dev: boolean;
 
-    @Column({ type: 'timestamp', nullable: true })
-    createdAt: Date;
+    @CreateDateColumn()
+    created_at: Date;
 
-    @Column({ type: 'timestamp', nullable: true })
-    updatedAt: Date;
+    @UpdateDateColumn()
+    updated_at: Date;
 }
 

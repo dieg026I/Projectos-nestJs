@@ -16,17 +16,17 @@ export class CountryController {
     }
 
     @Get(':id')
-    findOne(@Param('id') id: number) {
-        return this.countryService.findOne(id);
+    findOne(@Param('country_id') country_id: string) {
+        return this.countryService.findOne(country_id);
     }
 
     @Patch(':id')
-    update(@Param('id') id: number, @Body() body: { name: string }) {
-        return this.countryService.update(id, body);
+    update(@Param('country_id') country_id: string, @Body() body: { name: string }) {
+        return this.countryService.update(country_id, body);
     }
 
     @Delete(':id')
-    remove(@Param('id') id: number) {
-        return this.countryService.remove(id);
+    remove(@Param('country_id') country_id: string) {
+        return this.countryService.remove(country_id);
     }
 }

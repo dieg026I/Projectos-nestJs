@@ -113,7 +113,6 @@ const PublicationDetail: React.FC = () => {
     }, [publicationId]);
 
 
-
     if (!publication) {
         return <div>Cargando...</div>;
     }
@@ -207,7 +206,7 @@ const PublicationDetail: React.FC = () => {
                                 <br />
                                 
                             </div>
-                            )}
+                        )}
                         </Grid>
                     </Grid>
 

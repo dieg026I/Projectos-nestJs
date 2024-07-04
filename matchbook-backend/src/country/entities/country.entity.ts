@@ -1,14 +1,12 @@
-import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, OneToMany, PrimaryColumn } from 'typeorm';
 import { Address } from '../../address/entities/address.entity';
 
 @Entity('countries')
 export class Country {
-    @PrimaryGeneratedColumn()
-    id_country: number;
+    @PrimaryColumn()
+    country_id: string;
 
     @Column({ type: 'varchar' })
     name: string;
 
-    @OneToMany(() => Address, address => address.country)
-    addresses: Address[];
 }

@@ -30,7 +30,7 @@ const Transactions: React.FC = () => {
                             <TableHead>
                                 <TableRow style={{ backgroundColor: '#d2efff' }}>
                                     <TableCell style={{fontFamily:"SF Pro Display Semibold"}} align="center">Id Compra</TableCell>
-                                    <TableCell style={{fontFamily:"SF Pro Display Semibold"}} align="center">Id Libro</TableCell>
+                                    <TableCell style={{fontFamily:"SF Pro Display Semibold"}} align="center">Id Publicación</TableCell>
                                     <TableCell style={{fontFamily:"SF Pro Display Semibold"}} align="center">Nombre Libro</TableCell>
                                     <TableCell style={{fontFamily:"SF Pro Display Semibold"}} align="center">Precio Libro</TableCell>
                                     <TableCell style={{fontFamily:"SF Pro Display Semibold"}} align="center">Usuario Comprador</TableCell>
@@ -38,10 +38,14 @@ const Transactions: React.FC = () => {
                                     <TableCell style={{fontFamily:"SF Pro Display Semibold"}} align="center">Estado envío</TableCell>
                                     <TableCell style={{fontFamily:"SF Pro Display Semibold"}} align="center">Tipo envío</TableCell>
                                     <TableCell style={{fontFamily:"SF Pro Display Semibold"}} align="center">Fecha Trans</TableCell>
+                                    <TableCell style={{fontFamily:"SF Pro Display Semibold"}} align="center">Estado Compra</TableCell>
+                                    <TableCell style={{fontFamily:"SF Pro Display Semibold"}} align="center">Total</TableCell>
                                 </TableRow>
                             </TableHead>
                             <TableBody>
                             <TableRow>
+                                <TableCell align="center"></TableCell>
+                                <TableCell align="center"></TableCell>
                                 <TableCell align="center"></TableCell>
                                 <TableCell align="center"></TableCell>
                                 <TableCell align="center"></TableCell>
