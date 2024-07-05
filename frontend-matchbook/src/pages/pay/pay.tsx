@@ -124,6 +124,10 @@ const Pay: React.FC = () => {
         axios.get(`http://localhost:3001/publications/onePublication/${publicationId}`)
         .then(response => {
         setPublication(response.data);
+        localStorage.setItem('user_seller', JSON.stringify(response.data.users));
+        localStorage.setItem('id_publication', response.data.id_publication);
+        localStorage.setItem('name_book', response.data.book.name_book);
+        console.log('user_seller', response.data.users)
         console.log('Mostrar Publicaciones del carro'+ response.data);
         });
     }, []);
@@ -133,19 +137,17 @@ const Pay: React.FC = () => {
 
     }
     {/*-----------------------------------------------------------------------------*/}
-
     {/* Guardar Transaccion */}
-
     const id_publication = localStorage.getItem('id_publication');
     const name_book = localStorage.getItem('name_book');
-    const cost_book = Number(localStorage.getItem('cost_book'));
-    const usuario_vendedor = localStorage.getItem('usuario_vendedor');
+    const user_seller = localStorage.getItem('user_seller');
     const selectedAddress = localStorage.getItem('selectedAddress');
     const selectedExpress = localStorage.getItem('selectedExpress');
 
+
     const saveTransaction = async () => {
         // Genera el ID de la transacción
-        const id_transaccion = uuidv4();
+        const transaction_id = uuidv4();
     
         // Obtiene el usuario comprador del localStorage
         const user = localStorage.getItem("user");
@@ -154,14 +156,17 @@ const Pay: React.FC = () => {
             const userD: User = users;
             const usernameBuyer = userD.username;
             setUsernameBuyer(usernameBuyer);
+            console.log("username Buyer: "+ usernameBuyer)
 
-            const userSeller = localStorage.getItem("user_seller");
-            if (userSeller) {
-                const userSellerObj : User = JSON.parse(userSeller);
+            if (user_seller) {
+                const userSellerObj : User = JSON.parse(user_seller);
                 const usernameSeller = userSellerObj.username;
                 setUsernameSeller(usernameSeller);
+                console.log("username Seller: "+ usernameSeller)
+            } else{
+                console.log("error al obtener usuario vendedor")
             }
-    
+            
             // Define el tipo de envío
             let id_type_send = 0;
             if (selectedAddress) {
@@ -172,10 +177,9 @@ const Pay: React.FC = () => {
         
             // Crea el objeto de la transacción
             const transaction = {
-                id_transaccion,
+                transaction_id,
                 id_publication: id_publication,
                 name_book: name_book,
-                cost_book: cost_book,
                 username_buyer: usernameBuyer,
                 username_seller: usernameSeller,
                 id_status_send: 1,
@@ -185,11 +189,16 @@ const Pay: React.FC = () => {
         
             try {
                 // Envía la transacción a tu API
-                const response = await axios.post('http://localhost:3001/transactions', transaction);
+                console.log("antes de transaccion")
+                console.log("username_seller: "+ usernameSeller)
+                const response = await axios.post('http://localhost:3001/transfers', transaction);
                 console.log('Transacción guardada:', response.data);
+                alert("Transacción Guardando")
             } catch (error) {
                 console.error('Error al guardar la transacción:', error);
             }
+        } else {
+            console.log("error en obtener usuario")
         }
     };
 
@@ -262,10 +271,7 @@ const Pay: React.FC = () => {
                             </div>
 
                             <Typography style={{color:"#F05D16",  fontWeight: "bold"}}>Una vez realizada, haz click en continuar.</Typography>
-
                         </Card>
-                        
-                        
                     </div>
                 </Grid>
 
@@ -311,10 +317,11 @@ const Pay: React.FC = () => {
                                 <div style={{  height:"40px", display: 'flex', justifyContent: 'center', marginTop:"35px"}}>
                                     <Button onClick={() => navigate(-1)} style={{backgroundColor:"#989ca8", color:"#ffffff", textTransform: "none",fontSize:"19px", marginRight: "130px", borderRadius:"30px"}} >Cancelar</Button>
                                     <Button 
-                                        onClick={async () => {await saveTransaction(); navigate('/paymentMessage', { state: { publicationId: publication.id_publication } }); }}
+                                        onClick={async () => {await saveTransaction();navigate('/paymentMessage', { state: { publicationId: publication.id_publication } });  }}
                                         style={{backgroundColor:"#00a9e0", textAlign:"center", color:"#ffffff", textTransform: "none", fontSize:"19px" , borderRadius:"30px"}}>Completar 
                                     </Button>
                                 </div>
+                                {/*  */}
                             </>
                         )}
                     </Card>

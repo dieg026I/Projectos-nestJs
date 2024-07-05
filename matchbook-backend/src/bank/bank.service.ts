@@ -31,4 +31,5 @@ export class BankService {
   async remove(code_sbif: string): Promise<void> {
     await this.bankRepository.delete(code_sbif);
   }
+
 }

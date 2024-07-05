@@ -168,6 +168,13 @@ const DeliveryMethods: React.FC = () => {
     const location = useLocation();
     const { publicationId } = location.state;
     const navigate = useNavigate();
+
+    const [envioExpress, setEnvioExpress] = useState(2500);
+    const [envioAddress, setEnvioAddress] = useState(4500); 
+    const [envio, setEnvio] = useState(0); 
+    const [precio, setPrecio] = useState(0); 
+
+    const [total, setTotal] = useState(precio); 
     {/*-----------------------------------------------------------------------------*/}
 
     const handleChange = (event: ChangeEvent<{}>, newValue: number) => {
@@ -181,10 +188,9 @@ const DeliveryMethods: React.FC = () => {
         .then(response => {
             setPublication(response.data);
             // Guarda los datos que necesitas en el localStorage
-            localStorage.setItem('id_publication', response.data.id_publication);
-            localStorage.setItem('name_book', response.data.name_book);
             localStorage.setItem('cost_book', response.data.cost_book.toString());
-            localStorage.setItem('user_seller', JSON.stringify(response.data.book.user));
+            const cost_book = Number(localStorage.getItem('cost_book'));
+            setPrecio(cost_book);
             console.log('Mostrar Publicaciones del carro'+ response.data);
         });
     }, []);
@@ -223,7 +229,6 @@ const DeliveryMethods: React.FC = () => {
     {/*-----------------------------------------------------------------------------*/}
 
     {/* Comuna y Sucursal chilexpress */}
-
     const handleCityChangeApi = (event: { target: { value: React.SetStateAction<string>; }; }) => { 
         console.log("antes de api")
         const cityApi = event.target.value;
@@ -242,7 +247,6 @@ const DeliveryMethods: React.FC = () => {
     {/*-----------------------------------------------------------------------------*/}
 
     {/* Sucursal chilexpress */}
-
     const handleSucursal= (event: { target: { value: React.SetStateAction<string>; }; }) => {
         setId_sucu(event.target.value);
         const apiDirec = event.target.value;
@@ -278,7 +282,6 @@ const DeliveryMethods: React.FC = () => {
         setDisplaySucursal(id_sucu);
         closeModalChilexpress();
     
-        // Agregar console.log para verificar los datos almacenados
         console.log('id_express:', localStorage.getItem('id_express'));
         console.log('phoneNumber:', localStorage.getItem('phoneNumber'));
         console.log('retireeName:', localStorage.getItem('retireeName'));
@@ -286,42 +289,41 @@ const DeliveryMethods: React.FC = () => {
         console.log('id_city_api:', localStorage.getItem('id_city_api'));
         console.log('id_sucu:', localStorage.getItem('id_sucu'));
     };
+    {/*-----------------------------------------------------------------------------*/}
 
+    {/* Cargar Datos del LocalStorage */}
     useEffect(() => {
         let envioValue = 0;
+        //selectedAddress y SelectedExpress = envio(1 o 2)
+        console.log("selectedAddress: "+ selectedAddress)
+        console.log("selectedExpress: "+ selectedExpress)
         if (selectedAddress && !selectedExpress) {
             envioValue = envioAddress;
+            console.log("envioValue: "+ envioValue)
         } else if (!selectedAddress && selectedExpress) {
             envioValue = envioExpress;
+            console.log("envioValue: "+ envioValue)
         }
+        console.log("envioAddress: "+ envioAddress)
+        console.log("envioExpress: "+ envioExpress)
     
         setEnvio(envioValue);
     
         const totalValue = precio + envioValue;
+        //total y envio
         localStorage.setItem('envio', envioValue.toString());
         localStorage.setItem('total', totalValue.toString());
+        console.log("envio: "+ envioValue.toString())
+        console.log("total: "+ totalValue.toString())
+        console.log("precio: "+ precio)
     
         setTotal(totalValue);
+        console.log("totalValue" + totalValue)
+        console.log("total" + total)
     }, [selectedAddress, selectedExpress]);
+    {/*-----------------------------------------------------------------------------*/}
 
-    const handleDeleteExpress = (displayIdExpress: string) => {
-        if (displayIdExpress === selectedExpress) {
-            localStorage.removeItem('phoneNumber');
-            localStorage.removeItem('retireeName');
-            localStorage.removeItem('selectedRegionApi');
-            localStorage.removeItem('id_city_api');
-            localStorage.removeItem('id_sucu');
-            setSelectedExpress(null); 
-        }
-    };
-
-    const [envioExpress, setEnvioExpress] = useState(2500);
-    const [envioAddress, setEnvioAddress] = useState(4500); 
-    const [envio, setEnvio] = useState(0); 
-    const [precio, setPrecio] = useState(0); 
-
-    const [total, setTotal] = useState(precio); 
-
+    {/* Seleccionar Dirección */}
     const handleSelectAddress = (addressId: string) => {
         if (selectedAddress === addressId) {
             setSelectedAddress(null);
@@ -332,6 +334,9 @@ const DeliveryMethods: React.FC = () => {
         }
     };
     
+    {/*-----------------------------------------------------------------------------*/}
+
+    {/* Seleccionar Correos de Chile */}
     const handleSelectExpress = (expressId: string) => {
         if (selectedExpress === expressId) {
             setSelectedExpress(null); 
@@ -743,7 +748,7 @@ const DeliveryMethods: React.FC = () => {
                                             textAlign:"left", 
                                             padding:"14px", 
                                             borderRadius:"20px",
-                                            backgroundColor: displayIdExpress === selectedAddress ? '#ddd' : '#fff'
+                                            backgroundColor: displayIdExpress === selectedExpress ? '#ddd' : '#fff'
                                         }}
                                         onClick={() => handleSelectExpress(displayIdExpress)}
                                     >

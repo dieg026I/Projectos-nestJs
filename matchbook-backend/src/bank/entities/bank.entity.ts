@@ -7,7 +7,7 @@ export class Bank {
   code_sbif: string;
 
   @Column({ type: 'varchar' })
-  name: string;
+  name_bank: string;
   
   @OneToMany(() => BankAccount, bankAccount => bankAccount.bank)
   bank_accounts: BankAccount[];

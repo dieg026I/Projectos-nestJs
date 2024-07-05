@@ -8,15 +8,18 @@ import { MdClose } from "react-icons/md";
 import { BiMap } from "react-icons/bi";
 import axios from "axios";
 import React from "react";
+import { FiTrash2 } from "react-icons/fi";
 
 interface Region  {
     id_region: number;
     name: string;
+    cities: Cities[];
 };
 interface Cities {
     id_city: number;
     name: string;
-};
+    region: Region;
+}
 interface Bank {
     code_sbif: number;
     name_bank: string;
@@ -26,6 +29,66 @@ interface AccountType {
     name: string;
 };
 
+interface Publication {
+    id_publication: string;
+    date_publication: Date;
+    users: User;
+    book: Book;
+    photo_showcase: string;
+    photo_cover: string;
+    photo_first_page: string;
+    photo_back_cover: string;
+    cost_book: number;
+}
+interface Author {
+    id_author: string;
+    name_author: string;
+}
+interface Publisher {
+    id_publisher: string;
+    name_publisher: string;
+}
+interface Book {
+    id_book: string;
+    name_book: string;
+    format_book: string;
+    author_id_author: Author;
+    publisher_name: string; 
+    publisher_id_publisher: Publisher;
+    categories: Categories[];
+    year_book: number;
+    status_book: string;
+    stock_book: number;
+    description_book: string;
+}
+interface User {
+    name_user: string,
+    lastname_user: string,
+    rut_user: number,
+    dv_user: string,
+    phone_user: number,
+    email_user: string,
+    password_users: string,
+    cities: Cities,
+    username: string,
+    publication: Publication[]
+}
+interface Categories {
+    id_category: string;
+    name_category: string;
+}
+interface Address {
+    address_id: string;
+    name: string;
+    street: string;
+    house_number: number;
+    extra_details: string;
+    postal_code: number;
+    phone_number: number;
+    region: Region;
+    city: Cities;
+    user_id: User;
+}
 
 
 const MyDetails: React.FC = () => {
@@ -93,6 +156,14 @@ const MyDetails: React.FC = () => {
     const [isModalOpenAdress, setIsModalOpenAdress] = useState(false);
     const [isModalOpenBank, setIsModalOpenBank] = useState(false);
 
+    const [name, setNameAdress] = React.useState('');
+    const [street, setStreet] = React.useState('');
+    const [house_number, setHouseNumber] = React.useState<number | null>(null);
+    const [extra_details, setExtraDetails] = React.useState('');
+    const [postal_code, setPostalCode] = React.useState<number | null>(null);
+    const [phone_number, setPhoneNumber] = React.useState<number | null>(null);
+
+
     {/* Modal Direccion */}
 
     const openModalAddress = () => setIsModalOpenAdress(true);
@@ -114,6 +185,73 @@ const MyDetails: React.FC = () => {
         setSelectedAccount(event.target.value);
     };
 
+    const [address, setAddress] = useState<Address[]>([]);
+    const [user, setUser] = useState<User | null>(null);
+
+    {/*------------------------------------------ */}
+
+    {/* Eliminar Direccion */}
+    const handleDeleteAddress = async (addressId: string) => {
+        const confirmDelete = window.confirm('¿Realmente deseas eliminar esta dirección?');
+        if (confirmDelete) {
+            try {
+                const response = await axios.delete(`http://localhost:3001/addresses/${addressId}`);
+                console.log(response.data);
+                alert('Dirección eliminada');
+                // Actualiza las direcciones después de eliminar una
+                const updatedAddresses = address.filter(a => a.address_id !== addressId);
+                setAddress(updatedAddresses);
+            } catch (error) {
+                console.error('Hubo un error al eliminar la dirección:', error);
+            }
+        }
+    };
+    {/*-----------------------------------------------------------------------------*/}
+
+    {/* Cargar Todas Las Direcciones */}
+    useEffect(() => {
+
+        const user = localStorage.getItem("user");
+        if (user) {
+            const users : User = JSON.parse(user);
+            const userD: User = users;
+            const rutUser = userD.rut_user;
+            setUser(userD);
+
+            axios.get(`http://localhost:3001/addresses/userAdress/${rutUser}`)
+            .then(response => {
+                console.log('rutUser: '+ rutUser);
+                setAddress(response.data);
+                console.log('Mostrar direcciones: '+ response.data);
+            });
+        } else {
+            console.log("Usuario no existe")
+        }
+    }, []);
+        {/*-----------------------------------------------------------------------------*/}
+
+    {/* Cargar Todos los bancos */}
+    useEffect(() => {
+
+        const user = localStorage.getItem("user");
+        if (user) {
+            const users : User = JSON.parse(user);
+            const userD: User = users;
+            const rutUser = userD.rut_user;
+            setUser(userD);
+
+            axios.get(`http://localhost:3001/addresses/userAdress/${rutUser}`)
+            .then(response => {
+                console.log('rutUser: '+ rutUser);
+                setAddress(response.data);
+                console.log('Mostrar direcciones: '+ response.data);
+            });
+        } else {
+            console.log("Usuario no existe")
+        }
+    }, []);
+    {/*-----------------------------------------------------------------------------*/}
+
     {/* Titulos */}
     const getTitle = () => {
         switch (activeTab) {
@@ -133,11 +271,27 @@ const MyDetails: React.FC = () => {
                 return (
                     <>
                         <div style={{paddingTop:"25px", marginRight:"35px", marginLeft:"35px"}}>
-                            <Card style={{margin: '10px 0', textAlign:"left", padding:"14px", borderRadius:"20px"}}>
-                                <p style={{fontFamily:"SF Pro Display Medium", fontSize:"20px"}}><BiMap style={{marginRight:"3px"}} /> Mi Casa</p>
-                                <p style={{fontFamily:"SF Pro Display Medium"}}>Teresa Vial, 1330, 1402B, San Miguel - Metropolitana de Santigo</p>
-                                <Link style={{color:"#000000", fontFamily:"SF Pro Display Medium"}} >Modificar</Link>
-                            </Card>
+                                {address && address.map((address) => (
+                                    <Card 
+                                        style={{
+                                            margin: '10px 0', 
+                                            textAlign:"left", 
+                                            padding:"14px", 
+                                            borderRadius:"20px",
+                                            backgroundColor: address.address_id === selectedAddress ? '#ddd' : '#fff'
+                                        }}
+                                        onClick={() => handleSelectAddress(address.address_id)}
+                                    >
+                                        <div style={{display: 'flex', justifyContent: 'space-between'}}>
+                                            <div>
+                                                <p style={{fontFamily:"SF Pro Display Medium", fontSize:"20px"}}><BiMap style={{marginRight:"3px"}} /> {address.name}</p>
+                                                <p style={{fontFamily:"SF Pro Display Medium"}}>{address.street}, {address.house_number}, {address.city.name} - {address.region.name} </p>
+                                                <Link style={{color:"#000000", fontFamily:"SF Pro Display Medium"}} >Modificar</Link>
+                                            </div>
+                                            <FiTrash2 onClick={(e) => {e.stopPropagation(); handleDeleteAddress(address.address_id);}} style={{cursor: 'pointer', width:"25px", height:"auto", marginRight:"10px"}}/>
+                                        </div>
+                                    </Card>
+                                ))}
                             <div style={{display: 'flex', justifyContent: 'space-between', marginTop:"20px"}}>
                                 <p>Agregar dirección</p>
                                 <Button onClick={openModalAddress} variant="contained">+</Button>
@@ -436,11 +590,20 @@ const MyDetails: React.FC = () => {
                 return null;
         }
     };
-    
-    
-    
-    
-    
+    {/*-----------------------------------------------------------------------------*/}
+    const [selectedAddress, setSelectedAddress] = useState<string | null>(null);
+
+
+    {/* Seleccionar Dirección */}
+    const handleSelectAddress = (addressId: string) => {
+        if (selectedAddress === addressId) {
+            setSelectedAddress(null);
+            localStorage.removeItem('selectedAddress'); 
+        } else {
+            setSelectedAddress(addressId);
+            localStorage.setItem('selectedAddress', addressId); 
+        }
+    };
     
     return (
         <>

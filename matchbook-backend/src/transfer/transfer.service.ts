@@ -15,7 +15,7 @@ export class TransferService {
     }
 
     findAll(): Promise<Transfer[]> {
-        return this.transferRepository.find();
+        return this.transferRepository.find({relations: ['publication','publication.users', 'publication.book' ,'statusSend', 'shipment_type'  ]});
     }
 
     async getTransferById(transaction_id: string): Promise<Transfer | undefined> {

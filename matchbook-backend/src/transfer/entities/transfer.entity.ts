@@ -31,10 +31,10 @@ export class Transfer {
     total: number;
 
     @CreateDateColumn()
-    createdAt: Date;
+    created_at: Date;
 
     @UpdateDateColumn()
-    updatedAt: Date;
+    updated_at: Date;
 
     @ManyToOne(() => Publication, publication => publication.transfers)
     @JoinColumn({ name: 'id_publication' })
