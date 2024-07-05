@@ -150,9 +150,9 @@ const BookManagement: React.FC = () => {
                                         
                                     </TableCell>
 
-                                    <TableCell align="center"> pausada </TableCell>
+                                    <TableCell align="center"> Activa </TableCell>
 
-                                    <TableCell align="center"> stock </TableCell>
+                                    <TableCell align="center"> 1 </TableCell>
 
                                     <TableCell align="center">${publication.cost_book}</TableCell>
                                     <TableCell align="center">

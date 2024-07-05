@@ -111,27 +111,15 @@ const Cart: React.FC = () => {
 
     {/* Eliminar Publicacion del carro */} //NO LISTO
     const handleDelete = async (publicationId: string) => {
-        const userString = localStorage.getItem("user");
-        if (userString !== null){
-            const user : Users = JSON.parse(userString);
-            try {
-                await axios.delete(`http://localhost:3001/publications/put/${publicationId}`);
-                const response = await axios.get(`http://localhost:3001/shopping-cart/userCart/${user.rut_user}`);
-                const shoppingCartGet: ShoppingCart = response.data;
-                const publicationGet = shoppingCartGet.publication;
-                const groupedPublications: GroupedPublications = publicationGet.reduce((acc: GroupedPublications, publication) => {
-                    const { username } = publication.users;
-                    if (!acc[username]) {
-                        acc[username] = [];
-                    }
-                    acc[username].push(publication);
-                    return acc;
-                }, {});
-                setPublicationsCart(groupedPublications);
-            } catch (error) {
-                console.error('Error deleting publication from cart:', error);
-            }  
-        }
+        try {
+            await axios.put(`http://localhost:3001/publications/${publicationId}`, {
+                id_cart: null
+            });
+
+            window.location.reload();
+        } catch (error) {
+            console.error('Error deleting publication from cart:', error);
+        }  
     };
     
     return (
