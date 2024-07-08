@@ -435,6 +435,10 @@ export default function MarketplaceSearch() {
         );
     }
 
+    const getPublications = () => {
+        // Devuelve las publicaciones filtradas si hay alguna, de lo contrario devuelve todas las publicaciones
+        return filteredPublications.length > 0 ? filteredPublications : publications;
+    };
 
     return (
         <>
@@ -678,7 +682,11 @@ export default function MarketplaceSearch() {
                                 </Grid>
                                 <Grid container justifyContent="center" alignItems="center" style={{padding: "20px"}}>
                                     <Stack spacing={2}>
-                                        <Pagination count={Math.ceil(publications.length / 12)} page={page} onChange={handleChange} />
+                                        <Pagination 
+                                        count={Math.ceil(getPublications().length / 12)} 
+                                        page={page} 
+                                        onChange={handleChange} 
+                                        />
                                     </Stack>
                                 </Grid>
                         </Card>

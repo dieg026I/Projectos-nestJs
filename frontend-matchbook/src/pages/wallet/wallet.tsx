@@ -72,7 +72,7 @@ const Wallet: React.FC = () => {
                             <br />
 
                             <Button 
-                                href="/bookManagement" 
+                                href="/myDetails" 
                                 variant="contained"  
                                 style={{ 
                                 textTransform: "none", 
@@ -124,16 +124,16 @@ const Wallet: React.FC = () => {
                                             <TableBody>
                                                 <TableRow>
                                                     <TableCell align="center">
-                                                        <Button variant="contained">Producto</Button>
+                                                    
                                                     </TableCell>
                                                     <TableCell align="center">
-                                                        <Button variant="contained">Estado</Button>
+                                                        
                                                     </TableCell>
                                                     <TableCell align="center">
-                                                        <Button variant="contained">Stock</Button>
+                                                        
                                                     </TableCell>
                                                     <TableCell align="center">
-                                                        <Button variant="contained">Total</Button>
+                                                        
                                                     </TableCell>
                                                 </TableRow>
                                             </TableBody>

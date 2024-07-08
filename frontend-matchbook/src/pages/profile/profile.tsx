@@ -231,26 +231,25 @@ export default function Profile() {
                                     <Grid container justifyContent="center" alignItems="center" style={{padding: "20px"}}>
                                         <Stack spacing={2}>
                                             <Pagination 
-                                                count={Math.ceil(publications.length / 2)} 
-                                                page={page} 
-                                                onChange={handleChange}
-                                                renderItem={(item) => (
-                                                    <PaginationItem
-                                                        {...item}
-                                                        sx={{
-                                                            '&.Mui-selected': {
-                                                                color: 'black',
-                                                            },
-                                                        }}
-                                                    >
-                                                        •
-                                                    </PaginationItem>
-                                                )}
+                                            count={Math.ceil((users && Array.isArray(users.publication) ? users.publication.length : publications.length) / 3)} 
+                                            page={page} 
+                                            onChange={handleChange}
+                                            renderItem={(item) => (
+                                                <PaginationItem
+                                                {...item}
+                                                sx={{
+                                                    '&.Mui-selected': {
+                                                    color: 'black',
+                                                    },
+                                                }}
+                                                >
+                                                •
+                                                </PaginationItem>
+                                            )}
                                             />
                                         </Stack>
                                     </Grid>
                                 </Card>
-                            
                         </div>
                     </Grid>
                 </Grid>

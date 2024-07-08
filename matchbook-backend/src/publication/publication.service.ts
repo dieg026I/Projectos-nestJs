@@ -100,7 +100,7 @@ export class PublicationService {
 
   async update(id_publication: string, updateData: Partial<Publication>): Promise<Publication> { 
     await this.publicationRepository.update(id_publication, updateData);
-    return this.publicationRepository.findOne({where: {id_publication}});
+    return this.publicationRepository.findOne({where: {id_publication}, relations: ['book','book.author_id_author', 'book.publisher_id_publisher', 'users']});
 }
 
 

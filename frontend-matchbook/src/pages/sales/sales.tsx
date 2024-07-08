@@ -311,64 +311,86 @@ const Sales: React.FC = () => {
     {/* Publicación */}
     const handleSubmitPublication = async (event: React.FormEvent) => {
         event.preventDefault();
-
+    
         // Validación de campos requeridos
         if (!name_book) {
-            alert("Por favor, ingresa el nombre del libro.");
-            return;
+        alert("Por favor, ingresa el nombre del libro.");
+        return;
         }
+
         if (!author_name) {
-            alert("Por favor, ingresa el nombre del autor.");
-            return;
+        alert("Por favor, ingresa el nombre del autor.");
+        return;
         }
+
         if (!publisher_name) {
-            alert("Por favor, ingresa el nombre de la editorial.");
-            return;
+        alert("Por favor, ingresa el nombre de la editorial.");
+        return;
         }
+
         if (!year_book) {
-            alert("Por favor, ingresa el año del libro.");
-            return;
+        alert("Por favor, ingresa el año del libro.");
+        return;
         }
+
         if (!cost_book) {
-            alert("Por favor, ingresa el costo del libro.");
-            return;
+        alert("Por favor, ingresa el costo del libro.");
+        return;
         }
+
         if (!category) {
-            alert("Por favor, selecciona una categoría.");
-            return;
+        alert("Por favor, selecciona una categoría.");
+        return;
         }
 
+        if (!photo_showcase) {
+        alert("Por favor, sube la imagen de presentación del libro.");
+        return;
+        }
+
+        if (!photo_cover) {
+        alert("Por favor, sube la imagen de la portada del libro.");
+        return;
+        }
+
+        if (!photo_first_page) {
+        alert("Por favor, sube la imagen de portada pagina.");
+        return;
+        }
+        
+        if (!photo_back_cover) {
+        alert("Por favor, sube la imagen de la contraportada.");
+        return;
+        }
+    
         const formData = new FormData();
-
-            if (photo_showcase) {
-                formData.append('images', photo_showcase);
-            }
-            if (photo_cover) {
-                formData.append('images', photo_cover);
-            }
-            if (photo_first_page) {
-                formData.append('images', photo_first_page);
-            }
-            if (photo_back_cover) {
-                formData.append('images', photo_back_cover);
-            }
-            const id_publication = uuidv4();
-            formData.append('id_publication', id_publication);
-            
-            const userString = localStorage.getItem('user');
-
-            if (userString !== null) {
-                const user: Users = JSON.parse(userString);
-                let user_rut = user.rut_user;  
-                formData.append('rut_user', user_rut.toString());
-            } 
-            const bookId = `${name_book}-${author_name.length}-${publisher_name.slice(0, 3)}`.toLowerCase();
-            formData.append('id_book', bookId );
-
-            if(cost_book){
-            formData.append('cost_book', cost_book.toString());
-            }
-    try {
+    
+        formData.append('images', photo_showcase);
+        formData.append('images', photo_cover);
+    
+        if (photo_first_page) {
+        formData.append('images', photo_first_page);
+        }
+        if (photo_back_cover) {
+        formData.append('images', photo_back_cover);
+        }
+        const id_publication = uuidv4();
+        formData.append('id_publication', id_publication);
+        
+        const userString = localStorage.getItem('user');
+    
+        if (userString !== null) {
+        const user: Users = JSON.parse(userString);
+        let user_rut = user.rut_user;  
+        formData.append('rut_user', user_rut.toString());
+        } 
+        const bookId = `${name_book}-${author_name.length}-${publisher_name.slice(0, 3)}`.toLowerCase();
+        formData.append('id_book', bookId );
+    
+        if(cost_book){
+        formData.append('cost_book', cost_book.toString());
+        }
+        try {
         const response = await axios.post('http://localhost:3001/publications/upload', formData, {
             headers: {
             'Content-Type': 'multipart/form-data',
@@ -377,7 +399,7 @@ const Sales: React.FC = () => {
         
         navigate('/home2')
     
-    }catch (error) {
+        } catch (error) {
         console.error('Hubo un error al registrar el libro:', error);
         }
     };

@@ -6,6 +6,7 @@ import axios from 'axios';
 import { IoTrashOutline } from "react-icons/io5";
 import { HiOutlinePencil } from "react-icons/hi2";
 import { VscDebugStart } from "react-icons/vsc";
+import { CiSaveDown2 } from "react-icons/ci";
 
 interface Cities {
     id_city: string;
@@ -64,6 +65,93 @@ const BookManagement: React.FC = () => {
     const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
     const [users, setUsers] = React.useState<Users>();
     const [publications, setPublications] = React.useState<Publication[]>([]);
+    const [editingId, setEditingId] = useState<string | null>(null);
+    const [editedPublication, setEditedPublication] = useState<Publication | null>(null);
+
+    const handleEdit = (publication: Publication) => {
+        setEditingId(publication.id_publication);
+        setEditedPublication(publication);
+    };
+    
+    const handleSaveClick = async () => {
+        if (editingId && editedPublication) {
+            try {
+            console.log("editingId: " + editingId);
+        
+            const responsePublication = await axios.get(`http://localhost:3001/publications/onePublication/${editingId}`);
+            console.log("responsePublication: ", responsePublication);
+        
+            const publication: Publication = responsePublication.data;
+            console.log("publication: ", publication);
+        
+            // Asegúrate de que publication.book no es null antes de continuar
+            if (publication.book) {
+                const book: Book = publication.book;
+                console.log("book: ", book);
+        
+                // Utiliza book.id_book directamente aquí
+                const id_book = book.id_book;
+                console.log("id_book: " + id_book);
+        
+                if (id_book) {
+                await axios.put(`http://localhost:3001/book/${id_book}`, {
+                    id_book: book.id_book,
+                    name_book: editedPublication.book.name_book,
+                    author_id_author: book.author_id_author,
+                    // Aquí puedes agregar o modificar los campos que necesites
+                });
+        
+                const id_author_book = book.author_id_author.id_author;
+                // Agrega depuración para verificar el valor de author_id_author
+                console.log("author_id_author: ", book.author_id_author.id_author);
+        
+                if (id_author_book) {
+                    console.log("nombre Autor: "+ id_author_book)
+                    
+                    console.log("Intentando actualizar autor con id: ", id_author_book);
+                    const responseAuthor = await axios.put(`http://localhost:3001/author/${id_author_book}`, {
+                    id_author: id_author_book,
+                    name_author: editedPublication.book.author_id_author.name_author
+                    });
+                    console.log("Respuesta de actualización del autor: ", responseAuthor);
+        
+                    console.log("nombre Autor: "+ id_author_book)
+        
+                    console.log("nombre libro: "+ book.name_book )
+                    console.log("editedname: " + editedPublication.book.name_book)
+        
+                    console.log("editedAuthorName: "+ editedPublication.book.author_id_author.name_author)
+                } else {
+                    console.error('El ID del autor es undefined');
+                    alert('Error: No se encontró el ID del autor.');
+                }
+                } else {
+                console.error('id_book es undefined');
+                alert('Error: No se encontró el ID del libro.');
+                }
+            } else {
+                console.error('El libro asociado a la publicación es null');
+                alert('Error: El libro asociado a la publicación no se encontró.');
+            }
+        
+            // Actualizar el precio de la publicación
+            await axios.put(`http://localhost:3001/publications/${editingId}`, {
+                ...editedPublication,
+                cost_book: editedPublication.cost_book,
+            });
+        
+            setEditingId(null);
+            setEditedPublication(null);
+            alert('Publicación actualizada con éxito');
+            window.location.reload();
+            } catch (error) {
+            console.error('Error al guardar los cambios:', error);
+            alert('Error al guardar los cambios');
+            }
+        } else {
+            alert('No hay una publicación seleccionada para guardar.');
+        }
+        };
 
     {/* Titulos */}
     const getTitle = () => {
@@ -76,6 +164,22 @@ const BookManagement: React.FC = () => {
                 return <Typography style={{ color: "#ffffff", fontSize:"25px", fontFamily:"SF Pro Text Bold"  }}>Ventas</Typography>;
             default:
                 return "";
+        }
+    };
+
+    const deletePublication = async (id: string) => {
+    const userConfirmation = window.confirm('¿Realmente deseas eliminar la publicación?');
+        if (userConfirmation) {
+            try {
+                await axios.delete(`http://localhost:3001/publications/${id}`);
+                // Actualizar la lista de publicaciones después de la eliminación
+                const updatedPublications = publications.filter(publication => publication.id_publication !== id);
+                setPublications(updatedPublications);
+                console.log('Publicación eliminada');
+                window.location.reload();
+            } catch (error) {
+            console.error('Error deleting publication:', error);
+            }
         }
     };
 
@@ -111,6 +215,7 @@ const BookManagement: React.FC = () => {
     fetchPublications();
     }, []);
 
+
     
     {/* Contenido Pestañas */}
     const getContent = () => {
@@ -129,8 +234,8 @@ const BookManagement: React.FC = () => {
                                 </TableRow>
                             </TableHead>
                             <TableBody>
-                            {users && Array.isArray(users.publication) && users.publication.reverse().map((publication) => (
-                                <TableRow key={publication.id_publication}>
+                                {users && Array.isArray(users.publication) && users.publication.reverse().map((publication) => (
+                                    <TableRow key={publication.id_publication}>
                                     <TableCell align="center" style={{ display: 'flex', alignItems: 'center', marginLeft: '50px', }}>
                                         <img
                                         src={`http://localhost:3001/images/${publication.photo_showcase}`}
@@ -144,29 +249,50 @@ const BookManagement: React.FC = () => {
                                         }}
                                         />
                                         <div style={{ alignSelf: 'flex-start', textAlign:"left", marginLeft:"10px"}}>
+                                        {editingId === publication.id_publication ? (
+                                            <TextField 
+                                            label="Nombre del libro" 
+                                            value={editedPublication ? editedPublication.book.name_book : ''} 
+                                            onChange={(e) => editedPublication && setEditedPublication({...editedPublication, book: {...editedPublication.book, name_book: e.target.value}})} />
+                                        ) : (
                                             <Typography style={{fontFamily:"SF Pro Display Bold"}}>{publication.book.name_book || 'No disponible'}</Typography>
+                                        )}
+                                        {editingId === publication.id_publication ? (
+                                            <TextField label="Autor" value={editedPublication ? editedPublication.book.author_id_author.name_author : ''} onChange={(e) => editedPublication && setEditedPublication({...editedPublication, book: {...editedPublication.book, author_id_author: {...editedPublication.book.author_id_author, name_author: e.target.value}}})} />
+                                        ) : (
                                             <span style={{fontFamily:"SF Pro Display Regular"}}>{publication.book.author_id_author.name_author || 'No disponible'}</span>
+                                        )}
                                         </div>
-                                        
                                     </TableCell>
 
                                     <TableCell align="center"> Activa </TableCell>
 
                                     <TableCell align="center"> 1 </TableCell>
 
-                                    <TableCell align="center">${publication.cost_book}</TableCell>
+                                    <TableCell align="center">                                        
+                                        {editingId === publication.id_publication ? (
+                                            <TextField label="Precio" value={editedPublication ? editedPublication.cost_book.toString() : ''} onChange={(e) => editedPublication && setEditedPublication({...editedPublication, cost_book: Number(e.target.value)})} />
+                                        ) : (
+                                            <Typography>{publication.cost_book || 'No disponible'}</Typography>
+                                        )}
+                                    </TableCell>
                                     <TableCell align="center">
-                                        <Button variant="contained" style={{ borderRadius: '50%', width: '40px', height: '40px', padding: '0', minWidth: '0', marginRight:"6px" }}>
-                                            <IoTrashOutline />
+                                        <Button onClick={() => deletePublication(publication.id_publication)} variant="contained" style={{ borderRadius: '50%', width: '40px', height: '40px', padding: '0', minWidth: '0', marginRight:"6px" }}>
+                                        <IoTrashOutline />
                                         </Button>
-                                        <Button variant="contained" style={{ borderRadius: '50%', width: '40px', height: '40px', padding: '0', minWidth: '0' }}>
-                                            <HiOutlinePencil />
+                                        <Button variant="contained" style={{ borderRadius: '50%', width: '40px', height: '40px', padding: '0', minWidth: '0' }} onClick={() => handleEdit(publication)}>
+                                        <HiOutlinePencil />
                                         </Button>
+                                        {editingId === publication.id_publication && 
+                                        <Button variant="contained" style={{ borderRadius: '50%', width: '40px', height: '40px', padding: '0', minWidth: '0' }} onClick={handleSaveClick}>
+                                            <CiSaveDown2 />
+                                        </Button>
+                                        }
                                         <Button variant="contained" style={{ borderRadius: '50%', width: '40px', height: '40px', padding: '0', minWidth: '0', marginLeft:"6px" }}>
-                                            <VscDebugStart />
+                                        <VscDebugStart />
                                         </Button>
                                     </TableCell>
-                                </TableRow>
+                                    </TableRow>
                                 ))}
                             </TableBody>
                         </Table>
