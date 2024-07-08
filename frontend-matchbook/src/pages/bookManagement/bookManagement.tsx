@@ -288,9 +288,6 @@ const BookManagement: React.FC = () => {
                                             <CiSaveDown2 />
                                         </Button>
                                         }
-                                        <Button variant="contained" style={{ borderRadius: '50%', width: '40px', height: '40px', padding: '0', minWidth: '0', marginLeft:"6px" }}>
-                                        <VscDebugStart />
-                                        </Button>
                                     </TableCell>
                                     </TableRow>
                                 ))}
